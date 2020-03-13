@@ -1,0 +1,245 @@
+prefix: '&6&lRPGHorses &8\u00BB &7'
+
+# Defines how {XP} should look like
+progress-bar:
+  # Character for each percentage point of the progress bar
+  character: '\u2B1B'
+  # Color for the completed bars
+  completed-color: '&a'
+  # Color for the uncompleted bars
+  missing-color: '&c'
+  # Number of bars per progress bar (ex. 10 == 10% per bar)
+  count: 10
+
+stable-options:
+  title: '&6&lStable'
+  rows: 3
+  # This item will fill all empty slots within the stable gui
+  fill-item:
+    material: STAINED_GLASS_PANE
+    data: 15
+  previous-page-item:
+    material: PAPER
+    name: '&6&lPrevious page'
+    lore: '&7Click to view the previous page'
+  next-page-item:
+    material: PAPER
+    name: '&6&lNext page'
+    lore: '&7Click to view the next page'
+  alive-horse-item:
+    material: SKULL_ITEM
+    skin-value: 'eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvNDJlYjk2N2FiOTRmZGQ0MWE2MzI1ZjEyNzdkNmRjMDE5MjI2ZTVjZjM0OTc3ZWVlNjk1OTdmYWZjZjVlIn19fQ==\'
+    name: '&8\u00BB &7{HORSE-NAME} &8\u00AB'
+    lore:
+      - '   &7Movement Speed: &6{MOVEMENT-SPEED} &7miles/second'
+      - '   &7Jump Strength: &6{JUMP-STRENGTH}'
+      - '   &7Health: &6{HEALTH}&7/&6{MAX-HEALTH}'
+      - '   &7Tier: &6{TIER}'
+      - '   &7XP: (&a{XP}&7)'
+  dead-horse-item:
+    material: SKULL_ITEM
+    skin-value: 'eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvNWM2ZDVhYmJmNjhjY2IyMzg2YmYxNmFmMjVhYzM4ZDhiNzdiYjBlMDQzMTUyNDYxYmQ5N2YzZjYzMGRiYjhiYyJ9fX0=\'
+    name: '&c\u00BB &7{HORSE-NAME} &c\u00AB'
+    lore:
+      - '   &7Death cooldown: &6{DEATH-COOLDOWN}'
+  market-horse-item:
+    material: SKULL_ITEM
+    skin-value: 'eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvYmZlNTY3MjgyZTc4NjA3ZjJjYTJhZWY1ODNiOGVmZWJjOTE5NTlmODRjYWU0YTgzYmVkMTBkY2Q1YjBjZmNjZCJ9fX0='
+    name: '&8\u00BB &7{HORSE-NAME} &8\u00AB'
+    lore:
+      - '&7RPGHorse is in market'
+
+upgrade-options:
+  title: '&6&lUpgrade RPGHorse'
+  rows: 3
+  # This item will fill all empty slots within the stable gui
+  fill-item:
+    material: STAINED_GLASS_PANE
+    data: 15
+  upgrade-item:
+    material: WOOL
+    data: 5
+    name: '&a&lUpgrade RPGHorse'
+    lore:
+      - '&7Click to upgrade your RPGHorse'
+      - '   &7Success Rate: &6{SUCCESS-CHANCE}'
+      - '   &7Tier: &6{TIER}'
+      - '   &7Cost: &6{COST}'
+      - '   &7Horse: &6{HORSE-NAME}'
+    x-cord: 5
+    y-cord: 2
+  success-sound:
+    sound: ENTITY_PLAYER_LEVELUP
+    volume: 1.0
+    pitch: 1.0
+  failure-sound:
+    sound: BLOCK_NOTE_PLING
+    volume: 1.0
+    pitch: 1.0
+
+horse-tiers:
+  # 1 defines the upgrades that occur from 1 -> 2
+  1:
+    movement-speed-multiplier: 1.3
+    jump-strength-multiplier: 1.3
+    success-chance: 100
+    cost: 100
+    exp-cost: 10000
+  2:
+    movement-speed-multiplier: 1.2
+    jump-strength-multiplier: 1.2
+    success-chance: 80
+    cost: 500
+    exp-cost: 40000
+  3:
+    movement-speed-multiplier: 1.1
+    jump-strength-multiplier: 1.1
+    success-chance: 90
+    cost: 160000
+
+market-options:
+  title: '&6&lRPGHorse Market'
+  rows: 3
+  fill-item:
+    material: STAINED_GLASS_PANE
+    data: 15
+  previous-page-item:
+    material: PAPER
+    name: '&6&lPrevious page'
+    lore: '&7Click to view the previous page'
+  next-page-item:
+    material: PAPER
+    name: '&6&lNext page'
+    lore: '&7Click to view the next page'
+  horse-item:
+    material: SKULL_ITEM
+    skin-value: 'eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvNDJlYjk2N2FiOTRmZGQ0MWE2MzI1ZjEyNzdkNmRjMDE5MjI2ZTVjZjM0OTc3ZWVlNjk1OTdmYWZjZjVlIn19fQ==\'
+    name: '&8\u00BB &7{HORSE-NAME} &8\u00AB'
+    lore:
+      - '   &7Movement Speed: &6{MOVEMENT-SPEED} &7miles/second'
+      - '   &7Jump Strength: &6{JUMP-STRENGTH}'
+      - '   &7Health: &6{HEALTH}&7/&6{MAX-HEALTH}'
+      - '   &7Tier: &6{TIER}'
+      - '   &7Price: &6${PRICE}'
+      - '   &7Owner: &6{HORSE-OWNER}'
+  your-horses-item:
+    material: SKULL_ITEM
+    skin-value: 'eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvYmZlNTY3MjgyZTc4NjA3ZjJjYTJhZWY1ODNiOGVmZWJjOTE5NTlmODRjYWU0YTgzYmVkMTBkY2Q1YjBjZmNjZCJ9fX0='
+    name: '&8\u00BB &6Your Market Horses &8\u00AB'
+    lore:
+      - '&7Click to view the horses you''re selling in the market'
+    x-cord: 5
+    y-cord: 3
+  back-item:
+    material: SKULL_ITEM
+    skin-value: 'eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvYmZlNTY3MjgyZTc4NjA3ZjJjYTJhZWY1ODNiOGVmZWJjOTE5NTlmODRjYWU0YTgzYmVkMTBkY2Q1YjBjZmNjZCJ9fX0='
+    name: '&c&lBack'
+    lore:
+      - '&7Click to go back to the market'
+    x-cord: 5
+    y-cord: 3
+
+horse-crates:
+  crate1:
+    price: 1000
+    horse-info:
+      health: 20.0-40.0
+      movement-speed: 0.5-1.0
+      jump-strength: 1.0-2.0
+      type: HORSE
+      color: BROWN
+      style: NONE
+      tier: 1
+
+horse-options:
+  default-name: '&6{PLAYER}''s &7Horse'
+  death-cooldown: 300
+  idle-time: 300
+  particles:
+    # How long should the interval be between particles (20 = 1 second)
+    interval: 3
+    # How many particles should appear at once
+    volume: 3
+    y-offset: 1
+
+time-options:
+  minute: 'minute'
+  minutes: 'minutes'
+  second: 'second'
+  seconds: 'seconds'
+
+listall-format:
+  header: '&8&m-------------&8< &7Listing Active RPGHorses &8>&m-------------'
+  body: ' &6{PLAYER} &8- &7Horse &6#{HORSE-NUMBER} &8(&7{LOCATION}&8)'
+  footer: '&8&m--------------------------------------------------'
+
+check-format:
+  header: '&8&m---------&8< &7Listing Active RPGHorses Within &6{RADIUS}m &8>&m---------'
+  body: ' &6{PLAYER} &8- &7Horse &6#{HORSE-NUMBER} &8(&7{LOCATION}&8)'
+  footer: '&8&m-------------------------------------------------'
+
+# Commands to be run upon spawning, despawning or upgrading a horse (success or failure).
+command-options:
+  on-spawn: []
+  on-despawn: []
+  on-upgrade-success: []
+  on-upgrade-fail: []
+
+messages:
+  max-xp: '{PREFIX}&6{HORSE-NAME} &7has reached max XP, &6shift + right-click &7your horse in your stable to upgrade it'
+  not-enough-xp: '{PREFIX}&6{HORSE-NAME} &7doesn''t have enough XP to level up'
+  no-permission-particle: '{PREFIX}You haven''t unlocked the &6{PARTICLE} &7particle effect'
+  particle-set: '{PREFIX}Trail for RPGHORSE &8(&6{HORSE-NUMBER}&8) &7set to &6{PARTICLE}'
+  particle-fail: '{PREFIX}You must call a RPGHorse to set it''s trail'
+  horse-crate-bought: '{PREFIX}&6{HORSE-CRATE} &7bought for &6${PRICE}'
+  cant-afford-crate: '{PREFIX}You can''t afford that crate'
+  market-horse-removed: '{PREFIX}RPGHorse &8(&6{HORSE-NUMBER}&8) &7removed from the market'
+  market-horse-limit: '{PREFIX}You have too many RPGHorses to buy another one'
+  market-horse-sold: '{PREFIX}Your horse has been sold to &6{PLAYER} &7for &6${PRICE}'
+  market-horse-bought: '{PREFIX}You have bought an RPGHorse from &6{PLAYER} &7for &6${PRICE}'
+  market-buy-own-horse: '{PREFIX}You may not buy your own RPGHorse'
+  cant-afford-market-horse: '{PREFIX}You can''t afford to buy that RPGHorse'
+  horse-added-to-market: '{PREFIX}RPGHorse &8(&6{HORSE-NUMBER}&8) &7added to market successfully'
+  horse-already-in-market: '{PREFIX}Your RPGHorse &8(&6{HORSE-NUMBER}&8) &7is already listed in the market'
+  horse-market-fail: '{PREFIX}Your RPGHorse &8(&6{HORSE-NUMBER}&8) &7must be alive and in your stable to be sold in the
+  market'
+  horse-is-in-market: '{PREFIX}You can''t call your horse while it''s in the market'
+  horse-is-dead: '{PREFIX}You can''t call your horse when it''s dead'
+  cant-afford-upgrade: '{PREFIX}You can''t afford to upgrade your RPGHorse &8(&6{HORSE-NUMBER}&8)'
+  upgrade-horse-success: '{PREFIX}Upgraded RPGHorse &8(&6{HORSE-NUMBER}&8) &7to tier &6{TIER} &7successfully'
+  upgrade-horse-failure: '{PREFIX}Failed to upgrade RPGHorse &8(&6{HORSE-NUMBER}&8) &7to tier &6{TIER}'
+  max-tier-horse: '{PREFIX}Your RPGHorse &8(&6{HORSE-NUMBER}&8) &7is already max tier!'
+  rename-horse: '{PREFIX}What would you like to name your RPGHORSE &8(&6{HORSE-NUMBER}&8)&7?'
+  horse-renamed: '{PREFIX}Your RPGHorse &8(&6{HORSE-NUMBER}&8) &7was renamed to {HORSE-NAME}'
+  confirm-remove-horse: '{PREFIX}Are you sure you want to remove your RPGHorse &8(&6{HORSE-NUMBER}&8)&7? Type
+  &6/confirm'
+  not-your-horse: '{PREFIX}That RPGHorse does not belong to you!'
+  horse-sent-to-stable: '{PREFIX}Your RPGHorse was sent back to the stable by &6{PLAYER}'
+  horse-removenear: '{PREFIX}&6{HORSE-COUNT} &7rpghorses were removed nearby'
+  horse-purgeall: '{PREFIX}&6{HORSE-COUNT} &7horses were removed nearby'
+  horse-upgraded: '{PREFIX}&6{PLAYER}''s &7RPGHorse &8(&6{HORSE-NUMBER}&8) &7upgraded to &6{TIER} &7successfully'
+  your-horse-was-upgraded: '{PREFIX}Your RPGHorse &8(&6{HORSE-NUMBER}&8) &7was upgraded to &6{TIER} &7by &6{PLAYER}'
+  max-horse-tier: '{PREFIX}&6{PLAYER}''s &7RPGHorse &8(&6{HORSE-NUMBER}&8) &7is already max tier'
+  horse-removed: '{PREFIX}&6{PLAYER}''s &7RPGHorse &8(&6{HORSE-NUMBER}&8) &7removed successfully'
+  your-horse-was-removed: '{PREFIX}Your RPGHorse &8(&6{HORSE-NUMBER}&8) &7has been removed by {PLAYER}'
+  horse-set: '{PREFIX}&6{PLAYER}''s &7RPGHorse &8(&6{HORSE-NUMBER}&8) &7updated successfully'
+  horse-given: '{PREFIX}RPGHorse given to &6{PLAYER} &7successfully'
+  horse-received: '{PREFIX}You have received an RPGHorse from &6{PLAYER}'
+  horse-limit: '{PREFIX}&6{PLAYER} &7tried to give you a RPGHorse but you''ve reach your limit!'
+  no-horses: '{PREFIX}You don''t have any horses in your stable'
+  config-reloaded: '{PREFIX}Configuration file reloaded'
+  no-permission: 'You don''t have permission for that'
+  help-message:
+    - '                             &6&lRPGHorses'
+    - '&6/rpghorseadmin give <health> <movement-speed> <jump-strength> <type> <color> <style> <player> &8- &7Gives a
+    player a RPGHorse'
+    - '&6/rpghorseadmin set <health> <movement-speed> <jump-height> <type> <color> <style> <horse-number> <player> &8-
+     &7Modifies an existing RPGHorse'
+    - '&6/rpghorseadmin remove <horse-number> <player> &8- &7Removes a RPGHorse from a player''s stable'
+    - '&6/rpghorseadmin upgrade <horse-number> <player> &8- &7Upgrades a player''s RPGHorse'
+    - '&6/rpghorseadmin listall &8- &7Lists all active RPGHorses'
+    - '&6/rpghorseadmin check <radius> &8- &7Lists all active RPGHorses within a certain radius'
+    - '&6/rpghourseadmin removenear <radius> &8- &7Removes all RPGHorses within a certain radius'
+    - '&6/rpghorsesadmin reload &8- &7Reloads the configuration file'
+    - '&6/rpghorsesadmin &8- &7Displays this message'
+    - '&6/rpghorses &8- &7Opens the stable gui'
