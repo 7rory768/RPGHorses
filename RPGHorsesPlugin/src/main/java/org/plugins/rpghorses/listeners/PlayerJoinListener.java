@@ -48,7 +48,7 @@ public class PlayerJoinListener implements Listener {
                 marketGUIManager.setupYourHorsesGUI(horseOwner);
                 messageQueuer.sendQueuedMessages(p);
                 if (p.isOp() && updateNotifier.needsUpdate()) {
-                    //p.sendMessage(updateNotifier.getUpdateMsg());
+                    p.sendMessage(updateNotifier.getUpdateMsg());
                 }
             }
         }.runTaskLaterAsynchronously(this.plugin, 5L);

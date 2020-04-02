@@ -138,7 +138,7 @@ public class RPGHorsesMain extends JavaPlugin {
 	}
 
 	public void initializeVariables() {
-		this.updateNotifier = new UpdateNotifier(this, messagingUtil, 18044);
+		this.updateNotifier = new UpdateNotifier(this, messagingUtil, 76836);
 		this.updateNotifier.checkForUpdate();
 		this.itemUtil = new ItemUtil(this);
 		this.horseCrateManager = new HorseCrateManager(this);
