@@ -26,12 +26,6 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 
 /*
-TODO:
- Add bStats
- Add update notifier
- */
-
-/*
 Future ideas
 TODO:
  - Change the trail skin-value to the trail skin-value the horse is currently using
