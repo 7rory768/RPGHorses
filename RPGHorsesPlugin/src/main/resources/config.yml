@@ -1,0 +1,558 @@
+###################################################
+#                    RPGHorses                    #
+#                Author: 7rory768                 #
+###################################################
+
+# Github: https://github.com/7rory768/RPGHorses
+
+# Thanks for choosing RPGHorses!
+# The config can be intimidating at first so let me give you some tips to get started
+# If you get stuck on anything, feel free to create an issue on the GitHub, message me on discord @ Rory#2518, or (last resort) pm me on Spigot
+# You'll see a lot of skin-values throughout the config, those are values for custom-heads which you can find on https://minecraft-heads.com/custom-heads
+#   -> To get a skin value, click a head on the website then scroll down to "Value" under the "Other" header
+# For an item to use a skin-value, its material must be PLAYER_HEAD (SKULL_ITEM for 1.8)
+
+# Since this plugin supports 1.8 - 1.15.2 you need to make sure you're using the correct website for finding enum values:
+# NOTE: By default, this config has 1.15.2 values in it, it will still work on lower versions for the current configuration
+#         but, if you set new values they must be from the correct version website
+#
+# Materials:
+#  1.8.8: https://helpch.at/docs/1.8/org/bukkit/Material.html
+#  1.9.4: https://helpch.at/docs/1.9.4/org/bukkit/Material.html
+#  1.10.2: https://helpch.at/docs/1.10.2/org/bukkit/Material.html
+#  1.11.2: https://helpch.at/docs/1.11.2/org/bukkit/Material.html
+#  1.12.2: https://helpch.at/docs/1.12.2/org/bukkit/Material.html
+#  1.13.2: https://helpch.at/docs/1.13.2/org/bukkit/Material.html
+#  1.14.4: https://helpch.at/docs/1.14.4/org/bukkit/Material.html
+#  1.15.2: https://hub.spigotmc.org/javadocs/bukkit/org/bukkit/Material.html
+#
+# Sounds:
+#  1.8.8: https://helpch.at/docs/1.8/org/bukkit/Sound.html
+#  1.9.4: https://helpch.at/docs/1.9.4/org/bukkit/Sound.html
+#  1.10.2: https://helpch.at/docs/1.10.2/org/bukkit/Sound.html
+#  1.11.2: https://helpch.at/docs/1.11.2/org/bukkit/Sound.html
+#  1.12.2: https://helpch.at/docs/1.12.2/org/bukkit/Sound.html
+#  1.13.2: https://helpch.at/docs/1.13.2/org/bukkit/Sound.html
+#  1.14.4: https://helpch.at/docs/1.14.4/org/bukkit/Sound.html
+#  1.15.2: https://hub.spigotmc.org/javadocs/bukkit/org/bukkit/Sound.html
+#
+# Particles:
+#  1.8.8: https://helpch.at/docs/1.8/org/bukkit/Particle.html
+#  1.9.4: https://helpch.at/docs/1.9.4/org/bukkit/Particle.html
+#  1.10.2: https://helpch.at/docs/1.10.2/org/bukkit/Particle.html
+#  1.11.2: https://helpch.at/docs/1.11.2/org/bukkit/Particle.html
+#  1.12.2: https://helpch.at/docs/1.12.2/org/bukkit/Particle.html
+#  1.13.2: https://helpch.at/docs/1.13.2/org/bukkit/Particle.html
+#  1.14.4: https://helpch.at/docs/1.14.4/org/bukkit/Particle.html
+#  1.15.2: https://hub.spigotmc.org/javadocs/spigot/org/bukkit/Particle.html
+
+prefix: '&6&lRPGHorses &8\u00BB &7'
+
+horse-options:
+  default-name: '&6{PLAYER}''s &7Horse'
+  # Should a player start with a default horse? If so, specify which crate they should get, if not just set this to ''
+  default-horse: crate1
+  # How long should a horse take to respawn? (in seconds)
+  death-cooldown: 300
+  # After how long should the horse return to it's stable (when idle/afk)
+  idle-time: 300
+  particles:
+    # How long should the interval be between particles (20 = 1 second)
+    interval: 1
+    # How many particles should appear at once
+    volume: 3
+    y-offset: 0.25
+
+horse-tiers:
+  # 1 defines the upgrades that occur from 1 -> 2
+  1:
+    health-multiplier: 1.3
+    movement-speed-multiplier: 1.3
+    jump-strength-multiplier: 1.3
+    # Chance that the upgrade will be successful from 0 - 100
+    success-chance: 100
+    cost: 10000
+    # This is horse-exp not player exp, it is earned as players ride their horses around
+    exp-cost: 10
+  2:
+    health-multiplier: 1.2
+    movement-speed-multiplier: 1.2
+    jump-strength-multiplier: 1.2
+    success-chance: 100
+    cost: 100000
+    exp-cost: 40000
+  3:
+    health-multiplier: 1.1
+    movement-speed-multiplier: 1.1
+    jump-strength-multiplier: 1.1
+    success-chance: 100
+    cost: 1000000
+    exp-cost: 1000000
+  # Since 3 is the last entry here, tier 4 is actually our last tier for horse
+
+# Defines crates that players can buy with /horses buy <crate>
+horse-crates:
+  crate1:
+    price: 1000
+    horse-info:
+      health: 20.0 - 30.0
+      movement-speed: 0.25 - 0.35
+      jump-strength: 0.5 - 0.75
+      # We can use keyword "RANDOM" here for random values
+      type: RANDOM
+      color: RANDOM
+      style: RANDOM
+      tier: 1
+
+# Options for the gui opened upon /horses
+stable-options:
+  title: '&6&lStable'
+  rows: 3
+  # Item that represents a horse which is alive
+  alive-horse-item:
+    # Defines the material of this item, see material info at the top of the config for valid values
+    material: PLAYER_HEAD
+    #data: 3 You can also include data (durability) for items
+    #amount: 1 You can also include amount for items
+    name: '&8\u00BB &7{HORSE-NAME} &8\u00AB'
+    lore:
+      - '   &7Movement Speed: &6{MOVEMENT-SPEED} &7miles/second'
+      - '   &7Jump Strength: &6{JUMP-STRENGTH}'
+      - '   &7Health: &6{HEALTH}&7/&6{MAX-HEALTH}'
+      - '   &7Tier: &6{TIER}'
+      - '   &7XP: (&a{XP}&7)'
+    # enchants: ['DURABILITY:1'] You can also include enchantments for items
+    # item-flags: ['HIDE_ENCHANTS'] You can also include item flags for items
+  # Item that represents a horse that is dead
+  dead-horse-item:
+    material: PLAYER_HEAD
+    name: '&c\u00BB &7{HORSE-NAME} &c\u00AB'
+    lore: ['   &7Death cooldown: &6{DEATH-COOLDOWN}']
+  # Item that represents a market horse
+  market-horse-item:
+    material: PLAYER_HEAD
+    # If you want the horse to remain as its regular horse head in the stable gui, just remove the line below (skin-value)
+    # After /horseadmin reload, players may have to re-log to see this change
+    skin-value: 'eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvMTYyMzRhZTdkNTU5MDNlYThiYzM0NDEzY2Q1MmRlZDNiMzdjOTJlZWU1YWU1MzNmYzUxMjZhNjU0NjFmMTFmIn19fQ=='
+    name: '&8\u00BB &7{HORSE-NAME} &8(&7In Market&8) &8\u00AB'
+    lore:
+      - '   &7Movement Speed: &6{MOVEMENT-SPEED} &7miles/second'
+      - '   &7Jump Strength: &6{JUMP-STRENGTH}'
+      - '   &7Health: &6{HEALTH}&7/&6{MAX-HEALTH}'
+      - '   &7Tier: &6{TIER}'
+      - '   &7XP: (&a{XP}&7)'
+  # Item to view the previous page
+  previous-page-item:
+    material: PLAYER_HEAD
+    skin-value: 'eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvYmQ2OWUwNmU1ZGFkZmQ4NGU1ZjNkMWMyMTA2M2YyNTUzYjJmYTk0NWVlMWQ0ZDcxNTJmZGM1NDI1YmMxMmE5In19fQ==' # https://minecraft-heads.com/custom-heads/alphabet/7827-oak-wood-arrow-left
+    name: '&6&lPrevious page'
+    lore: ['&7Click to view the previous page']
+  # Item to view the next page
+  next-page-item:
+    material: PLAYER_HEAD
+    skin-value: 'eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvMTliZjMyOTJlMTI2YTEwNWI1NGViYTcxM2FhMWIxNTJkNTQxYTFkODkzODgyOWM1NjM2NGQxNzhlZDIyYmYifX19' # https://minecraft-heads.com/custom-heads/alphabet/7826-oak-wood-arrow-right
+    name: '&6&lNext page'
+    lore: ['&7Click to view the next page']
+  # This item will fill all empty slots within the stable gui
+  fill-item:
+    material: GRAY_STAINED_GLASS_PANE
+    data: 15
+
+# Defines the gui opened after right-clicking a horse in a stable
+horse-gui-options:
+  title: '&8\u00BB &6{HORSE-NAME} &8\u00AB'
+  rows: 4
+  # Here you can define where the horse item goes
+  horse-item:
+    # Sets the coords for an item
+    x-cord: 5
+    y-cord: 2
+  items:
+    # Item that when clicked will open the sell-gui for players to sell their horse
+    sell-item:
+      # Don't edit the purpose key or the gui will break, it tells the GUI what to do when the item is clicked
+      purpose: SELL
+      material: PLAYER_HEAD
+      # https://minecraft-heads.com/custom-heads/decoration/33098-minecraft-earth-shop
+      skin-value: 'eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvN2UzZGViNTdlYWEyZjRkNDAzYWQ1NzI4M2NlOGI0MTgwNWVlNWI2ZGU5MTJlZTJiNGVhNzM2YTlkMWY0NjVhNyJ9fX0='
+      name: '&6&lSell Horse'
+      lore: ['&7Click to sell your horse in the market']
+      x-cord: 2
+      y-cord: 2
+    # Item that when clicked will open an anvil gui for a player to rename their horse
+    rename-item:
+      purpose: RENAME
+      material: PLAYER_HEAD
+      skin-value: 'eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvMTFiYjQyNjZhMjJkY2JjNDYwNzYyMWI5Yzc2ODkzMjk1MDE2MGMyYjk2NzA4MjY3ZDcwN2Q0NDU1MTM3OGNkNyJ9fX0=' # https://minecraft-heads.com/custom-heads/alphabet/35130-red-a
+      name: '&6&lRename Horse'
+      lore: ['&7Click to rename your horse']
+      x-cord: 3
+      y-cord: 2
+    # Item that when clicked toggles auto-mounting for horses off
+    toggle-automount-on:
+      purpose: TOGGLE_AUTOMOUNT_ON
+      material: PLAYER_HEAD
+      skin-value: 'eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvYTkyZTMxZmZiNTljOTBhYjA4ZmM5ZGMxZmUyNjgwMjAzNWEzYTQ3YzQyZmVlNjM0MjNiY2RiNDI2MmVjYjliNiJ9fX0=' # https://minecraft-heads.com/custom-heads/alphabet/21771-lime-checkmark
+      name: '&6&lToggle Auto-Mount'
+      lore: ['&7Click to toggle auto-mount &coff']
+      x-cord: 4
+      y-cord: 2
+    # Item that when clicked toggles auto-mounting for horses off
+    toggle-automount-off:
+      purpose: TOGGLE_AUTOMOUNT_OFF
+      material: PLAYER_HEAD
+      skin-value: 'eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvZmY5ZDlkZTYyZWNhZTliNzk4NTU1ZmQyM2U4Y2EzNWUyNjA1MjkxOTM5YzE4NjJmZTc5MDY2Njk4Yzk1MDhhNyJ9fX0=' # https://minecraft-heads.com/custom-heads/alphabet/21766-red-checkmark
+      name: '&6&lToggle Auto-Mount'
+      lore: ['&7Click to toggle auto-mount &aon']
+      x-cord: 4
+      y-cord: 2
+    # Item that when clicked opens the trails GUI
+    trails-item:
+      purpose: TRAILS
+      material: PLAYER_HEAD
+      skin-value: 'eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvYmFkYzA0OGE3Y2U3OGY3ZGFkNzJhMDdkYTI3ZDg1YzA5MTY4ODFlNTUyMmVlZWQxZTNkYWYyMTdhMzhjMWEifX19' # https://minecraft-heads.com/custom-heads/alphabet/7822-oak-wood-question-mark
+      name: '&6&lTrails'
+      lore: ['&7Click to change your horse''s trail']
+      x-cord: 6
+      y-cord: 2
+    # Item that when clicked attempts to upgrade the horse
+    upgrade-item:
+      purpose: UPGRADE
+      material: PLAYER_HEAD
+      skin-value: 'eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvYTk5YWFmMjQ1NmE2MTIyZGU4ZjZiNjI2ODNmMmJjMmVlZDlhYmI4MWZkNWJlYTFiNGMyM2E1ODE1NmI2NjkifX19' # https://minecraft-heads.com/custom-heads/alphabet/11214-quartz-arrow-up
+      name: '&6&lUpgrade Horse'
+      lore: ['&7Click to upgrade your horse']
+      x-cord: 7
+      y-cord: 2
+    # Item that when clicked prompts you to confirm if you'd like to delete your horse
+    delete-item:
+      purpose: DELETE
+      material: PLAYER_HEAD
+      # https://minecraft-heads.com/custom-heads/decoration/4517-trash-can
+      skin-value: 'eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvMWQ5YmZlNWYyYmM1YTY0MDI0Zjc1OTFiMjRmOTUxMTI1MDhkN2Q2NmFkYzk5OGJmZDNjZTVhZmRmMTQ5YWU0ZiJ9fX0='
+      name: '&6&lDelete Horse'
+      lore: ['&7Click to delete your horse']
+      x-cord: 8
+      y-cord: 2
+    # Item that when clicked brings you back to the stable gui
+    back-item:
+      purpose: BACK
+      material: PLAYER_HEAD
+      skin-value: 'eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvYmZlNTY3MjgyZTc4NjA3ZjJjYTJhZWY1ODNiOGVmZWJjOTE5NTlmODRjYWU0YTgzYmVkMTBkY2Q1YjBjZmNjZCJ9fX0='
+      name: '&c&lBack'
+      lore: ['&7Click to go back to your stable']
+      x-cord: 5
+      y-cord: 4
+    fill-item:
+      purpose: FILL
+      material: GRAY_STAINED_GLASS_PANE
+
+upgrade-options:
+  # Here you can define sounds upon upgrade failure or success
+  # Make sure you''re using valid values from the Sound link at the top of the config
+  success-sound:
+    sound: ENTITY_PLAYER_LEVELUP
+    volume: 1.0
+    pitch: 1.0
+  failure-sound:
+    sound: BLOCK_ANVIL_PLACE
+    volume: 1.0
+    pitch: 1.0
+
+market-options:
+  title: '&6&lRPGHorse Market'
+  rows: 3
+  # Defines how a horse looks in the market
+  horse-item:
+    material: PLAYER_HEAD
+    name: '&8\u00BB &7{HORSE-NAME}&8 \u00AB'
+    lore:
+      - '   &7Movement Speed: &6{MOVEMENT-SPEED} &7miles/second'
+      - '   &7Jump Strength: &6{JUMP-STRENGTH}'
+      - '   &7Health: &6{HEALTH}&7/&6{MAX-HEALTH}'
+      - '   &7Tier: &6{TIER}'
+      - '   &7Price: &6${PRICE}'
+      - '   &7Owner: &6{HORSE-OWNER}'
+  # Item that brings you to a gui that shows which horses you're currently selling
+  your-horses-item:
+    material: PLAYER_HEAD
+    skin-value: 'eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvYmZlNTY3MjgyZTc4NjA3ZjJjYTJhZWY1ODNiOGVmZWJjOTE5NTlmODRjYWU0YTgzYmVkMTBkY2Q1YjBjZmNjZCJ9fX0='
+    name: '&6&lYour Market Horses'
+    lore: ['&7Click to view the horses you''re selling in the market']
+    x-cord: 5
+    y-cord: 3
+  # Item that takes you back to the market gui
+  back-item:
+    material: PLAYER_HEAD
+    skin-value: 'eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvYmZlNTY3MjgyZTc4NjA3ZjJjYTJhZWY1ODNiOGVmZWJjOTE5NTlmODRjYWU0YTgzYmVkMTBkY2Q1YjBjZmNjZCJ9fX0='
+    name: '&c&lBack'
+    lore: ['&7Click to go back to the market']
+    x-cord: 5
+    y-cord: 3
+  previous-page-item:
+    material: PLAYER_HEAD
+    skin-value: 'eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvYmQ2OWUwNmU1ZGFkZmQ4NGU1ZjNkMWMyMTA2M2YyNTUzYjJmYTk0NWVlMWQ0ZDcxNTJmZGM1NDI1YmMxMmE5In19fQ==' # https://minecraft-heads.com/custom-heads/alphabet/7827-oak-wood-arrow-left
+    name: '&6&lPrevious page'
+    lore: ['&7Click to view the previous page']
+  next-page-item:
+    material: PLAYER_HEAD
+    skin-value: 'eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvMTliZjMyOTJlMTI2YTEwNWI1NGViYTcxM2FhMWIxNTJkNTQxYTFkODkzODgyOWM1NjM2NGQxNzhlZDIyYmYifX19' # https://minecraft-heads.com/custom-heads/alphabet/7826-oak-wood-arrow-right
+    name: '&6&lNext page'
+    lore: ['&7Click to view the next page']
+  fill-item:
+    material: GRAY_STAINED_GLASS_PANE
+    data: 15
+
+sell-gui-options:
+  title: '&6&lPick a price'
+  rows: 4
+  # Sets the slot that the horse head (of the horse being sold) will be in
+  horse-slot:
+    x-cord: 5
+    y-cord: 2
+  success-sound:
+    sound: ENTITY_PLAYER_LEVELUP
+    volume: 1.0
+    pitch: 1.0
+  failure-sound:
+    sound: BLOCK_ANVIL_PLACE
+    volume: 1.0
+    pitch: 1.0
+  items:
+    # You can create or remove CHANGE_PRICE items that decrease/increase the price by whatever you set key 'price-change' to
+    # You can have as many as you want, just make sure you set purpose: CHANGE_PRICE or they wont work
+    decrease-item1:
+      purpose: CHANGE_PRICE
+      price-change: -1000
+      material: PLAYER_HEAD
+      skin-value: 'eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvNzQzNzM0NmQ4YmRhNzhkNTI1ZDE5ZjU0MGE5NWU0ZTc5ZGFlZGE3OTVjYmM1YTEzMjU2MjM2MzEyY2YifX19' # https://minecraft-heads.com/custom-heads/alphabet/7824-oak-wood-arrow-down
+      name: '&c- ${PRICE-CHANGE}'
+      lore: ['&7Click to decrease the sell price by &c${PRICE-CHANGE}']
+      x-cord: 4
+      y-cord: 2
+      sound:
+        sound: BLOCK_NOTE_BLOCK_PLING
+        pitch: 1
+    decrease-item2:
+      purpose: CHANGE_PRICE
+      price-change: -10000
+      material: PLAYER_HEAD
+      skin-value: 'eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvOWI3Y2U2ODNkMDg2OGFhNDM3OGFlYjYwY2FhNWVhODA1OTZiY2ZmZGFiNmI1YWYyZDEyNTk1ODM3YTg0ODUzIn19fQ==' # https://minecraft-heads.com/custom-heads/alphabet/515-stone-arrow-down
+      name: '&c- ${PRICE-CHANGE}'
+      lore: ['&7Click to decrease the sell price by &c${PRICE-CHANGE}']
+      x-cord: 3
+      y-cord: 2
+      sound:
+        sound: BLOCK_NOTE_BLOCK_PLING
+        pitch: 0.7
+    decrease-item3:
+      purpose: CHANGE_PRICE
+      price-change: -100000
+      material: PLAYER_HEAD
+      skin-value: 'eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvMzkxMmQ0NWIxYzc4Y2MyMjQ1MjcyM2VlNjZiYTJkMTU3NzdjYzI4ODU2OGQ2YzFiNjJhNTQ1YjI5YzcxODcifX19' # https://minecraft-heads.com/custom-heads/alphabet/11221-quartz-arrow-down
+      name: '&c- ${PRICE-CHANGE}'
+      lore: ['&7Click to decrease the sell price by &c${PRICE-CHANGE}']
+      x-cord: 2
+      y-cord: 2
+      sound:
+        sound: BLOCK_NOTE_BLOCK_PLING
+        pitch: 0.5
+    # You can do the same thing for CHANGE_PRICE items
+    increase-item1:
+      purpose: CHANGE_PRICE
+      price-change: 1000
+      material: PLAYER_HEAD
+      skin-value: 'eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvMzA0MGZlODM2YTZjMmZiZDJjN2E5YzhlYzZiZTUxNzRmZGRmMWFjMjBmNTVlMzY2MTU2ZmE1ZjcxMmUxMCJ9fX0=' # https://minecraft-heads.com/custom-heads/alphabet/7825-oak-wood-arrow-up
+      name: '&a+ ${PRICE-CHANGE}'
+      lore: ['&7Click to increase the sell price by &a${PRICE-CHANGE}']
+      x-cord: 6
+      y-cord: 2
+      sound:
+        sound: BLOCK_NOTE_BLOCK_PLING
+        pitch: 1.25
+    increase-item2:
+      purpose: CHANGE_PRICE
+      price-change: 10000
+      material: PLAYER_HEAD
+      skin-value: 'eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvNThmZTI1MWE0MGU0MTY3ZDM1ZDA4MWMyNzg2OWFjMTUxYWY5NmI2YmQxNmRkMjgzNGQ1ZGM3MjM1ZjQ3NzkxZCJ9fX0=' # https://minecraft-heads.com/custom-heads/alphabet/514-stone-arrow-up
+      name: '&a+ ${PRICE-CHANGE}'
+      lore: ['&7Click to increase the sell price by &a${PRICE-CHANGE}']
+      x-cord: 7
+      y-cord: 2
+      sound:
+        sound: BLOCK_NOTE_BLOCK_PLING
+        pitch: 1.5
+    increase-item3:
+      purpose: CHANGE_PRICE
+      price-change: 100000
+      material: PLAYER_HEAD
+      skin-value: 'eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvYTk5YWFmMjQ1NmE2MTIyZGU4ZjZiNjI2ODNmMmJjMmVlZDlhYmI4MWZkNWJlYTFiNGMyM2E1ODE1NmI2NjkifX19' # https://minecraft-heads.com/custom-heads/alphabet/11214-quartz-arrow-up
+      name: '&a+ ${PRICE-CHANGE}'
+      lore: ['&7Click to increase the sell price by &a${PRICE-CHANGE}']
+      x-cord: 8
+      y-cord: 2
+      sound:
+        sound: BLOCK_NOTE_BLOCK_PLING
+        pitch: 1.75
+    # Item that confirms the price and puts the horse on the market
+    confirm-item:
+      purpose: CONFIRM
+      material: PLAYER_HEAD
+      skin-value: 'eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvYTkyZTMxZmZiNTljOTBhYjA4ZmM5ZGMxZmUyNjgwMjAzNWEzYTQ3YzQyZmVlNjM0MjNiY2RiNDI2MmVjYjliNiJ9fX0=' # https://minecraft-heads.com/custom-heads/alphabet/21771-lime-checkmark
+      name: '&a&lConfirm &8(&a${PRICE}&8)'
+      lore: ['&7Click to sell &6{HORSE-NAME} &7for &a${PRICE}']
+      x-cord: 6
+      y-cord: 4
+    back-item:
+      purpose: BACK
+      material: PLAYER_HEAD
+      skin-value: 'eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvYmZlNTY3MjgyZTc4NjA3ZjJjYTJhZWY1ODNiOGVmZWJjOTE5NTlmODRjYWU0YTgzYmVkMTBkY2Q1YjBjZmNjZCJ9fX0='
+      name: '&c&lBack'
+      lore: ['&7Click to go back']
+      x-cord: 4
+      y-cord: 4
+    fill-item:
+      purpose: FILL
+      material: GRAY_STAINED_GLASS_PANE
+
+trail-gui-options:
+  title: '&6&lTrails'
+  # Item that represents an unknown trail
+  unknown-trail:
+    purpose: UNKNOWN_TRAIL
+    material: PLAYER_HEAD
+    skin-value: 'eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvYmM4ZWExZjUxZjI1M2ZmNTE0MmNhMTFhZTQ1MTkzYTRhZDhjM2FiNWU5YzZlZWM4YmE3YTRmY2I3YmFjNDAifX19' # https://minecraft-heads.com/custom-heads/alphabet/9236-white-question-mark
+    name: '&c&l?'
+    lore: ['&7You haven''t unlocked this trail']
+  # Trails are known if the player has the permission rpghorses.trail.* or rpghorses.trail.<trail>
+  trail-item:
+    purpose: TRAIL
+    material: PLAYER_HEAD
+    name: '&6{TRAIL}'
+    lore: ['&7Click to set your trail to &6{TRAIL}']
+  back-item:
+    purpose: BACK
+    material: PLAYER_HEAD
+    skin-value: 'eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvYmZlNTY3MjgyZTc4NjA3ZjJjYTJhZWY1ODNiOGVmZWJjOTE5NTlmODRjYWU0YTgzYmVkMTBkY2Q1YjBjZmNjZCJ9fX0='
+    name: '&c&lBack'
+    lore: ['&7Click to go back']
+  fill-item:
+    purpose: FILL
+    material: GRAY_STAINED_GLASS_PANE
+  # Here you can define skin-values for each trail
+  # If you want to disable a trail, just remove the entry for it below
+  # If you want to add a trail that isn't here, just add an entry for it below
+  # Make sure you use particle values that are included in the corresponding link for your version at the top of the config
+  # ex: PARTICLE_NAME: '<skin value>'
+  trails:
+    DRIP_WATER: 'eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvMzRmY2JjMjU2ZDBiZTdlNjgzYWY4NGUzOGM0YmNkYjcxYWZiOTM5ODUzOGEyOWFhOTZjYmZhMzE4YjJlYSJ9fX0=' # https://minecraft-heads.com/custom-heads/blocks/13980-water'
+    CRIT: 'eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvYzdlNmM0MGY2OGI3NzVmMmVmY2Q3YmQ5OTE2YjMyNzg2OWRjZjI3ZTI0Yzg1NWQwYTE4ZTA3YWMwNGZlMSJ9fX0=' # https://minecraft-heads.com/custom-heads/miscellaneous/2361-sword
+    CRIT_MAGIC: 'eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvN2VlYTM0NTkwOGQxN2RjNDQ5NjdkMWRjZTQyOGYyMmYyYjE5Mzk3MzcwYWJlYjc3YmRjMTJlMmRkMWNiNiJ9fX0=' # https://minecraft-heads.com/custom-heads/decoration/4103-magic-book
+    SPELL: 'eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvNDY2YjEwYmY2ZWUyY2Q3ZTNhYzk2ZDk3NDllYTYxNmFhOWM3MzAzMGJkY2FlZmZhZWQyNDllNTVjODQ5OTRhYyJ9fX0=' # https://minecraft-heads.com/custom-heads/decoration/19792-cloud
+    SPELL_INSTANT: 'eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvOTUzZGQ0NTc5ZWRjMmE2ZjIwMzJmOTViMWMxODk4MTI5MWI2YzdjMTFlYjM0YjZhOGVkMzZhZmJmYmNlZmZmYiJ9fX0=' # https://minecraft-heads.com/custom-heads/miscellaneous/2300-repeat
+    SPELL_MOB: 'eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvNDRiMDM3OTRiOWIzZTNiNWQwN2UzYmU2OGI5NmFmODdkZjIxNWMzNzUyZTU0NzM2YzgwZjdkNTBiZDM0MzdhNCJ9fX0=' # https://minecraft-heads.com/custom-heads/blocks/18667-wool-rainbow
+    DRIP_LAVA: 'eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvYjY5NjVlNmE1ODY4NGMyNzdkMTg3MTdjZWM5NTlmMjgzM2E3MmRmYTk1NjYxMDE5ZGJjZGYzZGJmNjZiMDQ4In19fQ==' # https://minecraft-heads.com/custom-heads/blocks/1055-lava
+    VILLAGER_ANGRY: 'eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvZmJiMTI1NmViOWY2NjdjMDVmYjIxZTAyN2FhMWQ1MzU1OGJkYTc0ZTI0MGU0ZmE5ZTEzN2Q4NTFjNDE2ZmU5OCJ9fX0=' # https://minecraft-heads.com/custom-heads/miscellaneous/34653-angry-particle
+    VILLAGER_HAPPY: 'eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvYjcyYzA1ZGQ3NjI4OGY0MzI4YTI0MzkxYmY0NzI1ZmQyMjYwNTkyZGIzY2Y5YjJiYzIwMzJkZDA1OTZjZjQ0MCJ9fX0=' # https://minecraft-heads.com/custom-heads/blocks/22339-emerald-block
+    NOTE: 'eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvNGNlZWI3N2Q0ZDI1NzI0YTljYWYyYzdjZGYyZDg4Mzk5YjE0MTdjNmI5ZmY1MjEzNjU5YjY1M2JlNDM3NmUzIn19fQ==' # https://minecraft-heads.com/custom-heads/decoration/1104-note-block
+    PORTAL: 'eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvYjBiZmMyNTc3ZjZlMjZjNmM2ZjczNjVjMmM0MDc2YmNjZWU2NTMxMjQ5ODkzODJjZTkzYmNhNGZjOWUzOWIifX19' # https://minecraft-heads.com/custom-heads/blocks/1109-nether-portal
+    ENCHANTMENT_TABLE: 'eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvYjJmNzkwMTZjYWQ4NGQxYWUyMTYwOWM0ODEzNzgyNTk4ZTM4Nzk2MWJlMTNjMTU2ODI3NTJmMTI2ZGNlN2EifX19' # https://minecraft-heads.com/custom-heads/decoration/763-enchantment-table
+    SNOWBALL: 'eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvMzAyOTFlOTMyNjI5NmFhYWYyN2YyNTVkZTk4MWU3ODc4NjhiYzYyZmU0NjYzOWVlODdiMjhhMTk1ZTlkOTliZiJ9fX0=' # https://minecraft-heads.com/custom-heads/decoration/11470-snowball
+    SLIME: 'eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvNDkzNGE5ZjVhYjE3ODlhN2Q4ZGQ5NmQzMjQ5M2NkYWNmZjU3N2Q4YzgxZTdiMjM5MTdkZmYyZTMyYmQwYmMxMCJ9fX0=' # https://minecraft-heads.com/custom-heads/blocks/1157-slime-ball
+    HEART: 'eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvZjEyNjZiNzQ4MjQyMTE1YjMwMzcwOGQ1OWNlOWQ1NTIzYjdkNzljMTNmNmRiNGViYzkxZGQ0NzIwOWViNzU5YyJ9fX0=' # https://minecraft-heads.com/custom-heads/miscellaneous/34655-heart-particle
+    BARRIER: 'eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvM2VkMWFiYTczZjYzOWY0YmM0MmJkNDgxOTZjNzE1MTk3YmUyNzEyYzNiOTYyYzk3ZWJmOWU5ZWQ4ZWZhMDI1In19fQ==' # https://minecraft-heads.com/custom-heads/blocks/3229-barrier
+    TOTEM: 'eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvYTFkMWNmMjg5MTY1ZmJiMTEyZDg5MjFkNDc3MDhlNDlmYjcwOTI1NzM5YjFjYmQxNzk4ZGFmZjQyMjgwNmU4YSJ9fX0=' # https://minecraft-heads.com/custom-heads/decoration/32234-totem-of-undying
+    NAUTILUS: 'eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvODEyNmNhYzE2ZmQ4ZTQ3NTE2ZTg0NTIwY2QzOTgxYzQ1ZDcwOGY1NWQzNDU4NDk0ZDhmMDgxYzUwNWQ2ZDMwNCJ9fX0=' # https://minecraft-heads.com/custom-heads/decoration/20119-nautilus-shell
+    DRIPPING_HONEY: 'eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvZTZkY2M4ZjM3YWM5OWQ5NTFlY2JjNWRmNWU4NTgyMTMzZjVmMjMwN2U3NjlhZjZiNmNmZmY0MjgyMTgwNjcifX19' # https://minecraft-heads.com/custom-heads/food%20&%20drinks/871-honey\
+    # All trails below are 1.8.8 effects, you can remove them if you're using 1.8+
+    POTION-BREAK: 'eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvZTAxZTA0MGNiMDFjZjJjY2U0NDI4MzU4YWUzMWQyZTI2NjIwN2M0N2NiM2FkMTM5NzA5YzYyMDEzMGRjOGFkNCJ9fX0=' # https://minecraft-heads.com/custom-heads/decoration/22850-orb-blue
+    ENDER_SIGNAL: 'eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvMjc3ZTNkMGY3ZGQ2NmEyNjFjZjk2MmFhMGMxMzMzYjQ5YmZjZjM2MzlmYWFlZWIxNzRkNTk1NzU3ZGY2MTEifX19' # https://minecraft-heads.com/custom-heads/decoration/159-endportal-frame
+    POTION_SWIRL: 'eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvN2VlYTM0NTkwOGQxN2RjNDQ5NjdkMWRjZTQyOGYyMmYyYjE5Mzk3MzcwYWJlYjc3YmRjMTJlMmRkMWNiNiJ9fX0=' # https://minecraft-heads.com/custom-heads/decoration/4103-magic-book
+    FLYING_GLYPH: 'eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvYjJmNzkwMTZjYWQ4NGQxYWUyMTYwOWM0ODEzNzgyNTk4ZTM4Nzk2MWJlMTNjMTU2ODI3NTJmMTI2ZGNlN2EifX19' # https://minecraft-heads.com/custom-heads/decoration/763-enchantment-table
+    FOOTSTEP: 'eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvNGQ5YjY4OTE1YjE0NzJkODllNWUzYTliYTZjOTM1YWFlNjAzZDEyYzE0NTRmMzgyMjgyNWY0M2RmZThhMmNhYyJ9fX0=' # https://minecraft-heads.com/custom-heads/miscellaneous/34657-footstep-particle
+    COLOURED_DUST: 'eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvNDRiMDM3OTRiOWIzZTNiNWQwN2UzYmU2OGI5NmFmODdkZjIxNWMzNzUyZTU0NzM2YzgwZjdkNTBiZDM0MzdhNCJ9fX0=' # https://minecraft-heads.com/custom-heads/blocks/18667-wool-rainbow
+    SNOWBALL_BREAK: 'eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvMzAyOTFlOTMyNjI5NmFhYWYyN2YyNTVkZTk4MWU3ODc4NjhiYzYyZmU0NjYzOWVlODdiMjhhMTk1ZTlkOTliZiJ9fX0=' # https://minecraft-heads.com/custom-heads/decoration/11470-snowball
+    VILLAGER_THUNDERCLOUD: 'eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvZmJiMTI1NmViOWY2NjdjMDVmYjIxZTAyN2FhMWQ1MzU1OGJkYTc0ZTI0MGU0ZmE5ZTEzN2Q4NTFjNDE2ZmU5OCJ9fX0=' # https://minecraft-heads.com/custom-heads/miscellaneous/34653-angry-particle
+    HAPPY_VILLAGER: 'eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvYjcyYzA1ZGQ3NjI4OGY0MzI4YTI0MzkxYmY0NzI1ZmQyMjYwNTkyZGIzY2Y5YjJiYzIwMzJkZDA1OTZjZjQ0MCJ9fX0=' # https://minecraft-heads.com/custom-heads/blocks/22339-emerald-block
+
+# Supports seconds, minutes, hours, days, weeks, months, years
+# Here you can change the placeholders for time denominations
+time-options:
+  minute: 'minute'
+  minutes: 'minutes'
+  second: 'second'
+  seconds: 'seconds'
+
+listall-format:
+  header: '&8&m-------------&8< &7Listing Active RPGHorses &8>&m-------------'
+  body: ' &6{PLAYER} &8- &7Horse &6#{HORSE-NUMBER} &8(&7{LOCATION}&8)'
+  footer: '&8&m--------------------------------------------------'
+
+check-format:
+  header: '&8&m---------&8< &7Listing Active RPGHorses Within &6{RADIUS}m &8>&m---------'
+  body: ' &6{PLAYER} &8- &7Horse &6#{HORSE-NUMBER} &8(&7{LOCATION}&8)'
+  footer: '&8&m-------------------------------------------------'
+
+# Defines how {XP} should look like
+progress-bar:
+  # Character for each percentage point of the progress bar
+  character: '\u2B1B'
+  # Color for the completed bars
+  completed-color: '&a'
+  # Color for the uncompleted bars
+  missing-color: '&c'
+  # Number of bars per progress bar (ex. 10 == 10% per bar)
+  count: 10
+
+# Commands to be run upon spawning, despawning or upgrading a horse (success or failure).
+command-options:
+  on-spawn: []
+  on-despawn: []
+  on-upgrade-success: []
+  on-upgrade-fail: []
+
+messages:
+  horse-died: '{PREFIX}&6{HORSE-NAME} &7has died, it will respawn in &6{TIME}'
+  max-xp: '{PREFIX}&6{HORSE-NAME} &7has reached max XP, &6right-click &7&6{HORSE-NAME} &7in your stable to upgrade it'
+  not-enough-xp: '{PREFIX}&6{HORSE-NAME} &7doesn''t have enough XP to level up'
+  no-permission-particle: '{PREFIX}You haven''t unlocked the &6{PARTICLE} &7particle effect'
+  particle-set: '{PREFIX}Trail for &6{HORSE-NAME} &7set to &6{PARTICLE}'
+  particle-fail: '{PREFIX}You must call a RPGHorse first to set it''s trail'
+  horse-crate-bought: '{PREFIX}&6{HORSE-CRATE} &7bought for &6${PRICE}'
+  cant-afford-crate: '{PREFIX}You can''t afford that crate'
+  market-horse-removed: '{PREFIX}&6{HORSE-NAME} &7removed from the market'
+  market-horse-limit: '{PREFIX}You have too many RPGHorses to buy another one'
+  market-horse-sold: '{PREFIX}Your horse has been sold to &6{PLAYER} &7for &6${PRICE}'
+  market-horse-bought: '{PREFIX}You have bought an RPGHorse from &6{PLAYER} &7for &6${PRICE}'
+  market-buy-own-horse: '{PREFIX}You may not buy your own RPGHorse'
+  cant-afford-market-horse: '{PREFIX}You can''t afford to buy that RPGHorse'
+  horse-added-to-market: '{PREFIX}&6{HORSE-NAME} &7added to market successfully'
+  horse-already-in-market: '{PREFIX}&6{HORSE-NAME} &7is already listed in the market'
+  horse-market-fail: '{PREFIX}Your &6{HORSE-NAME} &7must be alive and in your stable to be sold in the
+  market'
+  horse-is-in-market: '{PREFIX}You can''t call your horse while it''s in the market'
+  horse-is-dead: '{PREFIX}You can''t call your horse when it''s dead'
+  cant-afford-upgrade: '{PREFIX}You can''t afford to upgrade &6{HORSE-NAME}'
+  upgrade-horse-success: '{PREFIX}Upgraded &6{HORSE-NAME} &7to tier &6{TIER} &7successfully'
+  upgrade-horse-failure: '{PREFIX}Failed to upgrade &6{HORSE-NAME} &7to tier &6{TIER}'
+  max-tier-horse: '{PREFIX}&6{HORSE-NAME} &7is already max tier!'
+  rename-horse: '{PREFIX}What would you like to rename &6{HORSE-NAME} &7to?'
+  horse-renamed: '{PREFIX}&6{OLD-HORSE-NAME} &7was renamed to &6{HORSE-NAME}'
+  confirm-remove-horse: '{PREFIX}Are you sure you want to remove &6{HORSE-NAME}&7? Type
+  &6/confirm'
+  not-your-horse: '{PREFIX}That RPGHorse does not belong to you!'
+  horse-sent-to-stable: '{PREFIX}Your RPGHorse was sent back to the stable by &6{PLAYER}'
+  horse-removenear: '{PREFIX}&6{HORSE-COUNT} &7rpghorses were removed nearby'
+  horse-purgeall: '{PREFIX}&6{HORSE-COUNT} &7horses were removed nearby'
+  horse-upgraded: '{PREFIX}&6{PLAYER}''s &7RPGHorse &8(&6{HORSE-NUMBER}&8) &7upgraded to &6{TIER} &7successfully'
+  your-horse-was-upgraded: '{PREFIX}&6{HORSE-NAME} &7was upgraded to &6{TIER} &7by &6{PLAYER}'
+  max-horse-tier: '{PREFIX}&6{PLAYER}''s &7RPGHorse &8(&6{HORSE-NUMBER}&8) &7is already max tier'
+  horse-removed: '{PREFIX}&6{PLAYER}''s &7RPGHorse &8(&6{HORSE-NUMBER}&8) &7removed successfully'
+  your-horse-was-removed: '{PREFIX}&6{HORSE-NAME} &7has been removed by {PLAYER}'
+  horse-set: '{PREFIX}&6{PLAYER}''s &7RPGHorse &8(&6{HORSE-NUMBER}&8) &7updated successfully'
+  horse-given: '{PREFIX}RPGHorse given to &6{PLAYER} &7successfully'
+  horse-received: '{PREFIX}You have received an RPGHorse from &6{PLAYER}'
+  horse-limit: '{PREFIX}&6{PLAYER} &7tried to give you a RPGHorse but you''ve reach your limit!'
+  no-horses: '{PREFIX}You don''t have any horses in your stable'
+  config-reloaded: '{PREFIX}Configuration file reloaded'
+  no-permission: '&cYou don''t have permission for that'

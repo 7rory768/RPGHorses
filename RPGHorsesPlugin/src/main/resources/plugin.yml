@@ -1,0 +1,45 @@
+main: org.plugins.rpghorses.RPGHorsesMain
+name: RPGHorses
+author: 7rory768
+version: ${project.version}
+api-version: 1.13
+depend: [Vault]
+load: POSTWORLD
+
+commands:
+  rpghorses:
+    aliases: [rpghorse, rpghorses, horses, horse]
+  rpghorsesadmin:
+    aliases: [rpghorseadmin, rpghorsesadmin, horseadmin, horsesadmin]
+
+permissions:
+  rpghorses.trail.*:
+    default: op
+  rpghorses.market:
+    default: true
+  rpghorses.sell:
+    default: true
+  rpghorses.buy:
+    default: op
+  rpghorses.stable:
+    default: true
+  rpghorses.upgrade:
+    default: op
+  rpghorses.check:
+    default: op
+  rpghorses.removenear:
+    default: op
+  rpghorses.listall:
+    default: op
+  rpghorses.remove:
+    default: op
+  rpghorses.set:
+    default: op
+  rpghorses.give:
+    default: op
+  rpghorses.limit.*:
+    default: op
+  rpghorses.reload:
+    default: op
+  rpghorses.help:
+    default: op
