@@ -62,6 +62,9 @@ horse-options:
     # How many particles should appear at once
     volume: 3
     y-offset: 0.25
+  # Should regular horses be disabled?
+  # This will despawn all horses upon start and prevent any from spawning
+  prevent-regular-horses: false
 
 horse-tiers:
   # 1 defines the upgrades that occur from 1 -> 2
