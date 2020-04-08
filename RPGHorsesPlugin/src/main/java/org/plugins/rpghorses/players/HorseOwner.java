@@ -2,6 +2,7 @@ package org.plugins.rpghorses.players;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
+import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
@@ -146,6 +147,19 @@ public class HorseOwner {
 		return Bukkit.getPlayer(uuid);
 	}
 
+	public String getPlayerName() {
+		OfflinePlayer player = getPlayer();
+		if (player != null) {
+			return player.getName();
+		} else {
+			player = Bukkit.getOfflinePlayer(uuid);
+			if (player != null && player.hasPlayedBefore()) {
+				return player.getName();
+			}
+		}
+		return "";
+	}
+	
 	public StableGUI getStableGUI() {
 		return stableGUI;
 	}

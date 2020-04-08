@@ -29,6 +29,7 @@ public class PlayerTeleportListener implements Listener {
     public void onTeleport(PlayerTeleportEvent e) {
         Player p = e.getPlayer();
         HorseOwner horseOwner = this.horseOwnerManager.getHorseOwner(p);
+        if (horseOwner != null) {
         RPGHorse currentHorse = horseOwner.getCurrentHorse();
 
         if (currentHorse != null && !horseOwner.isMountingHorse() && !horseOwner.isDeMountingHorse() && !horseOwner.isChangingHorse()) {
@@ -41,6 +42,6 @@ public class PlayerTeleportListener implements Listener {
         } else if (horseOwner.isChangingHorse()) {
             horseOwner.setChangingHorse(false);
         }
-    }
+    }}
 
 }

@@ -218,7 +218,7 @@ public class RPGHorsesCommand implements CommandExecutor {
 		}
 		Player p = (Player) sender;
 		
-		HorseOwner horseOwner = this.horseOwnerManager.getHorseOwner(p.getUniqueId());
+		HorseOwner horseOwner = this.horseOwnerManager.getHorseOwner(p);
 		if (horseOwner.getStableGUI() == null) {
 			this.stableGUIManager.setupStableGUI(horseOwner);
 		} else {
