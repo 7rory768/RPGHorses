@@ -152,8 +152,8 @@
                 <artifactId>maven-jar-plugin</artifactId>
                 <version>3.2.0</version>
                 <configuration>
-                    <finalName>${project.name}</finalName>
-                    <outputDirectory>${project.basedir}/out/</outputDirectory>
+                    <finalName>${project.parent.name}</finalName>
+                    <outputDirectory>${project.parent.basedir}/out/</outputDirectory>
                 </configuration>
             </plugin>
         </plugins>

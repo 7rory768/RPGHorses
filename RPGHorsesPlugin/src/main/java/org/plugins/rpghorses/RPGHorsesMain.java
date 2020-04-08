@@ -29,7 +29,6 @@ import java.util.Map;
 TODO:
  - Change the trail skin-value to the trail skin-value the horse is currently using
  - Change it so admins can go into other players stables/horse guis
- - Keep horse gui open after calling/dismissing horse
  */
 
 public class RPGHorsesMain extends JavaPlugin {
@@ -140,12 +139,12 @@ public class RPGHorsesMain extends JavaPlugin {
 		this.rpgHorseManager = new RPGHorseManager(this, this.horseOwnerManager, this.economy);
 		this.stableGuiManager = new StableGUIManager(this, this.horseOwnerManager, this.rpgHorseManager, this.itemUtil, this.messagingUtil);
 		this.marketGUIManager = new MarketGUIManager(this, this.horseOwnerManager, this.rpgHorseManager, this.marketConfig, this.itemUtil);
-		this.horseGUIManager = new HorseGUIManager(this, this.stableGuiManager);
+		this.horseGUIManager = new HorseGUIManager(this, this.horseOwnerManager, this.stableGuiManager);
 		this.messageQueuer = new MessageQueuer(this.playerConfigs, this.messagingUtil);
 		this.horseDespawner = new HorseDespawner(this, this.horseOwnerManager, this.rpgHorseManager);
 		this.particleManager = new ParticleManager(this, this.horseOwnerManager);
 		this.trailGUIManager = new TrailGUIManager(this, particleManager, this.horseOwnerManager);
-		this.sellGUIManager = new SellGUIManager(this, stableGuiManager);
+		this.sellGUIManager = new SellGUIManager(this, stableGuiManager, this.horseOwnerManager);
 		this.xpManager = new XPManager(this, rpgHorseManager, messagingUtil);
 	}
 
@@ -166,7 +165,7 @@ public class RPGHorsesMain extends JavaPlugin {
 
 	public void loadCommands() {
 		this.getCommand("rpghorses").setExecutor(new RPGHorsesCommand(this, this.horseOwnerManager, this.stableGuiManager, this.marketGUIManager, this.horseCrateManager, this.particleManager, this.economy, this.messagingUtil));
-		this.getCommand("rpghorsesadmin").setExecutor(new RPGHorsesAdminCommand(this, this.horseOwnerManager, this.rpgHorseManager, this.stableGuiManager, this.horseDespawner, this.horseCrateManager, this.marketGUIManager, this.particleManager, this.messageQueuer, this.messagingUtil));
+		this.getCommand("rpghorsesadmin").setExecutor(new RPGHorsesAdminCommand(this, this.horseOwnerManager, this.rpgHorseManager, this.stableGuiManager, this.horseGUIManager, this.sellGUIManager, this.trailGUIManager, this.horseDespawner, this.horseCrateManager, this.marketGUIManager, this.particleManager, this.messageQueuer, this.messagingUtil));
 	}
 
 	public void setupHelpMessage() {
