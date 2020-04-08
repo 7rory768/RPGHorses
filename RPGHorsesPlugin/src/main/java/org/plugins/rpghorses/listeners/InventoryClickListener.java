@@ -167,6 +167,7 @@ public class InventoryClickListener implements Listener {
 					this.messagingUtil.sendMessage(p, this.plugin.getConfig().getString("messages.confirm-remove-horse").replace("{HORSE-NUMBER}", "" + horseNumber), rpgHorse);
 				} else if (slot == ItemUtil.getSlot(plugin.getConfig(), "horse-gui-options.horse-item")) {
 					clickRPGHorse(p, horseOwner, rpgHorse);
+
 				}
 			}
 		} else if (horseOwner.isInGUI(GUILocation.TRAILS_GUI)) {
@@ -330,7 +331,12 @@ public class InventoryClickListener implements Listener {
 				Bukkit.getServer().dispatchCommand(Bukkit.getConsoleSender(), MessagingUtil.format(cmd.replace("{PLAYER}", p.getName())));
 			}
 		}
-		p.closeInventory();
+
+		if (horseOwner.getGUILocation() == GUILocation.HORSE_GUI) {
+			horseOwner.openHorseGUI(horseOwner.getHorseGUI());
+		} else if (horseOwner.getGUILocation() == GUILocation.STABLE_GUI) {
+			horseOwner.openStableGUIPage(horseOwner.getCurrentStableGUIPage());
+		}
 	}
 
 }
