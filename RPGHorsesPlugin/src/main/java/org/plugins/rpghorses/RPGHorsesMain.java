@@ -26,36 +26,36 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 
 /*
-Future ideas
 TODO:
  - Change the trail skin-value to the trail skin-value the horse is currently using
  - Change it so admins can go into other players stables/horse guis
  - Keep horse gui open after calling/dismissing horse
  */
+
 public class RPGHorsesMain extends JavaPlugin {
 
 	private static RPGHorsesMain     plugin;
 	private static Version           version = Version.v1_15;
 	private static NMS               NMS;
 	private        RPGHorseManager   rpgHorseManager;
-	private CustomConfig      marketConfig;
-	private PlayerConfigs     playerConfigs;
-	private ItemUtil          itemUtil;
-	private RPGMessagingUtil  messagingUtil;
-	private HorseDespawner    horseDespawner;
-	private HorseOwnerManager horseOwnerManager;
-	private StableGUIManager  stableGuiManager;
-	private MarketGUIManager  marketGUIManager;
-	private HorseGUIManager   horseGUIManager;
-	private TrailGUIManager   trailGUIManager;
-	private SellGUIManager    sellGUIManager;
-	private HorseCrateManager horseCrateManager;
-	private ParticleManager   particleManager;
-	private XPManager         xpManager;
-	private UpdateNotifier updateNotifier;
-	private MessageQueuer     messageQueuer;
-	private Permission        permissions;
-	private Economy           economy;
+	private        CustomConfig      marketConfig;
+	private        PlayerConfigs     playerConfigs;
+	private        ItemUtil          itemUtil;
+	private        RPGMessagingUtil  messagingUtil;
+	private        HorseDespawner    horseDespawner;
+	private        HorseOwnerManager horseOwnerManager;
+	private        StableGUIManager  stableGuiManager;
+	private        MarketGUIManager  marketGUIManager;
+	private        HorseGUIManager   horseGUIManager;
+	private        TrailGUIManager   trailGUIManager;
+	private        SellGUIManager    sellGUIManager;
+	private        HorseCrateManager horseCrateManager;
+	private        ParticleManager   particleManager;
+	private        XPManager         xpManager;
+	private        UpdateNotifier    updateNotifier;
+	private        MessageQueuer     messageQueuer;
+	private        Permission        permissions;
+	private        Economy           economy;
 
 	private Map<String, String> helpMessages = new LinkedHashMap<>();
 

@@ -26,22 +26,16 @@
             <url>https://oss.sonatype.org/content/groups/public/</url>
         </repository>
         <repository>
-            <id>jitpack.io</id>
-            <url>https://jitpack.io</url>
-        </repository>
-        <repository>
             <id>CodeMC</id>
             <url>https://repo.codemc.org/repository/maven-public</url>
+        </repository>
+        <repository>
+            <id>jitpack.io</id>
+            <url>https://jitpack.io</url>
         </repository>
     </repositories>
 
     <dependencies>
-        <dependency>
-            <groupId>org.plugins.roryslibrary</groupId>
-            <artifactId>RorysLibrary</artifactId>
-            <version>1.0.0</version>
-            <scope>compile</scope>
-        </dependency>
         <dependency>
             <groupId>org.bstats</groupId>
             <artifactId>bstats-bukkit</artifactId>
@@ -59,6 +53,12 @@
             <artifactId>Vault</artifactId>
             <version>1.7.2</version>
             <optional>true</optional>
+        </dependency>
+        <dependency>
+            <groupId>com.github.7rory768</groupId>
+            <artifactId>Rorys-Library</artifactId>
+            <version>master-e77ad39-1</version>
+            <scope>compile</scope>
         </dependency>
         <dependency>
             <groupId>org.plugins.rpghorses</groupId>
@@ -132,6 +132,10 @@
                             <pattern>org.bstats</pattern>
                             <shadedPattern>org.plugins.rpghorses.utils</shadedPattern>
                         </relocation>
+                        <relocation>
+                            <pattern>rorys.library</pattern>
+                            <shadedPattern>org.plugins.rpghorses.rorys.library</shadedPattern>
+                        </relocation>
                     </relocations>
                 </configuration>
                 <executions>
@@ -142,6 +146,15 @@
                         </goals>
                     </execution>
                 </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-jar-plugin</artifactId>
+                <version>3.2.0</version>
+                <configuration>
+                    <finalName>${project.name}</finalName>
+                    <outputDirectory>${project.basedir}/out/</outputDirectory>
+                </configuration>
             </plugin>
         </plugins>
     </build>

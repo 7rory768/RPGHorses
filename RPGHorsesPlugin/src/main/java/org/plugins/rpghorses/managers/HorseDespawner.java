@@ -27,7 +27,6 @@ public class HorseDespawner {
         this.horseOwnerManager = horseOwnerManager;
         this.rpgHorseManager = rpgHorseManager;
 
-        // TODO: Make auto horse despawning optional
         if (plugin.getConfig().getBoolean("horse-options.prevent-regular-horses")) {
             this.despawnAllHorses();
         } else {

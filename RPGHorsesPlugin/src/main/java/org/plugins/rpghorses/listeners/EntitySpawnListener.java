@@ -30,7 +30,6 @@ public class EntitySpawnListener implements Listener {
 			EntityType entityType = e.getEntityType();
 			if (this.rpgHorseManager.isValidEntityType(entityType)) {
 				CreatureSpawnEvent.SpawnReason spawnReason = e.getSpawnReason();
-				// TODO: Make auto horse despawning optional
 				for (HorseOwner horseOwner : this.horseOwnerManager.getHorseOwners()) {
 					if (horseOwner.isSpawningHorse() && spawnReason == CreatureSpawnEvent.SpawnReason.CUSTOM) {
 						horseOwner.setSpawningHorse(false);

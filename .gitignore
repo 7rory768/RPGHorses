@@ -8,3 +8,5 @@
 /RPGHorsesPlugin/target/
 /RPGHorsesPlugin/Vault.jar
 /1_15_2/spigot-1.15.2.jar
+*/dependency-reduced-pom.xml
+out
