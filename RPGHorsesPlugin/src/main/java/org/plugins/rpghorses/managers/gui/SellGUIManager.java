@@ -3,15 +3,18 @@ package org.plugins.rpghorses.managers.gui;
 import org.bukkit.Bukkit;
 import org.bukkit.Sound;
 import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.plugins.rpghorses.RPGHorsesMain;
 import org.plugins.rpghorses.guis.GUIItem;
+import org.plugins.rpghorses.guis.GUILocation;
 import org.plugins.rpghorses.guis.ItemPurpose;
 import org.plugins.rpghorses.guis.PriceGUIItem;
 import org.plugins.rpghorses.guis.instances.HorseGUI;
 import org.plugins.rpghorses.guis.instances.SellGUI;
 import org.plugins.rpghorses.horses.RPGHorse;
+import org.plugins.rpghorses.managers.HorseOwnerManager;
 import org.plugins.rpghorses.players.HorseOwner;
 import org.plugins.rpghorses.utils.RPGMessagingUtil;
 import rorys.library.util.ItemUtil;
@@ -22,15 +25,17 @@ public class SellGUIManager {
 
 	private final RPGHorsesMain plugin;
 	private final StableGUIManager stableGUIManager;
+	private final HorseOwnerManager horseOwnerManager;
 
 	private HashSet<GUIItem> guiItems = new HashSet<GUIItem>();
 	private int horseSlot;
 	private String title = "";
 	private int rows;
 
-	public SellGUIManager(RPGHorsesMain plugin, StableGUIManager stableGUIManager) {
+	public SellGUIManager(RPGHorsesMain plugin, StableGUIManager stableGUIManager, HorseOwnerManager horseOwnerManager) {
 		this.plugin = plugin;
 		this.stableGUIManager = stableGUIManager;
+		this.horseOwnerManager = horseOwnerManager;
 
 		reload();
 	}
@@ -71,6 +76,13 @@ public class SellGUIManager {
 				guiItem = new GUIItem(item, itemPurpose, slot);
 			}
 			guiItems.add(guiItem);
+		}
+
+		for (Player p : Bukkit.getOnlinePlayers()) {
+			HorseOwner horseOwner = horseOwnerManager.getHorseOwner(p);
+			if (horseOwner.getGUILocation() == GUILocation.SELL_GUI) {
+				horseOwner.openSellGUI(createSellGUI(horseOwner.getHorseGUI()));
+			}
 		}
 	}
 

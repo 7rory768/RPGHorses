@@ -16,8 +16,7 @@ import org.plugins.rpghorses.horseinfo.LegacyHorseInfo;
 import org.plugins.rpghorses.horses.HorseCrate;
 import org.plugins.rpghorses.horses.RPGHorse;
 import org.plugins.rpghorses.managers.*;
-import org.plugins.rpghorses.managers.gui.MarketGUIManager;
-import org.plugins.rpghorses.managers.gui.StableGUIManager;
+import org.plugins.rpghorses.managers.gui.*;
 import org.plugins.rpghorses.players.HorseOwner;
 import org.plugins.rpghorses.utils.RPGMessagingUtil;
 import rorys.library.util.*;
@@ -30,17 +29,23 @@ public class RPGHorsesAdminCommand implements CommandExecutor {
 	private final HorseOwnerManager horseOwnerManager;
 	private final RPGHorseManager   rpgHorseManager;
 	private final StableGUIManager  stableGuiManager;
+	private final HorseGUIManager  horseGUIManager;
+	private SellGUIManager sellGUIManager;
+	private TrailGUIManager trailGUIManager;
+	private final MarketGUIManager  marketGUIManager;
 	private final HorseDespawner    horseDespawner;
 	private final HorseCrateManager horseCrateManager;
-	private final MarketGUIManager  marketGUIManager;
 	private final ParticleManager   particleManager;
 	private final MessageQueuer     messageQueuer;
 	private final RPGMessagingUtil  messagingUtil;
 
-	public RPGHorsesAdminCommand(RPGHorsesMain plugin, HorseOwnerManager horseOwnerManager, RPGHorseManager rpgHorseManager, StableGUIManager stableGuiManager, HorseDespawner horseDespawner, HorseCrateManager horseCrateManager, MarketGUIManager marketGUIManager, ParticleManager particleManager, MessageQueuer messageQueuer, RPGMessagingUtil messagingUtil) {
+	public RPGHorsesAdminCommand(RPGHorsesMain plugin, HorseOwnerManager horseOwnerManager, RPGHorseManager rpgHorseManager, StableGUIManager stableGuiManager, HorseGUIManager horseGUIManager, SellGUIManager sellGUIManager, TrailGUIManager trailGUIManager, HorseDespawner horseDespawner, HorseCrateManager horseCrateManager, MarketGUIManager marketGUIManager, ParticleManager particleManager, MessageQueuer messageQueuer, RPGMessagingUtil messagingUtil) {
 		this.plugin = plugin;
 		this.horseOwnerManager = horseOwnerManager;
 		this.rpgHorseManager = rpgHorseManager;
+		this.horseGUIManager = horseGUIManager;
+		this.sellGUIManager = sellGUIManager;
+		this.trailGUIManager = trailGUIManager;
 		this.stableGuiManager = stableGuiManager;
 		this.horseDespawner = horseDespawner;
 		this.horseCrateManager = horseCrateManager;
@@ -65,6 +70,9 @@ public class RPGHorsesAdminCommand implements CommandExecutor {
 				this.plugin.reloadConfig();
 				this.messagingUtil.reload();
 				this.stableGuiManager.reload();
+				this.horseGUIManager.reload();
+				this.sellGUIManager.reload();
+				this.trailGUIManager.reload();
 				this.horseDespawner.reloadIdleTime();
 				TimeUtil.refreshUnitStrings(this.plugin.getConfig(), "time-options.");
 				this.horseCrateManager.loadHorseCrates();
