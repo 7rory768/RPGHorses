@@ -32,56 +32,56 @@ TODO:
  */
 
 public class RPGHorsesMain extends JavaPlugin {
-
-	private static RPGHorsesMain     plugin;
-	private static Version           version = Version.v1_15;
-	private static NMS               NMS;
-	private        RPGHorseManager   rpgHorseManager;
-	private        CustomConfig      marketConfig;
-	private        PlayerConfigs     playerConfigs;
-	private        ItemUtil          itemUtil;
-	private        RPGMessagingUtil  messagingUtil;
-	private        HorseDespawner    horseDespawner;
-	private        HorseOwnerManager horseOwnerManager;
-	private        StableGUIManager  stableGuiManager;
-	private        MarketGUIManager  marketGUIManager;
-	private        HorseGUIManager   horseGUIManager;
-	private        TrailGUIManager   trailGUIManager;
-	private        SellGUIManager    sellGUIManager;
-	private        HorseCrateManager horseCrateManager;
-	private        ParticleManager   particleManager;
-	private        XPManager         xpManager;
-	private        UpdateNotifier    updateNotifier;
-	private        MessageQueuer     messageQueuer;
-	private        Permission        permissions;
-	private        Economy           economy;
-
+	
+	private static RPGHorsesMain plugin;
+	private static Version version = Version.v1_15;
+	private static NMS NMS;
+	private RPGHorseManager rpgHorseManager;
+	private CustomConfig marketConfig;
+	private PlayerConfigs playerConfigs;
+	private ItemUtil itemUtil;
+	private RPGMessagingUtil messagingUtil;
+	private HorseDespawner horseDespawner;
+	private HorseOwnerManager horseOwnerManager;
+	private StableGUIManager stableGuiManager;
+	private MarketGUIManager marketGUIManager;
+	private HorseGUIManager horseGUIManager;
+	private TrailGUIManager trailGUIManager;
+	private SellGUIManager sellGUIManager;
+	private HorseCrateManager horseCrateManager;
+	private ParticleManager particleManager;
+	private XPManager xpManager;
+	private UpdateNotifier updateNotifier;
+	private MessageQueuer messageQueuer;
+	private Permission permissions;
+	private Economy economy;
+	
 	private Map<String, String> helpMessages = new LinkedHashMap<>();
-
+	
 	public static Version getVersion() {
 		return version;
 	}
-
+	
 	public static NMS getNMS() {
 		return NMS;
 	}
-
+	
 	public static RPGHorsesMain getInstance() {
 		return plugin;
 	}
-
+	
 	public RPGHorseManager getRpgHorseManager() {
 		return rpgHorseManager;
 	}
-
+	
 	@Override
 	public void onEnable() {
 		plugin = this;
-
-
+		
+		
 		version = Version.getByName(Bukkit.getBukkitVersion().split("-")[0]);
 		Bukkit.getLogger().info("[RPGHorses] " + version.getName() + " detected");
-
+		
 		try {
 			final Class<?> clazz = Class.forName("org.plugins.rpghorses." + version.getAbstractName() + ".NMSHandler");
 			if (NMS.class.isAssignableFrom(clazz)) {
@@ -91,9 +91,9 @@ public class RPGHorsesMain extends JavaPlugin {
 			this.getLogger().info("Could not find nms support for this version (" + version.getName() + ").");
 			this.getLogger().info("Because of this, horses will wander when unmounted");
 		}
-
+		
+		this.messagingUtil = new RPGMessagingUtil(this);
 		if (this.loadHooks()) {
-			this.messagingUtil = new RPGMessagingUtil(this);
 			messagingUtil.sendMessage(Bukkit.getConsoleSender(), "[RPGHorses] Successfully hooked into &aVault");
 			this.loadConfigs();
 			this.initializeVariables();
@@ -106,30 +106,30 @@ public class RPGHorsesMain extends JavaPlugin {
 			plugin.getServer().getPluginManager().disablePlugin(this);
 		}
 	}
-
+	
 	public void loadConfigs() {
 		CustomConfigUtil.loadDefaultConfig(this);
-
+		
 		this.playerConfigs = new PlayerConfigs(this);
-
+		
 		this.marketConfig = new CustomConfig(this, "market");
 		CustomConfigUtil.loadConfig(this.marketConfig);
 	}
-
+	
 	public boolean loadHooks() {
 		RegisteredServiceProvider<Permission> permissionProvider = getServer().getServicesManager().getRegistration(Permission.class);
 		if (permissionProvider != null) {
 			this.permissions = permissionProvider.getProvider();
 		}
-
+		
 		RegisteredServiceProvider<Economy> economyProvider = getServer().getServicesManager().getRegistration(Economy.class);
 		if (economyProvider != null) {
 			this.economy = economyProvider.getProvider();
 		}
-
+		
 		return this.permissions != null && this.economy != null;
 	}
-
+	
 	public void initializeVariables() {
 		this.updateNotifier = new UpdateNotifier(this, messagingUtil, 76836);
 		this.updateNotifier.checkForUpdate();
@@ -147,7 +147,7 @@ public class RPGHorsesMain extends JavaPlugin {
 		this.sellGUIManager = new SellGUIManager(this, stableGuiManager, this.horseOwnerManager);
 		this.xpManager = new XPManager(this, rpgHorseManager, messagingUtil);
 	}
-
+	
 	public void registerEvents() {
 		new EntityDamageByEntityListener(this, this.rpgHorseManager, this.stableGuiManager);
 		new EntityDeathListener(this, this.rpgHorseManager, this.stableGuiManager, xpManager, messagingUtil);
@@ -162,16 +162,17 @@ public class RPGHorsesMain extends JavaPlugin {
 		new PreCommandListener(this, this.rpgHorseManager, this.stableGuiManager, this.marketGUIManager, this.messagingUtil);
 		new VehicleListener(this, this.rpgHorseManager, this.xpManager, this.messagingUtil);
 	}
-
+	
 	public void loadCommands() {
-		this.getCommand("rpghorses").setExecutor(new RPGHorsesCommand(this, this.horseOwnerManager, this.stableGuiManager, this.marketGUIManager, this.horseCrateManager, this.particleManager, this.economy, this.messagingUtil));
+		this.getCommand("rpghorses").setExecutor(new RPGHorsesCommand(this, this.horseOwnerManager, this.rpgHorseManager, this.stableGuiManager, this.marketGUIManager, this.horseCrateManager, this.particleManager, this.economy, this.messagingUtil));
 		this.getCommand("rpghorsesadmin").setExecutor(new RPGHorsesAdminCommand(this, this.horseOwnerManager, this.rpgHorseManager, this.stableGuiManager, this.horseGUIManager, this.sellGUIManager, this.trailGUIManager, this.horseDespawner, this.horseCrateManager, this.marketGUIManager, this.particleManager, this.messageQueuer, this.messagingUtil));
 	}
-
+	
 	public void setupHelpMessage() {
 		helpMessages.put("                                &6&lRPGHorses", "rpghorses.help");
 		helpMessages.put("&6/rpghorses &8- &7Opens the stable gui", "rpghorses.stable");
 		helpMessages.put("&6/{LABEL} help &8- &7Displays this message", "rpghorses.help");
+		helpMessages.put("&6/rpghorses claim &8- &7Claims a wild horse as an RPG horse", "rpghorses.claim");
 		helpMessages.put("&6/rpghorses market &8- &7Opens the market", "rpghorses.market");
 		helpMessages.put("&6/rpghorses sell <horse-number> <price> &8- &7Sells a horse to the market", "rpghorses.sell");
 		helpMessages.put("&6/rpghorses buy <horse-crate> <price> &8- &7Buys a new horse", "rpghorses.buy");
@@ -186,32 +187,32 @@ public class RPGHorsesMain extends JavaPlugin {
 		helpMessages.put("&6/rpghorsesadmin removenear <radius> &8- &7Removes all RPGHorses within a certain radius", "rpghorses.removenear");
 		helpMessages.put("&6/rpghorsesadmin reload &8- &7Reloads the configuration file", "rpghorses.reload");
 	}
-
+	
 	@Override
 	public void onDisable() {
 		this.horseDespawner.despawnAllRPGHorses();
-
+		
 		for (HorseOwner horseOwner : this.horseOwnerManager.getHorseOwners()) {
 			if (horseOwner.getGUILocation() != GUILocation.NONE) {
 				horseOwner.getPlayer().closeInventory();
 			}
 		}
-
+		
 		this.horseOwnerManager.saveData();
 	}
-
+	
 	public void sendHelpMessage(CommandSender sender, String label) {
 		label = label.toLowerCase();
-		String  rpgReplace    = label.contains("rpg") ? "rpg" : "";
-		String  horsesReplace = label.contains("horses") ? "horses" : "horse";
-		boolean allPerms      = sender.hasPermission("rpghorses.*") || sender.isOp();
+		String rpgReplace = label.contains("rpg") ? "rpg" : "";
+		String horsesReplace = label.contains("horses") ? "horses" : "horse";
+		boolean allPerms = sender.hasPermission("rpghorses.*") || sender.isOp();
 		for (String line : plugin.getHelpMessages().keySet()) {
 			if (allPerms || sender.hasPermission(plugin.getHelpMessages().get(line))) {
 				this.messagingUtil.sendMessage(sender, line.replace("horses", horsesReplace).replace("rpg", rpgReplace).replace("{LABEL}", label));
 			}
 		}
 	}
-
+	
 	public Map<String, String> getHelpMessages() {
 		return helpMessages;
 	}

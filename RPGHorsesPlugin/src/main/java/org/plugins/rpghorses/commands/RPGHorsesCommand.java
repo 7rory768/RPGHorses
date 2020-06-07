@@ -1,18 +1,25 @@
 package org.plugins.rpghorses.commands;
 
 import net.milkbowl.vault.economy.Economy;
+import org.bukkit.Bukkit;
 import org.bukkit.Effect;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.Particle;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
+import org.bukkit.entity.Entity;
+import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.plugins.rpghorses.RPGHorsesMain;
+import org.plugins.rpghorses.events.RPGHorseClaimEvent;
 import org.plugins.rpghorses.horseinfo.LegacyHorseInfo;
 import org.plugins.rpghorses.horses.HorseCrate;
 import org.plugins.rpghorses.horses.RPGHorse;
-import org.plugins.rpghorses.managers.*;
+import org.plugins.rpghorses.managers.HorseCrateManager;
+import org.plugins.rpghorses.managers.HorseOwnerManager;
+import org.plugins.rpghorses.managers.ParticleManager;
+import org.plugins.rpghorses.managers.RPGHorseManager;
 import org.plugins.rpghorses.managers.gui.MarketGUIManager;
 import org.plugins.rpghorses.managers.gui.StableGUIManager;
 import org.plugins.rpghorses.players.HorseOwner;
@@ -21,18 +28,20 @@ import rorys.library.util.NumberUtil;
 
 public class RPGHorsesCommand implements CommandExecutor {
 	
-	private final RPGHorsesMain     plugin;
+	private final RPGHorsesMain plugin;
 	private final HorseOwnerManager horseOwnerManager;
-	private final StableGUIManager  stableGUIManager;
-	private final MarketGUIManager  marketGUIManager;
+	private final RPGHorseManager rpgHorseManager;
+	private final StableGUIManager stableGUIManager;
+	private final MarketGUIManager marketGUIManager;
 	private final HorseCrateManager horseCrateManager;
-	private final ParticleManager   particleManager;
-	private final Economy           economy;
-	private final RPGMessagingUtil  messagingUtil;
+	private final ParticleManager particleManager;
+	private final Economy economy;
+	private final RPGMessagingUtil messagingUtil;
 	
-	public RPGHorsesCommand(RPGHorsesMain plugin, HorseOwnerManager horseOwnerManager, StableGUIManager stableGUIManager, MarketGUIManager marketGUIManager, HorseCrateManager horseCrateManager, ParticleManager particleManager, Economy economy, RPGMessagingUtil messagingUtil) {
+	public RPGHorsesCommand(RPGHorsesMain plugin, HorseOwnerManager horseOwnerManager, RPGHorseManager rpgHorseManager, StableGUIManager stableGUIManager, MarketGUIManager marketGUIManager, HorseCrateManager horseCrateManager, ParticleManager particleManager, Economy economy, RPGMessagingUtil messagingUtil) {
 		this.plugin = plugin;
 		this.horseOwnerManager = horseOwnerManager;
+		this.rpgHorseManager = rpgHorseManager;
 		this.stableGUIManager = stableGUIManager;
 		this.marketGUIManager = marketGUIManager;
 		this.horseCrateManager = horseCrateManager;
@@ -47,6 +56,54 @@ public class RPGHorsesCommand implements CommandExecutor {
 		if (args.length > 0) {
 			
 			String arg1 = args[0];
+			
+			if (arg1.equalsIgnoreCase("claim")) {
+				if (!sender.hasPermission("rpghorses.claim")) {
+					messagingUtil.sendNoPermissionMessage(sender);
+					return false;
+				}
+				
+				if (!(sender instanceof Player)) {
+					this.messagingUtil.sendMessage(sender, "{PREFIX}This command can only be used in-game");
+					return false;
+				}
+				Player p = (Player) sender;
+				
+				Entity entity = p.getVehicle();
+				
+				if (entity == null || !(entity instanceof LivingEntity) || !rpgHorseManager.isValidEntityType(entity.getType())) {
+					messagingUtil.sendMessageAtPath(p, "messages.claim-fail");
+					return false;
+				}
+				
+				RPGHorse rpgHorse = rpgHorseManager.getRPGHorse(entity);
+				if (rpgHorse != null) {
+					messagingUtil.sendMessageAtPath(p, "messages.already-claimed", rpgHorse, "HORSE-OWNER", rpgHorse.getHorseOwner().getPlayerName());
+					return false;
+				}
+				
+				int horseCount = this.horseOwnerManager.getHorseCount(p);
+				if (horseCount >= this.horseOwnerManager.getHorseLimit(p)) {
+					this.messagingUtil.sendMessage(sender, this.plugin.getConfig().getString("messages.claim-limit").replace("{HORSE-LIMIT}", "" + horseOwnerManager.getHorseLimit(p)));
+					return false;
+				}
+				
+				RPGHorseClaimEvent event = new RPGHorseClaimEvent(p, entity);
+				Bukkit.getPluginManager().callEvent(event);
+				if (!event.isCancelled()) {
+					HorseOwner horseOwner = horseOwnerManager.getHorseOwner(p);
+					rpgHorse = new RPGHorse(horseOwner, (LivingEntity) entity, plugin.getConfig().getString("horse-options.default-name", "Horse").replace("{PLAYER}", horseOwner.getPlayerName()));
+					horseOwner.addRPGHorse(rpgHorse);
+					
+					entity.remove();
+					rpgHorse.spawnEntity();
+					this.stableGUIManager.setupStableGUI(horseOwner);
+					
+					messagingUtil.sendMessageAtPath(p, "messages.horse-claim", "ENTITY-TYPE", entity.getType().name().replace("_", " ").toLowerCase());
+				}
+				
+				return true;
+			}
 			
 			if (arg1.equalsIgnoreCase("sell")) {
 				if (!sender.hasPermission("rpghorses.sell")) {
@@ -188,21 +245,21 @@ public class RPGHorsesCommand implements CommandExecutor {
 					this.messagingUtil.sendMessageAtPath(p, "messages.particle-fail");
 					return false;
 				}
-
+				
 				if (RPGHorsesMain.getVersion().getWeight() < 9) {
-					((LegacyHorseInfo)rpgHorse.getHorseInfo()).setEffect(Effect.valueOf(particleArg.toUpperCase()));
+					((LegacyHorseInfo) rpgHorse.getHorseInfo()).setEffect(Effect.valueOf(particleArg.toUpperCase()));
 				} else {
 					rpgHorse.setParticle(Particle.valueOf(particleArg.toUpperCase()));
 				}
 				this.messagingUtil.sendMessage(p, this.plugin.getConfig().getString("messages.particle-set").replace("{HORSE-NUMBER}", "" + horseOwner.getHorseNumber(rpgHorse)).replace("{PARTICLE}", particleArg.toUpperCase()), rpgHorse);
 				return true;
 			}
-
+			
 			if (!sender.hasPermission("rpghorses.help")) {
 				this.messagingUtil.sendMessageAtPath(sender, "messages.no-permission");
 				return false;
 			}
-
+			
 			plugin.sendHelpMessage(sender, label);
 			return true;
 		}
