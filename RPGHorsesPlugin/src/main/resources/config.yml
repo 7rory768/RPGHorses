@@ -65,6 +65,13 @@ horse-options:
   # Should regular horses be disabled?
   # This will despawn all horses upon start and prevent any from spawning
   prevent-regular-horses: false
+  names:
+    # Min name length (does not include color codes)
+    min-length: 3
+    # Max name length (does not include color codes)
+    max-length: 32
+    # Should spaces be allowed in horse names?
+    allow-spaces: true
 
 horse-tiers:
   # 1 defines the upgrades that occur from 1 -> 2
@@ -515,6 +522,12 @@ command-options:
   on-upgrade-fail: []
 
 messages:
+  short-name: '{PREFIX}&6{HORSE-NAME} &7is too short, the min length is &6{MIN-LENGTH}'
+  long-name: '{PREFIX}&6{HORSE-NAME} &7is too long, the max length is &6{MAX-LENGTH}'
+  horse-claim: '{PREFIX}Claimed &6{ENTITY-TYPE} &7as yours successfully! Use &6/horses &7to manage it'
+  claim-limit: '{PREFIX}You cannot own more than &6{HORSE-LIMIT} &7horses'
+  claim-fail: '{PREFIX}You must be riding a horse to claim it'
+  already-claimed: '{PREFIX}This horse is already claimed by {HORSE-OWNER}'
   horse-died: '{PREFIX}&6{HORSE-NAME} &7has died, it will respawn in &6{TIME}'
   max-xp: '{PREFIX}&6{HORSE-NAME} &7has reached max XP, &6right-click &7&6{HORSE-NAME} &7in your stable to upgrade it'
   not-enough-xp: '{PREFIX}&6{HORSE-NAME} &7doesn''t have enough XP to level up'
