@@ -1,6 +1,7 @@
 package org.plugins.rpghorses.managers.gui;
 
 import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
@@ -15,34 +16,35 @@ import org.plugins.rpghorses.managers.HorseOwnerManager;
 import org.plugins.rpghorses.players.HorseOwner;
 import org.plugins.rpghorses.utils.RPGMessagingUtil;
 import rorys.library.util.ItemUtil;
+import rorys.library.util.MessagingUtil;
 
 import java.util.HashSet;
 
 public class HorseGUIManager {
-
-	private final RPGHorsesMain     plugin;
+	
+	private final RPGHorsesMain plugin;
 	private final HorseOwnerManager horseOwnerManager;
 	private final StableGUIManager stableGUIManager;
-
+	
 	private String title;
 	private int rows;
 	private HashSet<GUIItem> guiItems = new HashSet<>();
-
+	
 	public HorseGUIManager(RPGHorsesMain plugin, HorseOwnerManager horseOwnerManager, StableGUIManager stableGUIManager) {
 		this.plugin = plugin;
 		this.horseOwnerManager = horseOwnerManager;
 		this.stableGUIManager = stableGUIManager;
-
+		
 		reload();
 	}
-
+	
 	public void reload() {
 		guiItems.clear();
-
+		
 		String path = "horse-gui-options.";
 		FileConfiguration config = plugin.getConfig();
 		this.title = RPGMessagingUtil.format(config.getString(path + "title"));
-		this.rows = config.getInt(path +  "rows");
+		this.rows = config.getInt(path + "rows");
 		for (String itemID : config.getConfigurationSection(path + "items").getKeys(false)) {
 			path = "horse-gui-options.items." + itemID + ".";
 			ItemStack item = ItemUtil.getItemStack(config, path);
@@ -50,7 +52,7 @@ public class HorseGUIManager {
 			int slot = ItemUtil.getSlot(config, path);
 			guiItems.add(new GUIItem(item, purpose, slot));
 		}
-
+		
 		for (Player p : Bukkit.getOnlinePlayers()) {
 			HorseOwner horseOwner = horseOwnerManager.getHorseOwner(p);
 			if (horseOwner.getGUILocation() == GUILocation.HORSE_GUI) {
@@ -58,31 +60,48 @@ public class HorseGUIManager {
 			}
 		}
 	}
-
+	
 	public HorseGUI getHorseGUI(RPGHorse rpgHorse) {
-		Inventory inventory = Bukkit.createInventory(null, rows * 9, RPGMessagingUtil.format(title, rpgHorse));
-
+		String horseTitle = RPGMessagingUtil.format(title, rpgHorse);
+		
+		if (ChatColor.stripColor(horseTitle).length() > 32 && RPGHorsesMain.getVersion().getWeight() < 9) {
+			
+			int lengthNoName = title.replace("{HORSE-NAME}", "").length();
+			int beforeName = title.indexOf("{HORSE-NAME}");
+			int afterName = beforeName + "{HORSE-NAME}".length();
+			
+			if (beforeName != -1) {
+				horseTitle = title.substring(0, beforeName) + rpgHorse.getName().substring(0, (32 - lengthNoName)) + title.substring(afterName);
+			} else {
+				horseTitle = title.substring(0, 32);
+			}
+			
+			horseTitle = MessagingUtil.format(horseTitle);
+		}
+		
+		Inventory inventory = Bukkit.createInventory(null, rows * 9, horseTitle);
+		
 		for (GUIItem guiItem : guiItems) {
 			if (guiItem.getItemPurpose() != ItemPurpose.TOGGLE_AUTOMOUNT_OFF && guiItem.getItemPurpose() != ItemPurpose.TOGGLE_AUTOMOUNT_ON) {
 				inventory.setItem(guiItem.getSlot(), guiItem.getItem());
 			}
 		}
-
+		
 		inventory.setItem(ItemUtil.getSlot(plugin.getConfig(), "horse-gui-options.horse-item"), stableGUIManager.fillPlaceholders(stableGUIManager.getHorseItem(rpgHorse), rpgHorse));
-
+		
 		GUIItem autoMountItem = rpgHorse.getHorseOwner().autoMountOn() ? getGUIItem(ItemPurpose.TOGGLE_AUTOMOUNT_ON) : getGUIItem(ItemPurpose.TOGGLE_AUTOMOUNT_OFF);
 		inventory.setItem(autoMountItem.getSlot(), autoMountItem.getItem());
-
+		
 		ItemStack fillItem = getGUIItem(ItemPurpose.FILL).getItem();
 		for (int slot = 0; slot < inventory.getSize(); slot++) {
 			if (inventory.getItem(slot) == null) {
 				inventory.setItem(slot, fillItem);
 			}
 		}
-
+		
 		return new HorseGUI(rpgHorse, inventory);
 	}
-
+	
 	public void toggleAutoMount(HorseGUI horseGUI) {
 		HorseOwner horseOwner = horseGUI.getRpgHorse().getHorseOwner();
 		horseOwner.setAutoMount(!horseOwner.autoMountOn());
@@ -97,16 +116,16 @@ public class HorseGUIManager {
 			inv.setItem(offItem.getSlot(), offItem.getItem());
 		}
 	}
-
+	
 	public ItemPurpose getItemPurpose(int slot) {
 		for (GUIItem guiItem : guiItems) {
-			if (guiItem.getSlot() == slot&& (guiItem.getItemPurpose() != ItemPurpose.NOTHING || guiItem.getItemPurpose() != ItemPurpose.FILL)) {
-					return guiItem.getItemPurpose();
+			if (guiItem.getSlot() == slot && (guiItem.getItemPurpose() != ItemPurpose.NOTHING || guiItem.getItemPurpose() != ItemPurpose.FILL)) {
+				return guiItem.getItemPurpose();
 			}
 		}
 		return ItemPurpose.NOTHING;
 	}
-
+	
 	public GUIItem getGUIItem(ItemPurpose itemPurpose) {
 		for (GUIItem guiItem : guiItems) {
 			if (guiItem.getItemPurpose() == itemPurpose) {
@@ -115,5 +134,5 @@ public class HorseGUIManager {
 		}
 		return null;
 	}
-
+	
 }
