@@ -21,11 +21,11 @@ public class GUIItem {
 	public void setItem(ItemStack item) {
 		this.item = item;
 	}
-
+	
 	public ItemPurpose getItemPurpose() {
 		return itemPurpose;
 	}
-
+	
 	public void setItemPurpose(ItemPurpose itemPurpose) {
 		this.itemPurpose = itemPurpose;
 	}
@@ -33,7 +33,7 @@ public class GUIItem {
 	public int getSlot() {
 		return slot;
 	}
-
+	
 	public void setSlot(int slot) {
 		this.slot = slot;
 	}

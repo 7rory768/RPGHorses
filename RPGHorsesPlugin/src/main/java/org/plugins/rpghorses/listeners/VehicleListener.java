@@ -16,58 +16,58 @@ import org.plugins.rpghorses.players.HorseOwner;
 import org.plugins.rpghorses.utils.RPGMessagingUtil;
 
 public class VehicleListener implements Listener {
-
-    private final RPGHorsesMain plugin;
-    private final RPGHorseManager rpgHorseManager;
-    private final XPManager xpManager;
-    private final RPGMessagingUtil messagingUtil;
-
-    public VehicleListener(RPGHorsesMain plugin, RPGHorseManager rpgHorseManager, XPManager xpManager, RPGMessagingUtil messagingUtil) {
-        this.plugin = plugin;
-        this.rpgHorseManager = rpgHorseManager;
-        this.xpManager = xpManager;
-        this.messagingUtil = messagingUtil;
-
-        plugin.getServer().getPluginManager().registerEvents(this, plugin);
-    }
-
-    @EventHandler
-    public void onVehicleEnter(VehicleEnterEvent e) {
-        RPGHorse rpgHorse = this.rpgHorseManager.getRPGHorse(e.getVehicle());
-        if (rpgHorse != null) {
-            HorseOwner horseOwner = rpgHorse.getHorseOwner();
-            Entity entered = e.getEntered();
-            if (entered.getType() == EntityType.PLAYER) {
-                Player p = (Player) entered;
-                if (horseOwner.getUUID().equals(p.getUniqueId())) {
-                    horseOwner.setMountingHorse(true);
-                    horseOwner.setLastHorseLocation(p.getLocation());
-                    xpManager.addHorseOwner(horseOwner);
-                } else {
-                    this.messagingUtil.sendMessageAtPath(p, "messages.not-your-horse");
-                    e.setCancelled(true);
-                }
-            }
-        }
-    }
-
-    @EventHandler
-    public void onVehicleExit(VehicleExitEvent e) {
-        RPGHorse rpgHorse = this.rpgHorseManager.getRPGHorse(e.getVehicle());
-        if (rpgHorse != null) {
-            HorseOwner horseOwner = rpgHorse.getHorseOwner();
-            horseOwner.setDeMountingHorse(true);
-            if (plugin.getVersion().getWeight() < 9) {
-                horseOwner.setChangingHorse(true);
-                new BukkitRunnable() {
-                    @Override
-                    public void run() {
-                        horseOwner.setChangingHorse(false);
-                    }
-                }.runTaskLaterAsynchronously(plugin, 0L);
-            }
-            xpManager.removeHorseOwner(horseOwner);
-        }
-    }
-
+	
+	private final RPGHorsesMain plugin;
+	private final RPGHorseManager rpgHorseManager;
+	private final XPManager xpManager;
+	private final RPGMessagingUtil messagingUtil;
+	
+	public VehicleListener(RPGHorsesMain plugin, RPGHorseManager rpgHorseManager, XPManager xpManager, RPGMessagingUtil messagingUtil) {
+		this.plugin = plugin;
+		this.rpgHorseManager = rpgHorseManager;
+		this.xpManager = xpManager;
+		this.messagingUtil = messagingUtil;
+		
+		plugin.getServer().getPluginManager().registerEvents(this, plugin);
+	}
+	
+	@EventHandler
+	public void onVehicleEnter(VehicleEnterEvent e) {
+		RPGHorse rpgHorse = this.rpgHorseManager.getRPGHorse(e.getVehicle());
+		if (rpgHorse != null) {
+			HorseOwner horseOwner = rpgHorse.getHorseOwner();
+			Entity entered = e.getEntered();
+			if (entered.getType() == EntityType.PLAYER) {
+				Player p = (Player) entered;
+				if (horseOwner.getUUID().equals(p.getUniqueId())) {
+					horseOwner.setMountingHorse(true);
+					horseOwner.setLastHorseLocation(p.getLocation());
+					xpManager.addHorseOwner(horseOwner);
+				} else {
+					this.messagingUtil.sendMessageAtPath(p, "messages.not-your-horse");
+					e.setCancelled(true);
+				}
+			}
+		}
+	}
+	
+	@EventHandler
+	public void onVehicleExit(VehicleExitEvent e) {
+		RPGHorse rpgHorse = this.rpgHorseManager.getRPGHorse(e.getVehicle());
+		if (rpgHorse != null) {
+			HorseOwner horseOwner = rpgHorse.getHorseOwner();
+			horseOwner.setDeMountingHorse(true);
+			if (plugin.getVersion().getWeight() < 9) {
+				horseOwner.setChangingHorse(true);
+				new BukkitRunnable() {
+					@Override
+					public void run() {
+						horseOwner.setChangingHorse(false);
+					}
+				}.runTaskLaterAsynchronously(plugin, 0L);
+			}
+			xpManager.removeHorseOwner(horseOwner);
+		}
+	}
+	
 }

@@ -1,7 +1,7 @@
 package org.plugins.rpghorses.guis;
 
 public enum ItemPurpose {
-
+	
 	SELL(),
 	RENAME(),
 	HORSE(),

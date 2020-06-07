@@ -7,46 +7,46 @@ import org.plugins.rpghorses.horses.RPGHorse;
 import org.plugins.rpghorses.managers.RPGHorseManager;
 
 public class HorseRenamer {
-
-    private final RPGHorsesMain plugin;
-    private final RPGHorseManager rpgHorseManager;
-
-    private org.plugins.rpghorses.players.HorseOwner horseOwner;
-    private RPGHorse                                 rpgHorse;
-    private BukkitTask timeoutTask;
-
-    public HorseRenamer(RPGHorsesMain plugin, RPGHorseManager rpgHorseManager, org.plugins.rpghorses.players.HorseOwner horseOwner, RPGHorse rpgHorse) {
-        this.plugin = plugin;
-        this.rpgHorseManager = rpgHorseManager;
-        this.horseOwner = horseOwner;
-        this.rpgHorse = rpgHorse;
-
-        this.startTask();
-    }
-
-    public org.plugins.rpghorses.players.HorseOwner getHorseOwner() {
-        return horseOwner;
-    }
-
-    public RPGHorse getRPGHorse() {
-        return this.rpgHorse;
-    }
-
-    public void startTask() {
-        this.endTask();
-
-        this.timeoutTask = new BukkitRunnable() {
-            @Override
-            public void run() {
-                rpgHorseManager.removeHorseRenamer(horseOwner.getUUID());
-            }
-        }.runTaskLaterAsynchronously(this.plugin, 20L * 20);
-    }
-
-    public void endTask() {
-        if (this.timeoutTask != null) {
-            this.timeoutTask.cancel();
-            this.timeoutTask = null;
-        }
-    }
+	
+	private final RPGHorsesMain plugin;
+	private final RPGHorseManager rpgHorseManager;
+	
+	private org.plugins.rpghorses.players.HorseOwner horseOwner;
+	private RPGHorse rpgHorse;
+	private BukkitTask timeoutTask;
+	
+	public HorseRenamer(RPGHorsesMain plugin, RPGHorseManager rpgHorseManager, org.plugins.rpghorses.players.HorseOwner horseOwner, RPGHorse rpgHorse) {
+		this.plugin = plugin;
+		this.rpgHorseManager = rpgHorseManager;
+		this.horseOwner = horseOwner;
+		this.rpgHorse = rpgHorse;
+		
+		this.startTask();
+	}
+	
+	public org.plugins.rpghorses.players.HorseOwner getHorseOwner() {
+		return horseOwner;
+	}
+	
+	public RPGHorse getRPGHorse() {
+		return this.rpgHorse;
+	}
+	
+	public void startTask() {
+		this.endTask();
+		
+		this.timeoutTask = new BukkitRunnable() {
+			@Override
+			public void run() {
+				rpgHorseManager.removeHorseRenamer(horseOwner.getUUID());
+			}
+		}.runTaskLaterAsynchronously(this.plugin, 20L * 20);
+	}
+	
+	public void endTask() {
+		if (this.timeoutTask != null) {
+			this.timeoutTask.cancel();
+			this.timeoutTask = null;
+		}
+	}
 }

@@ -1,7 +1,7 @@
 package org.plugins.rpghorses.version;
 
 public enum Version {
-
+	
 	v1_8("1.8", 8, ""),
 	v1_9("1.9", 9, ""),
 	v1_10("1.10", 10, ""),
@@ -10,29 +10,29 @@ public enum Version {
 	v1_13("1.13", 13, "v1_13_2"),
 	v1_14("1.14", 14, "v1_14_4"),
 	v1_15("1.15", 15, "v1_15_2");
-
+	
 	private String name;
 	private int weight;
 	private String abstractName;
-
+	
 	Version(String name, int weight, String abstractName) {
 		this.name = name;
 		this.weight = weight;
 		this.abstractName = abstractName;
 	}
-
+	
 	public String getName() {
 		return name;
 	}
-
+	
 	public int getWeight() {
 		return weight;
 	}
-
+	
 	public String getAbstractName() {
 		return abstractName;
 	}
-
+	
 	public static Version getByName(String name) {
 		for (Version version : values()) {
 			if (name.startsWith(version.name)) {
@@ -41,5 +41,5 @@ public enum Version {
 		}
 		return Version.v1_15;
 	}
-
+	
 }

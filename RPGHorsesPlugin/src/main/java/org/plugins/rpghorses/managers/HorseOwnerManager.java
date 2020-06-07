@@ -63,9 +63,9 @@ public class HorseOwnerManager {
 			this.playerConfigs.deleteConfig(uuid);
 			if (horseCrateManager.getDefaultHorseCrate() != null) {
 				RPGHorse rpgHorse = horseCrateManager.getDefaultHorseCrate().getRPGHorse(horseOwner);
-					rpgHorse.setName(config.getString("horse-options.default-name", "Horse").replace("{PLAYER}", horseOwner.getPlayerName()));
-					horseOwner.addRPGHorse(rpgHorse);
-					horseOwner.setReceivedDefaultHorse(true);
+				rpgHorse.setName(config.getString("horse-options.default-name", "Horse").replace("{PLAYER}", horseOwner.getPlayerName()));
+				horseOwner.addRPGHorse(rpgHorse);
+				horseOwner.setReceivedDefaultHorse(true);
 				
 				this.horseOwners.add(horseOwner);
 			}

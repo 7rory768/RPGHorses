@@ -6,31 +6,31 @@ import java.util.List;
 
 public class YourHorsesGUI {
 
-    private HorseOwner horseOwner;
+	private HorseOwner horseOwner;
 
-    private List<YourHorsesGUIPage> yourHorsesGUIPages;
+	private List<YourHorsesGUIPage> yourHorsesGUIPages;
 
-    public YourHorsesGUI(HorseOwner horseOwner, List<YourHorsesGUIPage> yourHorsesGUIPages) {
-        this.horseOwner = horseOwner;
-        this.yourHorsesGUIPages = yourHorsesGUIPages;
-    }
+	public YourHorsesGUI(HorseOwner horseOwner, List<YourHorsesGUIPage> yourHorsesGUIPages) {
+		this.horseOwner = horseOwner;
+		this.yourHorsesGUIPages = yourHorsesGUIPages;
+	}
 
-    public HorseOwner getHorseOwner() {
-        return horseOwner;
-    }
+	public HorseOwner getHorseOwner() {
+		return horseOwner;
+	}
 
-    public List<YourHorsesGUIPage> getYourHorsesGUIPages() {
-        return yourHorsesGUIPages;
-    }
+	public List<YourHorsesGUIPage> getYourHorsesGUIPages() {
+		return yourHorsesGUIPages;
+	}
 
-    public void setYourHorsesGUIPages(List<YourHorsesGUIPage> yourHorsesGUIPages) {
-        this.yourHorsesGUIPages = yourHorsesGUIPages;
-    }
+	public void setYourHorsesGUIPages(List<YourHorsesGUIPage> yourHorsesGUIPages) {
+		this.yourHorsesGUIPages = yourHorsesGUIPages;
+	}
 
-    public YourHorsesGUIPage getPage(int page) {
-        if (page >= 1 && this.yourHorsesGUIPages.size() >= page) {
-            return this.yourHorsesGUIPages.get(page - 1);
-        }
-        return null;
-    }
+	public YourHorsesGUIPage getPage(int page) {
+		if (page >= 1 && this.yourHorsesGUIPages.size() >= page) {
+			return this.yourHorsesGUIPages.get(page - 1);
+		}
+		return null;
+	}
 }

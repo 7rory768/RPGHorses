@@ -15,9 +15,9 @@ import java.util.List;
 
 public class XPManager {
 	
-	private final RPGHorsesMain    plugin;
-	private final RPGHorseManager  rpgHorseManager;
-	private final RPGMessagingUtil   messagingUtil;
+	private final RPGHorsesMain plugin;
+	private final RPGHorseManager rpgHorseManager;
+	private final RPGMessagingUtil messagingUtil;
 	
 	private HashSet<HorseOwner> horseOwners = new HashSet<>();
 	private BukkitTask xpTask;

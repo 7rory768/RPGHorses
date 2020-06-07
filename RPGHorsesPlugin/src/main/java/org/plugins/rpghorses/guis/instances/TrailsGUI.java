@@ -15,8 +15,8 @@ import java.util.HashSet;
 
 public class TrailsGUI {
 
-	private RPGHorse              rpgHorse;
-	private Inventory             inventory;
+	private RPGHorse rpgHorse;
+	private Inventory inventory;
 	private HashSet<TrailGUIItem> trails, unknownTrails;
 	private TrailGUIItem currentTrail;
 
@@ -49,7 +49,7 @@ public class TrailsGUI {
 		String trailName = currentTrail.getTrailName();
 
 		if (RPGHorsesMain.getVersion().getWeight() < 9) {
-			((LegacyHorseInfo)rpgHorse.getHorseInfo()).setEffect(Effect.valueOf(trailName.toUpperCase()));
+			((LegacyHorseInfo) rpgHorse.getHorseInfo()).setEffect(Effect.valueOf(trailName.toUpperCase()));
 		} else {
 			rpgHorse.setParticle(Particle.valueOf(trailName.toUpperCase()));
 		}

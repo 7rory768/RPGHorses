@@ -11,19 +11,19 @@ import org.plugins.rpghorses.managers.RPGHorseManager;
 import org.plugins.rpghorses.players.HorseOwner;
 
 public class EntitySpawnListener implements Listener {
-
-	private final RPGHorsesMain     plugin;
-	private final RPGHorseManager   rpgHorseManager;
+	
+	private final RPGHorsesMain plugin;
+	private final RPGHorseManager rpgHorseManager;
 	private final HorseOwnerManager horseOwnerManager;
-
+	
 	public EntitySpawnListener(RPGHorsesMain plugin, RPGHorseManager rpgHorseManager, HorseOwnerManager horseOwnerManager) {
 		this.plugin = plugin;
 		this.rpgHorseManager = rpgHorseManager;
 		this.horseOwnerManager = horseOwnerManager;
-
+		
 		plugin.getServer().getPluginManager().registerEvents(this, plugin);
 	}
-
+	
 	@EventHandler(ignoreCancelled = true, priority = EventPriority.HIGHEST)
 	public void onEntitySpawn(CreatureSpawnEvent e) {
 		if (plugin.getConfig().getBoolean("horse-options.prevent-regular-horses")) {
@@ -42,5 +42,5 @@ public class EntitySpawnListener implements Listener {
 			}
 		}
 	}
-
+	
 }

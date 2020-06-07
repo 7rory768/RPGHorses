@@ -22,34 +22,34 @@ import rorys.library.util.ItemUtil;
 import java.util.HashSet;
 
 public class SellGUIManager {
-
+	
 	private final RPGHorsesMain plugin;
 	private final StableGUIManager stableGUIManager;
 	private final HorseOwnerManager horseOwnerManager;
-
+	
 	private HashSet<GUIItem> guiItems = new HashSet<GUIItem>();
 	private int horseSlot;
 	private String title = "";
 	private int rows;
-
+	
 	public SellGUIManager(RPGHorsesMain plugin, StableGUIManager stableGUIManager, HorseOwnerManager horseOwnerManager) {
 		this.plugin = plugin;
 		this.stableGUIManager = stableGUIManager;
 		this.horseOwnerManager = horseOwnerManager;
-
+		
 		reload();
 	}
-
+	
 	public void reload() {
 		guiItems.clear();
-
+		
 		FileConfiguration config = plugin.getConfig();
-
+		
 		String path = "sell-gui-options.";
 		title = RPGMessagingUtil.format(config.getString(path + "title"));
 		rows = config.getInt(path + "rows");
 		horseSlot = ItemUtil.getSlot(config, path + "horse-slot");
-
+		
 		for (String key : config.getConfigurationSection(path + "items").getKeys(false)) {
 			path = "sell-gui-options.items." + key + ".";
 			ItemStack item = ItemUtil.getItemStack(config, path);
@@ -71,13 +71,13 @@ public class SellGUIManager {
 					}
 				}
 				guiItem = new PriceGUIItem(item, itemPurpose, slot, config.getInt(path + "price-change"), sound, Float.valueOf(config.getString(path + "sound.volume", "1.0")), Float.valueOf(config.getString(path + "sound.pitch", "1.0")));
-				ItemUtil.fillPlaceholders(guiItem.getItem(), "PRICE-CHANGE", "" + Math.abs(((PriceGUIItem)guiItem).getPriceChange()));
+				ItemUtil.fillPlaceholders(guiItem.getItem(), "PRICE-CHANGE", "" + Math.abs(((PriceGUIItem) guiItem).getPriceChange()));
 			} else {
 				guiItem = new GUIItem(item, itemPurpose, slot);
 			}
 			guiItems.add(guiItem);
 		}
-
+		
 		for (Player p : Bukkit.getOnlinePlayers()) {
 			HorseOwner horseOwner = horseOwnerManager.getHorseOwner(p);
 			if (horseOwner.getGUILocation() == GUILocation.SELL_GUI) {
@@ -85,14 +85,14 @@ public class SellGUIManager {
 			}
 		}
 	}
-
+	
 	public SellGUI createSellGUI(HorseGUI horseGUI) {
 		RPGHorse rpgHorse = horseGUI.getRpgHorse();
 		HorseOwner horseOwner = rpgHorse.getHorseOwner();
-
+		
 		Inventory inv = Bukkit.createInventory(horseOwner.getPlayer(), rows * 9, title);
-
-		for (GUIItem guiItem  : guiItems) {
+		
+		for (GUIItem guiItem : guiItems) {
 			ItemPurpose itemPurpose = guiItem.getItemPurpose();
 			if (itemPurpose != ItemPurpose.FILL) {
 				if (itemPurpose == ItemPurpose.CONFIRM) {
@@ -102,9 +102,9 @@ public class SellGUIManager {
 				}
 			}
 		}
-
+		
 		inv.setItem(horseSlot, stableGUIManager.fillPlaceholders(stableGUIManager.getHorseItem(rpgHorse), rpgHorse));
-
+		
 		GUIItem fillItem = getGUIItem(ItemPurpose.FILL);
 		if (fillItem != null) {
 			ItemStack item = fillItem.getItem();
@@ -114,23 +114,23 @@ public class SellGUIManager {
 				}
 			}
 		}
-
+		
 		SellGUI sellGUI = new SellGUI(rpgHorse, inv);
 		fillPlaceholders(sellGUI);
-
+		
 		return new SellGUI(rpgHorse, inv);
 	}
-
+	
 	public void performUpdate(SellGUI sellGUI, GUIItem guiItem) {
 		if (guiItem instanceof PriceGUIItem) {
-
-
+			
+			
 			PriceGUIItem priceGUIItem = (PriceGUIItem) guiItem;
 			sellGUI.increasePrice(priceGUIItem.getPriceChange());
 			fillPlaceholders(sellGUI);
 		}
 	}
-
+	
 	public GUIItem getGUIItem(ItemPurpose itemPurpose) {
 		for (GUIItem guiItem : guiItems) {
 			if (guiItem.getItemPurpose() == itemPurpose) {
@@ -139,7 +139,7 @@ public class SellGUIManager {
 		}
 		return null;
 	}
-
+	
 	public GUIItem getGUIItem(int slot) {
 		for (GUIItem item : guiItems) {
 			if (item.getSlot() == slot) {
@@ -148,7 +148,7 @@ public class SellGUIManager {
 		}
 		return null;
 	}
-
+	
 	public void fillPlaceholders(SellGUI sellGUI) {
 		GUIItem confirmItem = getGUIItem(ItemPurpose.CONFIRM);
 		sellGUI.getInventory().setItem(confirmItem.getSlot(), ItemUtil.fillPlaceholders(confirmItem.getItem().clone(), "{PRICE}", "" + sellGUI.getPrice(), "{HORSE-NAME}", sellGUI.getRpgHorse().getName()));

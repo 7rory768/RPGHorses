@@ -14,24 +14,24 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ParticleManager {
-
-	private final RPGHorsesMain     plugin;
+	
+	private final RPGHorsesMain plugin;
 	private final HorseOwnerManager horseOwnerManager;
-
+	
 	private BukkitTask task;
-	private int        interval = 1, volume = 1;
+	private int interval = 1, volume = 1;
 	private double yOffset;
 	private List<String> validParticles = new ArrayList<>();
 	private String particleList = "";
-
+	
 	public ParticleManager(RPGHorsesMain plugin, HorseOwnerManager horseOwnerManager) {
 		this.plugin = plugin;
 		this.horseOwnerManager = horseOwnerManager;
-
+		
 		this.reload();
 		this.startTask();
 	}
-
+	
 	public void startTask() {
 		this.task = new BukkitRunnable() {
 			@Override
@@ -57,30 +57,30 @@ public class ParticleManager {
 			}
 		}.runTaskTimerAsynchronously(this.plugin, this.interval, this.interval);
 	}
-
+	
 	public void reload() {
 		this.reloadInterval();
 		this.reloadVolume();
 		this.reloadYOffset();
 		this.setupValidParticles();
 	}
-
+	
 	public void reloadInterval() {
 		this.interval = this.plugin.getConfig().getInt("horse-options.particles.interval");
 	}
-
+	
 	public void reloadVolume() {
 		this.volume = this.plugin.getConfig().getInt("horse-options.particles.volume");
 	}
-
+	
 	public void reloadYOffset() {
 		this.yOffset = this.plugin.getConfig().getDouble("horse-options.particles.y-offset");
 	}
-
+	
 	public void setupValidParticles() {
 		validParticles.clear();
 		particleList = "";
-
+		
 		if (RPGHorsesMain.getVersion().getWeight() >= 9) {
 			for (Particle particle : Particle.values()) {
 				validParticles.add(particle.name());
@@ -94,16 +94,16 @@ public class ParticleManager {
 				}
 			}
 		}
-
+		
 		particleList = particleList.substring(0, particleList.length() - 2);
 	}
-
+	
 	public boolean isValidParticle(String arg) {
 		return validParticles.contains(arg.toUpperCase());
 	}
-
+	
 	public String getParticleList() {
 		return particleList;
 	}
-
+	
 }

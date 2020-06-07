@@ -12,36 +12,37 @@ import org.plugins.rpghorses.players.HorseOwner;
 import org.plugins.rpghorses.utils.RPGMessagingUtil;
 
 public class PlayerTeleportListener implements Listener {
-
-    private final RPGHorsesMain     plugin;
-    private final HorseOwnerManager horseOwnerManager;
-    private       RPGMessagingUtil     messagingUtil;
-
-    public PlayerTeleportListener(RPGHorsesMain plugin, HorseOwnerManager horseOwnerManager, RPGMessagingUtil messagingUtil) {
-        this.plugin = plugin;
-        this.horseOwnerManager = horseOwnerManager;
-        this.messagingUtil = messagingUtil;
-
-        plugin.getServer().getPluginManager().registerEvents(this, plugin);
-    }
-
-    @EventHandler(ignoreCancelled = true, priority = EventPriority.MONITOR)
-    public void onTeleport(PlayerTeleportEvent e) {
-        Player p = e.getPlayer();
-        HorseOwner horseOwner = this.horseOwnerManager.getHorseOwner(p);
-        if (horseOwner != null) {
-        RPGHorse currentHorse = horseOwner.getCurrentHorse();
-
-        if (currentHorse != null && !horseOwner.isMountingHorse() && !horseOwner.isDeMountingHorse() && !horseOwner.isChangingHorse()) {
-            this.messagingUtil.sendMessage(p, this.plugin.getConfig().getString("messages.horse-sent-to-stable").replace("{PLAYER}", "CONSOLE"), currentHorse);
-            horseOwner.setCurrentHorse(null);
-        } else if (horseOwner.isMountingHorse()) {
-            horseOwner.setMountingHorse(false);
-        } else if (horseOwner.isDeMountingHorse()) {
-            horseOwner.setDeMountingHorse(false);
-        } else if (horseOwner.isChangingHorse()) {
-            horseOwner.setChangingHorse(false);
-        }
-    }}
-
+	
+	private final RPGHorsesMain plugin;
+	private final HorseOwnerManager horseOwnerManager;
+	private RPGMessagingUtil messagingUtil;
+	
+	public PlayerTeleportListener(RPGHorsesMain plugin, HorseOwnerManager horseOwnerManager, RPGMessagingUtil messagingUtil) {
+		this.plugin = plugin;
+		this.horseOwnerManager = horseOwnerManager;
+		this.messagingUtil = messagingUtil;
+		
+		plugin.getServer().getPluginManager().registerEvents(this, plugin);
+	}
+	
+	@EventHandler(ignoreCancelled = true, priority = EventPriority.MONITOR)
+	public void onTeleport(PlayerTeleportEvent e) {
+		Player p = e.getPlayer();
+		HorseOwner horseOwner = this.horseOwnerManager.getHorseOwner(p);
+		if (horseOwner != null) {
+			RPGHorse currentHorse = horseOwner.getCurrentHorse();
+			
+			if (currentHorse != null && !horseOwner.isMountingHorse() && !horseOwner.isDeMountingHorse() && !horseOwner.isChangingHorse()) {
+				this.messagingUtil.sendMessage(p, this.plugin.getConfig().getString("messages.horse-sent-to-stable").replace("{PLAYER}", "CONSOLE"), currentHorse);
+				horseOwner.setCurrentHorse(null);
+			} else if (horseOwner.isMountingHorse()) {
+				horseOwner.setMountingHorse(false);
+			} else if (horseOwner.isDeMountingHorse()) {
+				horseOwner.setDeMountingHorse(false);
+			} else if (horseOwner.isChangingHorse()) {
+				horseOwner.setChangingHorse(false);
+			}
+		}
+	}
+	
 }

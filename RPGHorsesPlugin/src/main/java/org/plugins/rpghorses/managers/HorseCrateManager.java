@@ -14,37 +14,37 @@ import java.util.HashSet;
 import java.util.logging.Level;
 
 public class HorseCrateManager {
-
+	
 	private final RPGHorsesMain plugin;
-
+	
 	private HashSet<HorseCrate> horseCrates = new HashSet<>();
-	private HorseCrate          defaultHorseCrate;
-
+	private HorseCrate defaultHorseCrate;
+	
 	public HorseCrateManager(RPGHorsesMain plugin) {
 		this.plugin = plugin;
-
+		
 		this.loadHorseCrates();
 	}
-
+	
 	public void loadHorseCrates() {
 		this.horseCrates.clear();
 		FileConfiguration config = this.plugin.getConfig();
 		for (String crateName : config.getConfigurationSection("horse-crates").getKeys(false)) {
-			String        path                = "horse-crates." + crateName + ".horse-info.";
-			double[]      healthValues        = this.getMinAndMaxValues(config.getString(path + "health"));
-			double        minHealth           = healthValues[0];
-			double        maxHealth           = healthValues[1];
-			double[]      movementSpeedValues = this.getMinAndMaxValues(config.getString(path + "movement-speed"));
-			double        minMovementSpeed    = movementSpeedValues[0];
-			double        maxMovementSpeed    = movementSpeedValues[1];
-			double[]      jumpStrengthValues  = this.getMinAndMaxValues(config.getString(path + "jump-strength"));
-			double        minJumpStrength     = jumpStrengthValues[0];
-			double        maxJumpStrength     = jumpStrengthValues[1];
-			int           tier                = config.getInt(path + "tier");
-			EntityType    entityType          = EntityType.HORSE;
-			Horse.Variant variant             = Horse.Variant.HORSE;
-			Horse.Color   color               = Horse.Color.BROWN;
-			Horse.Style   style               = Horse.Style.NONE;
+			String path = "horse-crates." + crateName + ".horse-info.";
+			double[] healthValues = this.getMinAndMaxValues(config.getString(path + "health"));
+			double minHealth = healthValues[0];
+			double maxHealth = healthValues[1];
+			double[] movementSpeedValues = this.getMinAndMaxValues(config.getString(path + "movement-speed"));
+			double minMovementSpeed = movementSpeedValues[0];
+			double maxMovementSpeed = movementSpeedValues[1];
+			double[] jumpStrengthValues = this.getMinAndMaxValues(config.getString(path + "jump-strength"));
+			double minJumpStrength = jumpStrengthValues[0];
+			double maxJumpStrength = jumpStrengthValues[1];
+			int tier = config.getInt(path + "tier");
+			EntityType entityType = EntityType.HORSE;
+			Horse.Variant variant = Horse.Variant.HORSE;
+			Horse.Color color = Horse.Color.BROWN;
+			Horse.Style style = Horse.Style.NONE;
 			try {
 				color = Horse.Color.valueOf(config.getString(path + "color", "BROWN"));
 			} catch (IllegalArgumentException e) {
@@ -63,9 +63,9 @@ public class HorseCrateManager {
 					style = null;
 				}
 			}
-
+			
 			AbstractHorseInfo horseInfo;
-
+			
 			if (plugin.getVersion().getWeight() < 11) {
 				try {
 					variant = Horse.Variant.valueOf(config.getString(path + "type", "HORSE"));
@@ -89,14 +89,14 @@ public class HorseCrateManager {
 				}
 				horseInfo = new HorseInfo(entityType, style, color);
 			}
-
+			
 			HorseCrate horseCrate = new HorseCrate(crateName, config.getDouble("horse-crates." + crateName + ".price"), minHealth, maxHealth, minMovementSpeed, maxMovementSpeed, minJumpStrength, maxJumpStrength, horseInfo, tier);
 			this.horseCrates.add(horseCrate);
 		}
-
+		
 		this.defaultHorseCrate = getHorseCrate(config.getString("horse-options.default-horse"));
 	}
-
+	
 	public HorseCrate getHorseCrate(String name) {
 		for (HorseCrate horseCrate : this.horseCrates) {
 			if (horseCrate.getName().equalsIgnoreCase(name)) {
@@ -105,7 +105,7 @@ public class HorseCrateManager {
 		}
 		return null;
 	}
-
+	
 	public double[] getMinAndMaxValues(String info) {
 		double[] values = new double[2];
 		values[0] = 0;
@@ -119,11 +119,11 @@ public class HorseCrateManager {
 		}
 		return values;
 	}
-
+	
 	public HorseCrate getDefaultHorseCrate() {
 		return defaultHorseCrate;
 	}
-
+	
 	public String getHorseCrateList() {
 		String list = "";
 		for (HorseCrate horseCrate : this.horseCrates) {
@@ -131,5 +131,5 @@ public class HorseCrateManager {
 		}
 		return list.substring(0, list.length() - 2);
 	}
-
+	
 }
