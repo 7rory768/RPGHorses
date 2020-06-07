@@ -6,24 +6,24 @@ import org.plugins.rpghorses.horses.RPGHorse;
 import rorys.library.util.MessagingUtil;
 
 public class RPGMessagingUtil extends MessagingUtil {
-
+	
 	public RPGMessagingUtil(JavaPlugin plugin) {
 		super(plugin);
 	}
-
-	public void sendMessage(CommandSender sender, String msg, RPGHorse rpgHorse) {
-		super.sendMessage(sender, msg.replace("{HORSE-NAME}", rpgHorse.getName()));
+	
+	public void sendMessage(CommandSender sender, String msg, RPGHorse rpgHorse, String... placeholders) {
+		super.sendMessage(sender, msg.replace("{HORSE-NAME}", rpgHorse.getName()), placeholders);
 	}
-
-	public void sendMessageAtPath(CommandSender sender, String path, RPGHorse rpgHorse) {
-		this.sendMessage(sender, getPlugin().getConfig().getString(path), rpgHorse);
+	
+	public void sendMessageAtPath(CommandSender sender, String path, RPGHorse rpgHorse, String... placeholders) {
+		this.sendMessage(sender, getPlugin().getConfig().getString(path), rpgHorse, placeholders);
 	}
-
-	public String placeholders(String arg, RPGHorse rpgHorse) {
-		return super.placeholders(arg).replace("{HORSE-NAME}", rpgHorse.getName());
+	
+	public String placeholders(String arg, RPGHorse rpgHorse, String... placeholders) {
+		return super.placeholders(arg, placeholders).replace("{HORSE-NAME}", rpgHorse.getName());
 	}
-
-	public static String format(String arg, RPGHorse rpgHorse) {
-		return MessagingUtil.format(arg.replace("{HORSE-NAME}", rpgHorse.getName()));
+	
+	public static String format(String arg, RPGHorse rpgHorse, String... placeholders) {
+		return MessagingUtil.format(arg.replace("{HORSE-NAME}", rpgHorse.getName()), placeholders);
 	}
 }
