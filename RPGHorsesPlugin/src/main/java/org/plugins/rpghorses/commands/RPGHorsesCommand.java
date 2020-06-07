@@ -11,6 +11,7 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
+import org.bukkit.entity.Tameable;
 import org.plugins.rpghorses.RPGHorsesMain;
 import org.plugins.rpghorses.events.RPGHorseClaimEvent;
 import org.plugins.rpghorses.horseinfo.LegacyHorseInfo;
@@ -69,6 +70,11 @@ public class RPGHorsesCommand implements CommandExecutor {
 				}
 				Player p = (Player) sender;
 				
+				if (!plugin.getConfig().getBoolean("horse-options.allow-claiming", false)) {
+					messagingUtil.sendMessageAtPath(sender, "messages.claiming-disabled");
+					return false;
+				}
+				
 				Entity entity = p.getVehicle();
 				
 				if (entity == null || !(entity instanceof LivingEntity) || !rpgHorseManager.isValidEntityType(entity.getType())) {
@@ -76,10 +82,19 @@ public class RPGHorsesCommand implements CommandExecutor {
 					return false;
 				}
 				
+				HorseOwner horseOwner = horseOwnerManager.getHorseOwner(p);
 				RPGHorse rpgHorse = rpgHorseManager.getRPGHorse(entity);
 				if (rpgHorse != null) {
 					messagingUtil.sendMessageAtPath(p, "messages.already-claimed", rpgHorse, "HORSE-OWNER", rpgHorse.getHorseOwner().getPlayerName());
 					return false;
+				}
+				
+				if (!plugin.getConfig().getBoolean("horse-options.horse-jacking") && entity instanceof Tameable) {
+					Tameable tameable = (Tameable) entity;
+					if (tameable.isTamed() && tameable.getOwner() != null && !tameable.getOwner().getUniqueId().equals(p.getUniqueId())) {
+						messagingUtil.sendMessageAtPath(p, "messages.claim-jacking", "PLAYER", tameable.getOwner().getName());
+						return false;
+					}
 				}
 				
 				int horseCount = this.horseOwnerManager.getHorseCount(p);
@@ -91,13 +106,13 @@ public class RPGHorsesCommand implements CommandExecutor {
 				RPGHorseClaimEvent event = new RPGHorseClaimEvent(p, entity);
 				Bukkit.getPluginManager().callEvent(event);
 				if (!event.isCancelled()) {
-					HorseOwner horseOwner = horseOwnerManager.getHorseOwner(p);
 					rpgHorse = new RPGHorse(horseOwner, (LivingEntity) entity, plugin.getConfig().getString("horse-options.default-name", "Horse").replace("{PLAYER}", horseOwner.getPlayerName()));
 					horseOwner.addRPGHorse(rpgHorse);
 					
-					entity.remove();
-					rpgHorse.spawnEntity();
 					this.stableGUIManager.setupStableGUI(horseOwner);
+					
+					entity.remove();
+					horseOwner.setCurrentHorse(rpgHorse);
 					
 					messagingUtil.sendMessageAtPath(p, "messages.horse-claim", "ENTITY-TYPE", entity.getType().name().replace("_", " ").toLowerCase());
 				}
