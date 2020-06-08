@@ -136,6 +136,7 @@ public class RPGHorse {
 	}
 	
 	public double getHealth() {
+		loadHealth();
 		return this.health;
 	}
 	
