@@ -1,10 +1,7 @@
 package org.plugins.rpghorses.commands;
 
 import net.milkbowl.vault.economy.Economy;
-import org.bukkit.Bukkit;
-import org.bukkit.Effect;
-import org.bukkit.OfflinePlayer;
-import org.bukkit.Particle;
+import org.bukkit.*;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -12,10 +9,12 @@ import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Tameable;
+import org.bukkit.inventory.Inventory;
+import org.bukkit.inventory.ItemStack;
 import org.plugins.rpghorses.RPGHorsesMain;
+import org.plugins.rpghorses.crates.HorseCrate;
 import org.plugins.rpghorses.events.RPGHorseClaimEvent;
 import org.plugins.rpghorses.horseinfo.LegacyHorseInfo;
-import org.plugins.rpghorses.horses.HorseCrate;
 import org.plugins.rpghorses.horses.RPGHorse;
 import org.plugins.rpghorses.managers.HorseCrateManager;
 import org.plugins.rpghorses.managers.HorseOwnerManager;
@@ -25,7 +24,11 @@ import org.plugins.rpghorses.managers.gui.MarketGUIManager;
 import org.plugins.rpghorses.managers.gui.StableGUIManager;
 import org.plugins.rpghorses.players.HorseOwner;
 import org.plugins.rpghorses.utils.RPGMessagingUtil;
+import rorys.library.util.ItemUtil;
+import rorys.library.util.MessagingUtil;
 import rorys.library.util.NumberUtil;
+
+import java.util.Map;
 
 public class RPGHorsesCommand implements CommandExecutor {
 	
@@ -198,12 +201,74 @@ public class RPGHorsesCommand implements CommandExecutor {
 					return false;
 				}
 				
-				if (this.economy.getBalance(p) < horseCrate.getPrice()) {
+				if (economy != null && this.economy.getBalance(p) < horseCrate.getPrice()) {
 					this.messagingUtil.sendMessageAtPath(p, "messages.cant-afford-crate");
 					return false;
 				}
 				
-				this.economy.withdrawPlayer(p, horseCrate.getPrice());
+				if (economy != null) this.economy.withdrawPlayer(p, horseCrate.getPrice());
+				
+				Map<ItemStack, Integer> itemsMissing = horseCrate.getMissingItems(p);
+				
+				if (!itemsMissing.isEmpty()) {
+					String items = "";
+					int totalMissing = itemsMissing.size(), count = 0;
+					for (ItemStack item : itemsMissing.keySet()) {
+						int amount = itemsMissing.get(item);
+						
+						String name = "";
+						if (item.getItemMeta().hasDisplayName()) {
+							name = item.getItemMeta().getDisplayName();
+						} else {
+							name = "&6";
+							String typeName = item.getType().name().toLowerCase().replace("_", "");
+							for (String word : typeName.split("\\s")) {
+								name += word.substring(0, 1).toUpperCase() + word.substring(1) + " ";
+							}
+							name = name.trim();
+						}
+						
+						items += ChatColor.GRAY + "" + amount + "x " + name + ChatColor.GRAY;
+						
+						if (++count < totalMissing) {
+							if (count == totalMissing - 1) {
+								items += " and ";
+							} else {
+								items += ", ";
+							}
+						}
+					}
+					
+					items = MessagingUtil.format(items);
+					
+					this.messagingUtil.sendMessage(p, this.plugin.getConfig().getString("messages.missing-items-crate"), "ITEMS", items);
+					return false;
+				}
+				
+				Inventory inv = p.getInventory();
+				
+				for (ItemStack itemNeeded : horseCrate.getItemsNeeded()) {
+					int amountNeeded = itemNeeded.getAmount();
+					for (int slot = 0; slot < inv.getSize(); slot++) {
+						ItemStack item = inv.getItem(slot);
+						if (ItemUtil.itemIsReal(item)) {
+							if (item.isSimilar(itemNeeded)) {
+								int amount = item.getAmount();
+								
+								if (amount <= amountNeeded) {
+									inv.setItem(slot, null);
+								} else {
+									item.setAmount(item.getAmount() - amountNeeded);
+								}
+								
+								amountNeeded -= amount;
+								
+								if (amountNeeded <= 0) continue;
+							}
+						}
+					}
+				}
+				
 				RPGHorse rpgHorse = horseCrate.getRPGHorse(horseOwner);
 				rpgHorse.setName(plugin.getConfig().getString("horse-options.default-name", "Horse").replace("{PLAYER}", p.getName()));
 				horseOwner.addRPGHorse(rpgHorse);

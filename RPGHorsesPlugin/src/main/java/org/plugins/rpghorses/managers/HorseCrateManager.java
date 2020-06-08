@@ -4,13 +4,16 @@ import org.bukkit.Bukkit;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Horse;
+import org.bukkit.inventory.ItemStack;
 import org.plugins.rpghorses.RPGHorsesMain;
+import org.plugins.rpghorses.crates.HorseCrate;
 import org.plugins.rpghorses.horseinfo.AbstractHorseInfo;
 import org.plugins.rpghorses.horseinfo.HorseInfo;
 import org.plugins.rpghorses.horseinfo.LegacyHorseInfo;
-import org.plugins.rpghorses.horses.HorseCrate;
+import rorys.library.util.ItemUtil;
 
 import java.util.HashSet;
+import java.util.Set;
 import java.util.logging.Level;
 
 public class HorseCrateManager {
@@ -90,7 +93,19 @@ public class HorseCrateManager {
 				horseInfo = new HorseInfo(entityType, style, color);
 			}
 			
-			HorseCrate horseCrate = new HorseCrate(crateName, config.getDouble("horse-crates." + crateName + ".price"), minHealth, maxHealth, minMovementSpeed, maxMovementSpeed, minJumpStrength, maxJumpStrength, horseInfo, tier);
+			path = "horse-crates." + crateName + ".";
+			
+			double price = config.getDouble(path + "price");
+			
+			Set<ItemStack> itemsNeeded = new HashSet<>();
+			
+			if (config.isSet(path + "items-needed")) {
+				for (String itemName : config.getConfigurationSection(path + "items-needed").getKeys(false)) {
+					itemsNeeded.add(ItemUtil.getItemStack(config, path + "items-needed." + itemName));
+				}
+			}
+			
+			HorseCrate horseCrate = new HorseCrate(crateName, price, itemsNeeded, minHealth, maxHealth, minMovementSpeed, maxMovementSpeed, minJumpStrength, maxJumpStrength, horseInfo, tier);
 			this.horseCrates.add(horseCrate);
 		}
 		

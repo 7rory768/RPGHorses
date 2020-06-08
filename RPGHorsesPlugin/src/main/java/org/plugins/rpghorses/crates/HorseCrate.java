@@ -1,27 +1,37 @@
-package org.plugins.rpghorses.horses;
+package org.plugins.rpghorses.crates;
 
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Horse;
+import org.bukkit.entity.Player;
+import org.bukkit.inventory.Inventory;
+import org.bukkit.inventory.ItemStack;
 import org.plugins.rpghorses.RPGHorsesMain;
 import org.plugins.rpghorses.horseinfo.AbstractHorseInfo;
 import org.plugins.rpghorses.horseinfo.HorseInfo;
 import org.plugins.rpghorses.horseinfo.LegacyHorseInfo;
+import org.plugins.rpghorses.horses.RPGHorse;
 import org.plugins.rpghorses.managers.RPGHorseManager;
 import org.plugins.rpghorses.players.HorseOwner;
+import rorys.library.util.ItemUtil;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Random;
+import java.util.Set;
 
 public class HorseCrate {
 	
-	private double price;
 	private String name;
+	private double price;
+	private Set<ItemStack> itemsNeeded;
 	private double minHealth, maxHealth, minMovementSpeed, maxMovementSpeed, minJumpStrength, maxJumpStrength;
 	private AbstractHorseInfo horseInfo;
 	private int tier;
 	
-	public HorseCrate(String name, double price, double minHealth, double maxHealth, double minMovementSpeed, double maxMovementSpeed, double minJumpStrength, double maxJumpStrength, AbstractHorseInfo horseInfo, int tier) {
+	public HorseCrate(String name, double price, Set<ItemStack> itemsNeeded, double minHealth, double maxHealth, double minMovementSpeed, double maxMovementSpeed, double minJumpStrength, double maxJumpStrength, AbstractHorseInfo horseInfo, int tier) {
 		this.name = name;
 		this.price = price;
+		this.itemsNeeded = itemsNeeded;
 		this.minHealth = minHealth;
 		this.maxHealth = maxHealth;
 		this.minMovementSpeed = minMovementSpeed;
@@ -64,11 +74,34 @@ public class HorseCrate {
 		return new RPGHorse(horseOwner, this.tier, 0, null, health, movementSpeed, jumpStrength, abstractHorseInfo, false, null);
 	}
 	
+	public String getName() {
+		return name;
+	}
+	
 	public double getPrice() {
 		return price;
 	}
 	
-	public String getName() {
-		return name;
+	public Set<ItemStack> getItemsNeeded() {
+		return itemsNeeded;
+	}
+	
+	public Map<ItemStack, Integer> getMissingItems(Player p) {
+		Inventory inv = p.getInventory();
+		Set<ItemStack> itemsNeeded = this.getItemsNeeded();
+		Map<ItemStack, Integer> amountMissing = new HashMap<>();
+		
+		for (ItemStack itemNeeded : itemsNeeded) {
+			int amount = 0, amountNeeded = itemNeeded.getAmount();
+			for (ItemStack item : inv.getContents()) {
+				if (ItemUtil.itemIsReal(item) && item.isSimilar(itemNeeded)) {
+					amount += item.getAmount();
+				}
+			}
+			
+			if (amount < amountNeeded) amountMissing.put(itemNeeded, amountNeeded - amount);
+		}
+		
+		return amountMissing;
 	}
 }

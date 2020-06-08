@@ -13,7 +13,7 @@ import org.bukkit.entity.Player;
 import org.plugins.rpghorses.RPGHorsesMain;
 import org.plugins.rpghorses.horseinfo.HorseInfo;
 import org.plugins.rpghorses.horseinfo.LegacyHorseInfo;
-import org.plugins.rpghorses.horses.HorseCrate;
+import org.plugins.rpghorses.crates.HorseCrate;
 import org.plugins.rpghorses.horses.RPGHorse;
 import org.plugins.rpghorses.managers.*;
 import org.plugins.rpghorses.managers.gui.*;
@@ -75,6 +75,7 @@ public class RPGHorsesAdminCommand implements CommandExecutor {
 				this.trailGUIManager.reload();
 				this.horseDespawner.reloadIdleTime();
 				TimeUtil.refreshUnitStrings(this.plugin.getConfig(), "time-options.");
+				this.rpgHorseManager.reload();
 				this.horseCrateManager.loadHorseCrates();
 				this.particleManager.reload();
 				this.messagingUtil.sendMessageAtPath(sender, "messages.config-reloaded");
