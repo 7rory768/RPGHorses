@@ -10,6 +10,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.Inventory;
+import org.bukkit.inventory.ItemStack;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.plugins.rpghorses.RPGHorsesMain;
 import org.plugins.rpghorses.guis.GUIItem;
@@ -24,10 +25,13 @@ import org.plugins.rpghorses.managers.MessageQueuer;
 import org.plugins.rpghorses.managers.RPGHorseManager;
 import org.plugins.rpghorses.managers.gui.*;
 import org.plugins.rpghorses.players.HorseOwner;
+import org.plugins.rpghorses.tiers.Tier;
 import org.plugins.rpghorses.utils.RPGMessagingUtil;
 import rorys.library.util.ItemUtil;
 import rorys.library.util.MessagingUtil;
 import rorys.library.util.SoundUtil;
+
+import java.util.Map;
 
 public class InventoryClickListener implements Listener {
 	
@@ -103,25 +107,64 @@ public class InventoryClickListener implements Listener {
 				if (itemPurpose == ItemPurpose.BACK) {
 					horseOwner.openStableGUIPage(horseOwner.getCurrentStableGUIPage());
 				} else if (itemPurpose == ItemPurpose.UPGRADE) {
-					if (rpgHorse.getTier() >= this.rpgHorseManager.getMaxTier()) {
+					Tier tier = rpgHorseManager.getTier(rpgHorse.getTier());
+					if (tier == null) {
 						SoundUtil.playSound(p, plugin.getConfig(), "upgrade-options.success-sound");
 						this.messagingUtil.sendMessage(p, this.plugin.getConfig().getString("messages.max-tier-horse").replace("{HORSE-NUMBER}", "" + horseNumber), rpgHorse);
-					} else if (rpgHorse.getXp() > rpgHorseManager.getXPNeededToUpgrade(rpgHorse)) {
-						if (this.rpgHorseManager.getUpgradeCost(rpgHorse) <= this.economy.getBalance(p)) {
-							int tier = rpgHorse.getTier() + 1;
-							if (this.rpgHorseManager.upgradeHorse(p, rpgHorse)) {
-								this.stableGUIManager.updateRPGHorse(rpgHorse);
-								this.messagingUtil.sendMessage(p, this.plugin.getConfig().getString("messages.upgrade-horse-success").replace("{HORSE-NUMBER}", "" + horseNumber).replace("{TIER}", "" + tier), rpgHorse);
-								SoundUtil.playSound(p, plugin.getConfig(), "upgrade-options.success-sound");
-								for (String cmd : this.plugin.getConfig().getStringList("command-options.on-upgrade-success")) {
-									Bukkit.getServer().dispatchCommand(Bukkit.getConsoleSender(), MessagingUtil.format(cmd.replace("{PLAYER}", p.getName())));
+					} else if (rpgHorse.getXp() >= tier.getExpCost()) {
+						if (economy == null || tier.getCost() <= this.economy.getBalance(p)) {
+							Map<ItemStack, Integer> itemsMissing = rpgHorseManager.getMissingItems(p, tier);
+							if (itemsMissing.isEmpty()) {
+								String tierStr = "" + (rpgHorse.getTier() + 1);
+								if (this.rpgHorseManager.upgradeHorse(p, rpgHorse)) {
+									this.stableGUIManager.updateRPGHorse(rpgHorse);
+									this.messagingUtil.sendMessage(p, this.plugin.getConfig().getString("messages.upgrade-horse-success").replace("{HORSE-NUMBER}", "" + horseNumber).replace("{TIER}", tierStr), rpgHorse);
+									SoundUtil.playSound(p, plugin.getConfig(), "upgrade-options.success-sound");
+									for (String cmd : this.plugin.getConfig().getStringList("command-options.on-upgrade-success")) {
+										Bukkit.getServer().dispatchCommand(Bukkit.getConsoleSender(), MessagingUtil.format(cmd.replace("{PLAYER}", p.getName())));
+									}
+								} else {
+									this.messagingUtil.sendMessage(p, this.plugin.getConfig().getString("messages.upgrade-horse-failure").replace("{HORSE-NUMBER}", "" + horseNumber).replace("{TIER}", tierStr), rpgHorse);
+									SoundUtil.playSound(p, plugin.getConfig(), "upgrade-options.failure-sound");
+									for (String cmd : this.plugin.getConfig().getStringList("command-options.on-upgrade-fail")) {
+										Bukkit.getServer().dispatchCommand(Bukkit.getConsoleSender(), MessagingUtil.format(cmd.replace("{PLAYER}", p.getName())));
+									}
 								}
 							} else {
-								this.messagingUtil.sendMessage(p, this.plugin.getConfig().getString("messages.upgrade-horse-failure").replace("{HORSE-NUMBER}", "" + horseNumber).replace("{TIER}", "" + tier), rpgHorse);
 								SoundUtil.playSound(p, plugin.getConfig(), "upgrade-options.failure-sound");
-								for (String cmd : this.plugin.getConfig().getStringList("command-options.on-upgrade-fail")) {
-									Bukkit.getServer().dispatchCommand(Bukkit.getConsoleSender(), MessagingUtil.format(cmd.replace("{PLAYER}", p.getName())));
+								
+								String items = "";
+								int totalMissing = itemsMissing.size(), count = 0;
+								for (ItemStack item : itemsMissing.keySet()) {
+									int amount = itemsMissing.get(item);
+									
+									String name = "";
+									if (item.getItemMeta().hasDisplayName()) {
+										name = item.getItemMeta().getDisplayName();
+									} else {
+										name = "&6";
+										String typeName = item.getType().name().toLowerCase().replace("_", "");
+										for (String word : typeName.split("\\s")) {
+											name += word.substring(0, 1).toUpperCase() + word.substring(1) + " ";
+										}
+										name = name.trim();
+									}
+									
+									items += ChatColor.GRAY + "" + amount + "x " + name + ChatColor.GRAY;
+									
+									if (++count < totalMissing) {
+										if (count == totalMissing - 1) {
+											items += " and ";
+										} else {
+										 items += ", ";
+										}
+									}
 								}
+								
+								items = MessagingUtil.format(items);
+								
+								this.messagingUtil.sendMessage(p, this.plugin.getConfig().getString("messages.missing-items-upgrade").replace("{HORSE-NUMBER}", "" + horseNumber), rpgHorse, "ITEMS", items);
+								p.closeInventory();
 							}
 						} else {
 							SoundUtil.playSound(p, plugin.getConfig(), "upgrade-options.failure-sound");

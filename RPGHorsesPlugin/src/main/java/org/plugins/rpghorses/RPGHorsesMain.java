@@ -78,7 +78,6 @@ public class RPGHorsesMain extends JavaPlugin {
 	public void onEnable() {
 		plugin = this;
 		
-		
 		version = Version.getByName(Bukkit.getBukkitVersion().split("-")[0]);
 		Bukkit.getLogger().info("[RPGHorses] " + version.getName() + " detected");
 		
@@ -102,8 +101,7 @@ public class RPGHorsesMain extends JavaPlugin {
 			setupHelpMessage();
 			Metrics metrics = new Metrics(this, 6955);
 		} else {
-			messagingUtil.sendMessage(Bukkit.getConsoleSender(), "[RPGHorses] Failed to hook into &cVault&r, plugin disabled");
-			plugin.getServer().getPluginManager().disablePlugin(this);
+			messagingUtil.sendMessage(Bukkit.getConsoleSender(), "[RPGHorses] Failed to hook into &cVault&r");
 		}
 	}
 	
@@ -174,8 +172,8 @@ public class RPGHorsesMain extends JavaPlugin {
 		helpMessages.put("&6/{LABEL} help &8- &7Displays this message", "rpghorses.help");
 		helpMessages.put("&6/rpghorses claim &8- &7Claims a wild horse as an RPG horse", "rpghorses.claim");
 		helpMessages.put("&6/rpghorses market &8- &7Opens the market", "rpghorses.market");
-		helpMessages.put("&6/rpghorses sell <horse-number> <price> &8- &7Sells a horse to the market", "rpghorses.sell");
-		helpMessages.put("&6/rpghorses buy <horse-crate> <price> &8- &7Buys a new horse", "rpghorses.buy");
+		helpMessages.put("&6/rpghorses sell <horse-number> <> &8- &7Sells a horse to the market", "rpghorses.sell");
+		helpMessages.put("&6/rpghorses buy <horse-crate> &8- &7Buys a new horse", "rpghorses.buy");
 		helpMessages.put("&6/rpghorses trail <particle> &8- &7Sets the trail of your current horse", "rpghorses.trail");
 		helpMessages.put("&6/rpghorsesadmin give <horse-crate> <player> &8- &7Gives a player a horse crate", "rpghorses.give");
 		helpMessages.put("&6/rpghorsesadmin give <health> <movement-speed> <jump-strength> <type> [color] [style] <player> &8- &7Gives a player a RPGHorse", "rpghorses.give");

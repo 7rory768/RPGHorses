@@ -1,15 +1,20 @@
 package org.plugins.rpghorses.managers;
 
 import net.milkbowl.vault.economy.Economy;
+import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Horse;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.Inventory;
+import org.bukkit.inventory.ItemStack;
 import org.plugins.rpghorses.RPGHorsesMain;
 import org.plugins.rpghorses.horses.RPGHorse;
 import org.plugins.rpghorses.players.HorseOwner;
 import org.plugins.rpghorses.players.HorseRenamer;
 import org.plugins.rpghorses.players.RemoveHorseConfirmation;
+import org.plugins.rpghorses.tiers.Tier;
+import rorys.library.util.ItemUtil;
 
 import java.util.*;
 
@@ -22,6 +27,7 @@ public class RPGHorseManager {
 	private final List<EntityType> validEntityTypes = new ArrayList<>();
 	private HashMap<UUID, RemoveHorseConfirmation> removeConfirmations = new HashMap<>();
 	private HashMap<UUID, HorseRenamer> horseRenamers = new HashMap<>();
+	private List<Tier> tiers = new ArrayList<>();
 	
 	public RPGHorseManager(RPGHorsesMain plugin, HorseOwnerManager horseOwnerManager, Economy economy) {
 		this.plugin = plugin;
@@ -29,10 +35,41 @@ public class RPGHorseManager {
 		this.economy = economy;
 		
 		this.setupValidEntityTypes();
+		reload();
+	}
+	
+	public void reload() {
+		tiers.clear();
+		
+		FileConfiguration config = plugin.getConfig();
+		
+		for (String tierNum : config.getConfigurationSection("horse-tiers").getKeys(false)) {
+			String path = "horse-tiers." + tierNum + ".";
+			try {
+				int tier = Integer.valueOf(tierNum);
+				int successChance = config.getInt(path + "success-chance", 100);
+				double healthMultiplier = config.getDouble(path + "health-multiplier", 1);
+				double speedMultiplier = config.getDouble(path + "movement-speed-multiplier", 1);
+				double strengthMultiplier = config.getDouble(path + "jump-strength-multiplier", 1);
+				double cost = config.getDouble(path + "cost", 0);
+				double expCost = config.getDouble(path + "exp-cost", 0);
+				
+				Set<ItemStack> itemsNeeded = new HashSet<>();
+				if (config.isSet(path + "items-needed")) {
+					for (String itemName : config.getConfigurationSection(path + "items-needed").getKeys(false)) {
+						itemsNeeded.add(ItemUtil.getItemStack(config, path + "items-needed." + itemName));
+					}
+				}
+				
+				tiers.add(new Tier(tier, successChance, healthMultiplier, speedMultiplier, strengthMultiplier, cost, expCost, itemsNeeded));
+			} catch (IllegalArgumentException e) {
+				plugin.getLogger().severe("Invalid tier \"" + tierNum + "\", tiers must be positive integers");
+			}
+		}
 	}
 	
 	public int getMaxTier() {
-		return this.plugin.getConfig().getConfigurationSection("horse-tiers").getKeys(false).size() + 1;
+		return tiers.size() + 1;
 	}
 	
 	public RPGHorse getRPGHorse(Entity entity) {
@@ -47,41 +84,92 @@ public class RPGHorseManager {
 		return null;
 	}
 	
+	public Tier getTier(int tier) {
+		for (Tier tierO : tiers) {
+			if (tierO.getTier() == tier) return tierO;
+		}
+		
+		return null;
+	}
+	
 	public double getUpgradeCost(RPGHorse rpgHorse) {
-		return this.plugin.getConfig().getDouble("horse-tiers." + rpgHorse.getTier() + ".cost");
+		Tier tier = getTier(rpgHorse.getTier());
+		return tier == null ? 0 : tier.getCost();
 	}
 	
 	public double getSuccessChance(RPGHorse rpgHorse) {
-		int tier = rpgHorse.getTier();
-		if (tier < this.getMaxTier()) {
-			return this.plugin.getConfig().getDouble("horse-tiers." + tier + ".success-chance");
-		}
-		return -1;
+		Tier tier = getTier(rpgHorse.getTier());
+		return tier == null ? -1 : tier.getSuccessChance();
 	}
 	
 	public double getXPNeededToUpgrade(RPGHorse rpgHorse) {
-		return plugin.getConfig().getDouble("horse-tiers." + rpgHorse.getTier() + ".exp-cost");
+		Tier tier = getTier(rpgHorse.getTier());
+		return tier == null ? 0 : tier.getExpCost();
+	}
+	
+	public Map<ItemStack, Integer> getMissingItems(Player p, Tier tier) {
+		Inventory inv = p.getInventory();
+		Set<ItemStack> itemsNeeded = tier.getItemsNeeded();
+		Map<ItemStack, Integer> amountMissing = new HashMap<>();
+		
+		for (ItemStack itemNeeded : itemsNeeded) {
+			int amount = 0, amountNeeded = itemNeeded.getAmount();
+			for (ItemStack item : inv.getContents()) {
+				if (ItemUtil.itemIsReal(item) && item.isSimilar(itemNeeded)) {
+					amount += item.getAmount();
+				}
+			}
+			
+			if (amount < amountNeeded) amountMissing.put(itemNeeded, amountNeeded - amount);
+		}
+		
+		return amountMissing;
 	}
 	
 	public boolean upgradeHorse(Player p, RPGHorse rpgHorse) {
-		int tier = rpgHorse.getTier();
-		if (tier < this.getMaxTier()) {
+		Tier tier = getTier(rpgHorse.getTier());
+		if (tier != null) {
 			
-			this.economy.withdrawPlayer(p, this.getUpgradeCost(rpgHorse));
+			if (economy != null && tier.getCost() > 0) this.economy.withdrawPlayer(p, tier.getCost());
 			
-			double success = this.getSuccessChance(rpgHorse);
-			if ((new Random()).nextDouble() * 100 >= success) {
-				return false;
+			Inventory inv = p.getInventory();
+			Set<ItemStack> itemsNeeded = tier.getItemsNeeded();
+			
+			if (!getMissingItems(p, tier).isEmpty()) return false;
+			
+			for (ItemStack itemNeeded : itemsNeeded) {
+				int amountNeeded = itemNeeded.getAmount();
+				for (int slot = 0; slot < inv.getSize(); slot++) {
+					ItemStack item = inv.getItem(slot);
+					if (ItemUtil.itemIsReal(item)) {
+						if (item.isSimilar(itemNeeded)) {
+							int amount = item.getAmount();
+							
+							if (amount <= amountNeeded) {
+								inv.setItem(slot, null);
+							} else {
+								item.setAmount(item.getAmount() - amountNeeded);
+							}
+							
+							amountNeeded -= amount;
+							
+							if (amountNeeded <= 0) continue;
+						}
+					}
+				}
 			}
 			
-			double health = rpgHorse.getMaxHealth() * this.plugin.getConfig().getDouble("horse-tiers." + tier + ".health-multiplier");
-			double movementSpeed = rpgHorse.getMovementSpeed() * this.plugin.getConfig().getDouble("horse-tiers." + tier + ".movement-speed-multiplier");
-			double jumpStrength = rpgHorse.getMovementSpeed() * this.plugin.getConfig().getDouble("horse-tiers." + tier + ".jump-strength-multiplier");
+			double success = this.getSuccessChance(rpgHorse);
+			if (success < 100 && (new Random()).nextDouble() * 100 >= success) return false;
+			
+			double health = rpgHorse.getMaxHealth() * tier.getHealthMultiplier();
+			double movementSpeed = rpgHorse.getMovementSpeed() * tier.getMovementSpeedMultiplier();
+			double jumpStrength = rpgHorse.getJumpStrength() * tier.getJumpStrengthMultiplier();
 			
 			rpgHorse.setMaxHealth(health);
 			rpgHorse.setMovementSpeed(movementSpeed);
 			rpgHorse.setJumpStrength(jumpStrength);
-			rpgHorse.setTier(tier + 1);
+			rpgHorse.setTier(tier.getTier() + 1);
 			return true;
 		}
 		return false;
