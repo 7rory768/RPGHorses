@@ -17,10 +17,12 @@ import org.plugins.rpghorses.managers.gui.StableGUIManager;
 
 public class EntityDamageByEntityListener implements Listener {
 	
+	private final RPGHorsesMain plugin;
 	private final RPGHorseManager rpgHorseManager;
 	private final StableGUIManager stableGuiManager;
 	
 	public EntityDamageByEntityListener(RPGHorsesMain plugin, RPGHorseManager rpgHorseManager, StableGUIManager stableGuiManager) {
+		this.plugin = plugin;
 		this.rpgHorseManager = rpgHorseManager;
 		this.stableGuiManager = stableGuiManager;
 		
@@ -31,7 +33,8 @@ public class EntityDamageByEntityListener implements Listener {
 	public void onEntityDamageByEntity(EntityDamageByEntityEvent e) {
 		Entity victim = e.getEntity();
 		Entity damager = e.getDamager();
-		if (this.rpgHorseManager.isValidEntityType(victim.getType())) {
+		RPGHorse rpgHorse = this.rpgHorseManager.getRPGHorse(victim);
+		if (rpgHorse != null) {
 			EntityType damagerType = damager.getType(), victimType = victim.getType();
 			Player damagerPlayer = null;
 			
@@ -43,7 +46,9 @@ public class EntityDamageByEntityListener implements Listener {
 				if (projectileSource instanceof Player) damagerPlayer = (Player) projectileSource;
 			}
 			
-			if (damagerPlayer != null) {
+			boolean horsePvp = plugin.getConfig().getBoolean("horse-options.horse-pvp", false);
+			
+			if (damagerPlayer != null && (!horsePvp || damagerPlayer.getUniqueId().equals(rpgHorse.getHorseOwner().getUUID()))) {
 				e.setCancelled(true);
 			}
 		}
