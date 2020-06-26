@@ -14,7 +14,7 @@
     </properties>
 
     <artifactId>RPGHorsesPlugin</artifactId>
-    <version>1.1.1</version>
+    <version>1.1.2</version>
 
     <repositories>
         <repository>
@@ -97,6 +97,13 @@
         </dependency>
         <dependency>
             <groupId>org.plugins.rpghorses</groupId>
+            <artifactId>1_16_1</artifactId>
+            <version>1.0.0</version>
+            <scope>compile</scope>
+            <optional>true</optional>
+        </dependency>
+        <dependency>
+            <groupId>org.plugins.rpghorses</groupId>
             <artifactId>API</artifactId>
             <version>1.0.0</version>
             <scope>compile</scope>
@@ -105,7 +112,7 @@
         <dependency>
             <groupId>org.spigotmc</groupId>
             <artifactId>spigot-api</artifactId>
-            <version>1.15.2-R0.1-SNAPSHOT</version>
+            <version>1.16.1-R0.1-SNAPSHOT</version>
             <scope>provided</scope>
             <optional>true</optional>
         </dependency>
