@@ -49,9 +49,11 @@
             <scope>compile</scope>
         </dependency>
         <dependency>
-            <groupId>local.vault</groupId>
+            <groupId>dependencies</groupId>
             <artifactId>Vault</artifactId>
             <version>1.7.2</version>
+            <scope>system</scope>
+            <systemPath>${project.basedir}/dependencies/Vault.jar</systemPath>
             <optional>true</optional>
         </dependency>
         <dependency>
