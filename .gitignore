@@ -1,7 +1,8 @@
 /*/target/
 /target/
-/RPGHorsesPlugin/Vault.jar
-/1_15_2/spigot-1.15.2.jar
 */dependency-reduced-pom.xml
 out
-/1_16_1/spigot-1.16.1.jar
+/*/*.iml
+*.iml
+/*.iml
+.idea/
