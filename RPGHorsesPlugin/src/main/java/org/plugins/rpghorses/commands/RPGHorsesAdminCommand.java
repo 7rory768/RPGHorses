@@ -103,7 +103,7 @@ public class RPGHorsesAdminCommand implements CommandExecutor {
 						return false;
 					}
 					
-					String playerArg = args[1];
+					String playerArg = args[2];
 					p = this.runPlayerCheck(sender, playerArg);
 					if (p == null) {
 						return false;
