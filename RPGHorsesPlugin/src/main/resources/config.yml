@@ -48,6 +48,17 @@
 
 prefix: '&6&lRPGHorses &8\u00BB &7'
 
+mysql:
+  enabled: false
+  host: 'localhost'
+  port: 3306
+  username: 'root'
+  password: 'root'
+  # Getting an SSL connection warning? append '?useSSL=false&useUnicode=true' to the end of your database string
+  database: 'mcserver'
+  # Should items on horses be synced between servers?
+  save-items: false
+
 horse-options:
   default-name: '&6{PLAYER}''s &7Horse'
   # Should a player start with a default horse? If so, specify which crate they should get, if not just set this to ''

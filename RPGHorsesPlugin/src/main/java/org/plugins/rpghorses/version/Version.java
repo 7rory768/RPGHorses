@@ -1,5 +1,7 @@
 package org.plugins.rpghorses.version;
 
+import org.bukkit.Bukkit;
+
 public enum Version {
 	
 	v1_8("1.8", 8, ""),
@@ -43,4 +45,9 @@ public enum Version {
 		return Version.v1_15;
 	}
 	
+	public static Version getVersion() {
+		return Version.getByName(Bukkit.getBukkitVersion().split("-")[0]);
+	}
+	
 }
+

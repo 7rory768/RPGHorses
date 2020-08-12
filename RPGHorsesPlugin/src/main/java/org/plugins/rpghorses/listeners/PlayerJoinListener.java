@@ -40,18 +40,26 @@ public class PlayerJoinListener implements Listener {
 	@EventHandler(priority = EventPriority.MONITOR)
 	public void onJoin(PlayerJoinEvent e) {
 		Player p = e.getPlayer();
-		HorseOwner horseOwner = this.horseOwnerManager.loadData(p);
-		this.stableGuiManager.setupStableGUI(horseOwner);
+		
 		new BukkitRunnable() {
 			@Override
 			public void run() {
+				HorseOwner horseOwner = horseOwnerManager.loadData(p);
+				stableGuiManager.setupStableGUI(horseOwner);
+			}
+		}.runTaskAsynchronously(plugin);
+		
+		new BukkitRunnable() {
+			@Override
+			public void run() {
+				HorseOwner horseOwner = horseOwnerManager.getHorseOwner(p);
 				marketGUIManager.setupYourHorsesGUI(horseOwner);
 				messageQueuer.sendQueuedMessages(p);
 				if (p.isOp() && updateNotifier.needsUpdate()) {
 					p.sendMessage(updateNotifier.getUpdateMsg());
 				}
 			}
-		}.runTaskLaterAsynchronously(this.plugin, 5L);
+		}.runTaskLaterAsynchronously(this.plugin, 10L);
 	}
 	
 }

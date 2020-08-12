@@ -1,5 +1,6 @@
 package org.plugins.rpghorses;
 
+import lombok.Getter;
 import net.milkbowl.vault.economy.Economy;
 import net.milkbowl.vault.permission.Permission;
 import org.bstats.bukkit.Metrics;
@@ -22,6 +23,7 @@ import rorys.library.util.CustomConfigUtil;
 import rorys.library.util.ItemUtil;
 import rorys.library.util.UpdateNotifier;
 
+import java.sql.SQLException;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
@@ -38,6 +40,7 @@ public class RPGHorsesMain extends JavaPlugin {
 	private static NMS NMS;
 	private RPGHorseManager rpgHorseManager;
 	private CustomConfig marketConfig;
+	@Getter
 	private PlayerConfigs playerConfigs;
 	private ItemUtil itemUtil;
 	private RPGMessagingUtil messagingUtil;
@@ -51,6 +54,7 @@ public class RPGHorsesMain extends JavaPlugin {
 	private HorseCrateManager horseCrateManager;
 	private ParticleManager particleManager;
 	private XPManager xpManager;
+	private SQLManager sqlManager;
 	private UpdateNotifier updateNotifier;
 	private MessageQueuer messageQueuer;
 	private Permission permissions;
@@ -72,6 +76,10 @@ public class RPGHorsesMain extends JavaPlugin {
 	
 	public RPGHorseManager getRpgHorseManager() {
 		return rpgHorseManager;
+	}
+	
+	public SQLManager getSQLManager() {
+		return sqlManager;
 	}
 	
 	@Override
@@ -131,8 +139,10 @@ public class RPGHorsesMain extends JavaPlugin {
 	public void initializeVariables() {
 		this.updateNotifier = new UpdateNotifier(this, messagingUtil, 76836);
 		this.updateNotifier.checkForUpdate();
+		
 		this.itemUtil = new ItemUtil(this);
 		this.horseCrateManager = new HorseCrateManager(this);
+		if (plugin.getConfig().getBoolean("mysql.enabled", false)) this.sqlManager = new SQLManager(this);
 		this.horseOwnerManager = new HorseOwnerManager(this, this.horseCrateManager, this.playerConfigs, this.permissions);
 		this.rpgHorseManager = new RPGHorseManager(this, this.horseOwnerManager, this.economy);
 		this.stableGuiManager = new StableGUIManager(this, this.horseOwnerManager, this.rpgHorseManager, this.itemUtil, this.messagingUtil);
@@ -197,6 +207,12 @@ public class RPGHorsesMain extends JavaPlugin {
 		}
 		
 		this.horseOwnerManager.saveData();
+		
+		try {
+			sqlManager.close();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
 	}
 	
 	public void sendHelpMessage(CommandSender sender, String label) {
