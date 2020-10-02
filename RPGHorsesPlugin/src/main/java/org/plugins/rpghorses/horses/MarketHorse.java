@@ -1,25 +1,26 @@
 package org.plugins.rpghorses.horses;
 
+import lombok.Getter;
+import lombok.Setter;
+
 public class MarketHorse {
 	
+	@Getter
 	private RPGHorse rpgHorse;
+	@Getter
 	private double price;
-	private int index;
+	@Getter @Setter
+	private int id, index;
 	
-	public MarketHorse(int index, RPGHorse rpgHorse, double price) {
+	public MarketHorse(int id, RPGHorse rpgHorse, double price, int index) {
+		this.id = id;
 		this.rpgHorse = rpgHorse;
 		this.price = price;
-	}
-	
-	public int getIndex() {
-		return index;
+		this.index = index;
 	}
 	
 	public RPGHorse getRPGHorse() {
 		return rpgHorse;
 	}
 	
-	public double getPrice() {
-		return price;
-	}
 }

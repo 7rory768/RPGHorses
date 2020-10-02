@@ -12,8 +12,8 @@
 #   -> To get a skin value, click a head on the website then scroll down to "Value" under the "Other" header
 # For an item to use a skin-value, its material must be PLAYER_HEAD (SKULL_ITEM for 1.8)
 
-# Since this plugin supports 1.8 - 1.15.2 you need to make sure you're using the correct website for finding enum values:
-# NOTE: By default, this config has 1.15.2 values in it, it will still work on lower versions for the current configuration
+# Since this plugin supports 1.8 - 1.16.3 you need to make sure you're using the correct website for finding enum values:
+# NOTE: By default, this config has 1.16.3 values in it, it will still work on lower versions for the current configuration
 #         but, if you set new values they must be from the correct version website
 #
 # Materials:
@@ -24,7 +24,8 @@
 #  1.12.2: https://helpch.at/docs/1.12.2/org/bukkit/Material.html
 #  1.13.2: https://helpch.at/docs/1.13.2/org/bukkit/Material.html
 #  1.14.4: https://helpch.at/docs/1.14.4/org/bukkit/Material.html
-#  1.15.2: https://hub.spigotmc.org/javadocs/bukkit/org/bukkit/Material.html
+#  1.15.2: https://helpch.at/docs/1.15.2/org/bukkit/Material.html
+#  1.16.3: https://hub.spigotmc.org/javadocs/bukkit/org/bukkit/Material.html
 #
 # Sounds:
 #  1.8.8: https://helpch.at/docs/1.8/org/bukkit/Sound.html
@@ -34,20 +35,23 @@
 #  1.12.2: https://helpch.at/docs/1.12.2/org/bukkit/Sound.html
 #  1.13.2: https://helpch.at/docs/1.13.2/org/bukkit/Sound.html
 #  1.14.4: https://helpch.at/docs/1.14.4/org/bukkit/Sound.html
-#  1.15.2: https://hub.spigotmc.org/javadocs/bukkit/org/bukkit/Sound.html
+#  1.15.2: https://helpch.at/docs/1.15.2/org/bukkit/Sound.html
+#  1.16.3: https://hub.spigotmc.org/javadocs/bukkit/org/bukkit/Sound.html
 #
 # Particles:
-#  1.8.8: https://helpch.at/docs/1.8/org/bukkit/Particle.html
+#  1.8.8: https://helpch.at/docs/1.8/org/bukkit/Effect.html
 #  1.9.4: https://helpch.at/docs/1.9.4/org/bukkit/Particle.html
 #  1.10.2: https://helpch.at/docs/1.10.2/org/bukkit/Particle.html
 #  1.11.2: https://helpch.at/docs/1.11.2/org/bukkit/Particle.html
 #  1.12.2: https://helpch.at/docs/1.12.2/org/bukkit/Particle.html
 #  1.13.2: https://helpch.at/docs/1.13.2/org/bukkit/Particle.html
 #  1.14.4: https://helpch.at/docs/1.14.4/org/bukkit/Particle.html
-#  1.15.2: https://hub.spigotmc.org/javadocs/spigot/org/bukkit/Particle.html
+#  1.15.2: https://helpch.at/docs/1.15.2/org/bukkit/Particle.html
+#  1.16.3: https://hub.spigotmc.org/javadocs/spigot/org/bukkit/Particle.html
 
 prefix: '&6&lRPGHorses &8\u00BB &7'
 
+# This is used to sync data between servers, there's not much point in using this unless that is your goal
 mysql:
   enabled: false
   host: 'localhost'
@@ -56,7 +60,11 @@ mysql:
   password: 'root'
   # Getting an SSL connection warning? append '?useSSL=false&useUnicode=true' to the end of your database string
   database: 'mcserver'
-  # Should items on horses be synced between servers?
+  # "rpghorses_" will be added to the beginning of both table names automatically
+  player-table: 'players' # Stores if players have received a default horse already, and their auto-mount toggle
+  horse-table: 'horses' # Stores horses
+  market-table: 'market' # NOTE: All servers sharing the same horse-table MUST share the same market-table
+  # Should items on horses be synced between servers? (Should only be used for server mirroring)
   save-items: false
 
 horse-options:
@@ -508,7 +516,7 @@ trail-gui-options:
     NAUTILUS: 'eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvODEyNmNhYzE2ZmQ4ZTQ3NTE2ZTg0NTIwY2QzOTgxYzQ1ZDcwOGY1NWQzNDU4NDk0ZDhmMDgxYzUwNWQ2ZDMwNCJ9fX0=' # https://minecraft-heads.com/custom-heads/decoration/20119-nautilus-shell
     DRIPPING_HONEY: 'eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvZTZkY2M4ZjM3YWM5OWQ5NTFlY2JjNWRmNWU4NTgyMTMzZjVmMjMwN2U3NjlhZjZiNmNmZmY0MjgyMTgwNjcifX19' # https://minecraft-heads.com/custom-heads/food%20&%20drinks/871-honey\
     # All trails below are 1.8.8 effects, you can remove them if you're using 1.8+
-    POTION-BREAK: 'eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvZTAxZTA0MGNiMDFjZjJjY2U0NDI4MzU4YWUzMWQyZTI2NjIwN2M0N2NiM2FkMTM5NzA5YzYyMDEzMGRjOGFkNCJ9fX0=' # https://minecraft-heads.com/custom-heads/decoration/22850-orb-blue
+    POTION_BREAK: 'eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvZTAxZTA0MGNiMDFjZjJjY2U0NDI4MzU4YWUzMWQyZTI2NjIwN2M0N2NiM2FkMTM5NzA5YzYyMDEzMGRjOGFkNCJ9fX0=' # https://minecraft-heads.com/custom-heads/decoration/22850-orb-blue
     ENDER_SIGNAL: 'eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvMjc3ZTNkMGY3ZGQ2NmEyNjFjZjk2MmFhMGMxMzMzYjQ5YmZjZjM2MzlmYWFlZWIxNzRkNTk1NzU3ZGY2MTEifX19' # https://minecraft-heads.com/custom-heads/decoration/159-endportal-frame
     POTION_SWIRL: 'eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvN2VlYTM0NTkwOGQxN2RjNDQ5NjdkMWRjZTQyOGYyMmYyYjE5Mzk3MzcwYWJlYjc3YmRjMTJlMmRkMWNiNiJ9fX0=' # https://minecraft-heads.com/custom-heads/decoration/4103-magic-book
     FLYING_GLYPH: 'eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvYjJmNzkwMTZjYWQ4NGQxYWUyMTYwOWM0ODEzNzgyNTk4ZTM4Nzk2MWJlMTNjMTU2ODI3NTJmMTI2ZGNlN2EifX19' # https://minecraft-heads.com/custom-heads/decoration/763-enchantment-table

@@ -14,7 +14,7 @@
     </properties>
 
     <artifactId>RPGHorsesPlugin</artifactId>
-    <version>1.1.2</version>
+    <version>1.2.0</version>
 
     <repositories>
         <repository>
@@ -43,10 +43,9 @@
             <scope>compile</scope>
         </dependency>
         <dependency>
-            <groupId>com.github.WesJD</groupId>
-            <artifactId>AnvilGUI</artifactId>
-            <version>master-7a87a9dd65-1</version>
-            <scope>compile</scope>
+            <groupId>com.github.WesJD.AnvilGUI</groupId>
+            <artifactId>anvilgui</artifactId>
+            <version>master-SNAPSHOT</version>
         </dependency>
         <dependency>
             <groupId>dependencies</groupId>
@@ -55,6 +54,12 @@
             <scope>system</scope>
             <systemPath>${project.basedir}/dependencies/Vault.jar</systemPath>
             <optional>true</optional>
+        </dependency>
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+            <version>1.18.4</version>
+            <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>com.github.7rory768</groupId>
@@ -99,7 +104,7 @@
         </dependency>
         <dependency>
             <groupId>org.plugins.rpghorses</groupId>
-            <artifactId>1_16_1</artifactId>
+            <artifactId>1_16_3</artifactId>
             <version>1.0.0</version>
             <scope>compile</scope>
             <optional>true</optional>

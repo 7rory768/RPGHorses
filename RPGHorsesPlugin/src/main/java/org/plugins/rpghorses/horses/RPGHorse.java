@@ -1,5 +1,7 @@
 package org.plugins.rpghorses.horses;
 
+import lombok.Getter;
+import lombok.Setter;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.Particle;
@@ -28,6 +30,8 @@ public class RPGHorse {
 	private boolean dead, inMarket, gainedXP;
 	private Long deathTime;
 	private Particle particle;
+	@Getter @Setter
+	private int index = -1;
 	
 	public RPGHorse(HorseOwner horseOwner, int tier, double xp, String name, double health, double movementSpeed, double jumpStrength, AbstractHorseInfo horseInfo, boolean inMarket, Particle particle) {
 		this.horseOwner = horseOwner;

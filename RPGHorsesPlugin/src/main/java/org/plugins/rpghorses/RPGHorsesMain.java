@@ -26,6 +26,7 @@ import rorys.library.util.UpdateNotifier;
 import java.sql.SQLException;
 import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.concurrent.Callable;
 
 /*
 TODO:
@@ -45,8 +46,11 @@ public class RPGHorsesMain extends JavaPlugin {
 	private ItemUtil itemUtil;
 	private RPGMessagingUtil messagingUtil;
 	private HorseDespawner horseDespawner;
+	@Getter
 	private HorseOwnerManager horseOwnerManager;
+	@Getter
 	private StableGUIManager stableGuiManager;
+	@Getter
 	private MarketGUIManager marketGUIManager;
 	private HorseGUIManager horseGUIManager;
 	private TrailGUIManager trailGUIManager;
@@ -89,6 +93,8 @@ public class RPGHorsesMain extends JavaPlugin {
 		version = Version.getByName(Bukkit.getBukkitVersion().split("-")[0]);
 		Bukkit.getLogger().info("[RPGHorses] " + version.getName() + " detected");
 		
+		Bukkit.getLogger().info(version.getAbstractName());
+		
 		try {
 			final Class<?> clazz = Class.forName("org.plugins.rpghorses." + version.getAbstractName() + ".NMSHandler");
 			if (NMS.class.isAssignableFrom(clazz)) {
@@ -108,6 +114,7 @@ public class RPGHorsesMain extends JavaPlugin {
 			this.loadCommands();
 			setupHelpMessage();
 			Metrics metrics = new Metrics(this, 6955);
+			metrics.addCustomChart(new Metrics.SimplePie("sql", () -> getConfig().getBoolean("sql.enabled") ? "Enabled" : "Disabled"));
 		} else {
 			messagingUtil.sendMessage(Bukkit.getConsoleSender(), "[RPGHorses] Failed to hook into &cVault&r");
 		}
@@ -146,7 +153,7 @@ public class RPGHorsesMain extends JavaPlugin {
 		this.horseOwnerManager = new HorseOwnerManager(this, this.horseCrateManager, this.playerConfigs, this.permissions);
 		this.rpgHorseManager = new RPGHorseManager(this, this.horseOwnerManager, this.economy);
 		this.stableGuiManager = new StableGUIManager(this, this.horseOwnerManager, this.rpgHorseManager, this.itemUtil, this.messagingUtil);
-		this.marketGUIManager = new MarketGUIManager(this, this.horseOwnerManager, this.rpgHorseManager, this.marketConfig, this.itemUtil);
+		this.marketGUIManager = new MarketGUIManager(this, this.horseOwnerManager, this.marketConfig, this.itemUtil);
 		this.horseGUIManager = new HorseGUIManager(this, this.horseOwnerManager, this.stableGuiManager);
 		this.messageQueuer = new MessageQueuer(this.playerConfigs, this.messagingUtil);
 		this.horseDespawner = new HorseDespawner(this, this.horseOwnerManager, this.rpgHorseManager);
@@ -207,6 +214,7 @@ public class RPGHorsesMain extends JavaPlugin {
 		}
 		
 		this.horseOwnerManager.saveData();
+		this.marketGUIManager.saveMarketHorses();
 		
 		try {
 			sqlManager.close();

@@ -1,5 +1,6 @@
 package org.plugins.rpghorses.utils;
 
+import org.bukkit.Bukkit;
 import org.bukkit.inventory.ItemStack;
 import org.plugins.rpghorses.RPGHorsesMain;
 import org.plugins.rpghorses.horseinfo.LegacyHorseInfo;

@@ -6,10 +6,12 @@ import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
+import org.bukkit.scheduler.BukkitRunnable;
 import org.plugins.rpghorses.RPGHorsesMain;
 import org.plugins.rpghorses.guis.GUILocation;
 import org.plugins.rpghorses.guis.instances.*;
 import org.plugins.rpghorses.horses.RPGHorse;
+import org.plugins.rpghorses.managers.SQLManager;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -62,7 +64,11 @@ public class HorseOwner {
 	
 	public void addRPGHorse(RPGHorse rpgHorse) {
 		this.rpgHorses.add(rpgHorse);
+		rpgHorse.setIndex(rpgHorses.size() - 1);
 		rpgHorse.setHorseOwner(this);
+		
+		SQLManager sqlManager = RPGHorsesMain.getInstance().getSQLManager();
+		if (sqlManager != null) sqlManager.addHorse(rpgHorse);
 	}
 	
 	public RPGHorse removeRPGHorse(int index) {
@@ -74,11 +80,37 @@ public class HorseOwner {
 		return null;
 	}
 	
+	public RPGHorse removeRPGHorse(int index, boolean sqlRemove) {
+		if (index >= 0 && index < this.rpgHorses.size()) {
+			RPGHorse rpgHorse = this.rpgHorses.get(index);
+			this.removeRPGHorse(rpgHorse, sqlRemove);
+			return rpgHorse;
+		}
+		return null;
+	}
+	
 	public void removeRPGHorse(RPGHorse rpgHorse) {
+		removeRPGHorse(rpgHorse, true);
+	}
+	
+	
+	public void removeRPGHorse(RPGHorse rpgHorse, boolean sqlRemove) {
 		if (rpgHorse == this.currentHorse) {
 			this.setCurrentHorse(null);
 		}
 		this.rpgHorses.remove(rpgHorse);
+		
+		int index = rpgHorse.getIndex();
+		for (RPGHorse otherHorse : rpgHorses) {
+			if (otherHorse.getIndex() > index) {
+				otherHorse.setIndex(otherHorse.getIndex() - 1);
+			}
+		}
+		
+		if (sqlRemove) {
+			SQLManager sqlManager = RPGHorsesMain.getInstance().getSQLManager();
+			if (sqlManager != null) sqlManager.removeHorse(rpgHorse);
+		}
 	}
 	
 	public RPGHorse getCurrentHorse() {
@@ -219,8 +251,13 @@ public class HorseOwner {
 	
 	public void openMarketGUIPage(MarketGUIPage marketGUIPage) {
 		if (marketGUIPage != null) {
-			getPlayer().openInventory(marketGUIPage.getGUI());
-			guiLocation = GUILocation.MARKET_GUI;
+			new BukkitRunnable() {
+				@Override
+				public void run() {
+					getPlayer().openInventory(marketGUIPage.getGUI());
+					guiLocation = GUILocation.MARKET_GUI;
+				}
+			}.runTask(RPGHorsesMain.getInstance());
 			this.marketGUIPage = marketGUIPage;
 		}
 	}

@@ -15,11 +15,9 @@ import org.plugins.rpghorses.RPGHorsesMain;
 import org.plugins.rpghorses.crates.HorseCrate;
 import org.plugins.rpghorses.events.RPGHorseClaimEvent;
 import org.plugins.rpghorses.horseinfo.LegacyHorseInfo;
+import org.plugins.rpghorses.horses.MarketHorse;
 import org.plugins.rpghorses.horses.RPGHorse;
-import org.plugins.rpghorses.managers.HorseCrateManager;
-import org.plugins.rpghorses.managers.HorseOwnerManager;
-import org.plugins.rpghorses.managers.ParticleManager;
-import org.plugins.rpghorses.managers.RPGHorseManager;
+import org.plugins.rpghorses.managers.*;
 import org.plugins.rpghorses.managers.gui.MarketGUIManager;
 import org.plugins.rpghorses.managers.gui.StableGUIManager;
 import org.plugins.rpghorses.players.HorseOwner;
@@ -39,6 +37,7 @@ public class RPGHorsesCommand implements CommandExecutor {
 	private final MarketGUIManager marketGUIManager;
 	private final HorseCrateManager horseCrateManager;
 	private final ParticleManager particleManager;
+	private final SQLManager sqlManager;
 	private final Economy economy;
 	private final RPGMessagingUtil messagingUtil;
 	
@@ -50,6 +49,7 @@ public class RPGHorsesCommand implements CommandExecutor {
 		this.marketGUIManager = marketGUIManager;
 		this.horseCrateManager = horseCrateManager;
 		this.particleManager = particleManager;
+		this.sqlManager = plugin.getSQLManager();
 		this.economy = economy;
 		this.messagingUtil = messagingUtil;
 	}
@@ -164,7 +164,12 @@ public class RPGHorsesCommand implements CommandExecutor {
 				}
 				
 				rpgHorse.setInMarket(true);
-				this.marketGUIManager.addHorse(rpgHorse, price, horseNumber - 1);
+				MarketHorse marketHorse = this.marketGUIManager.addHorse(rpgHorse, price, horseNumber - 1);
+				
+				if (sqlManager != null) {
+					sqlManager.addMarketHorse(marketHorse);
+				}
+				
 				this.stableGUIManager.updateRPGHorse(rpgHorse);
 				this.messagingUtil.sendMessage(sender, this.plugin.getConfig().getString("messages.horse-added-to-market").replace("{HORSE-NUMBER}", "" + horseNumber), rpgHorse);
 				return true;

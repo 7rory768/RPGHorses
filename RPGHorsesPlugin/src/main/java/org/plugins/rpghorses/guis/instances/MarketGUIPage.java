@@ -1,6 +1,7 @@
 package org.plugins.rpghorses.guis.instances;
 
 import org.bukkit.inventory.Inventory;
+import org.plugins.rpghorses.horses.MarketHorse;
 import org.plugins.rpghorses.horses.RPGHorse;
 
 import java.util.HashMap;
@@ -9,9 +10,9 @@ public class MarketGUIPage {
 
 	private int pageNum;
 	private Inventory gui;
-	HashMap<Integer, RPGHorse> horseSlots;
+	HashMap<Integer, MarketHorse> horseSlots;
 
-	public MarketGUIPage(int pageNum, Inventory gui, HashMap<Integer, RPGHorse> horseSlots) {
+	public MarketGUIPage(int pageNum, Inventory gui, HashMap<Integer, MarketHorse> horseSlots) {
 		this.pageNum = pageNum;
 		this.gui = gui;
 		this.horseSlots = horseSlots;
@@ -28,12 +29,12 @@ public class MarketGUIPage {
 	public void setGUI(Inventory gui) {
 		this.gui = gui;
 	}
-
-	public RPGHorse getRPGHorse(int slot) {
+	
+	public MarketHorse getHorse(int slot) {
 		return this.horseSlots.get(slot);
 	}
 
-	public HashMap<Integer, RPGHorse> getHorseSlots() {
+	public HashMap<Integer, MarketHorse> getHorseSlots() {
 		return horseSlots;
 	}
 }

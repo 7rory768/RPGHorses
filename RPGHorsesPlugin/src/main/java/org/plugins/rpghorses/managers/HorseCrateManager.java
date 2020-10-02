@@ -99,7 +99,7 @@ public class HorseCrateManager {
 			
 			Set<ItemStack> itemsNeeded = new HashSet<>();
 			
-			if (config.isSet(path + "items-needed")) {
+			if (config.isSet(path + "items-needed") && config.getConfigurationSection(path + "items-needed") != null) {
 				for (String itemName : config.getConfigurationSection(path + "items-needed").getKeys(false)) {
 					itemsNeeded.add(ItemUtil.getItemStack(config, path + "items-needed." + itemName));
 				}
