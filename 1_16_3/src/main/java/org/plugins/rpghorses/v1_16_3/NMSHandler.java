@@ -1,9 +1,9 @@
-package org.plugins.rpghorses.v1_16_1;
+package org.plugins.rpghorses.v1_16_3;
 
 import com.google.common.collect.Sets;
-import net.minecraft.server.v1_16_R1.EntityCreature;
-import net.minecraft.server.v1_16_R1.PathfinderGoalSelector;
-import org.bukkit.craftbukkit.v1_16_R1.entity.CraftEntity;
+import net.minecraft.server.v1_16_R2.EntityCreature;
+import net.minecraft.server.v1_16_R2.PathfinderGoalSelector;
+import org.bukkit.craftbukkit.v1_16_R2.entity.CraftEntity;
 import org.bukkit.entity.LivingEntity;
 import org.plugins.rpghorses.NMS;
 

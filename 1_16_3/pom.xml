@@ -10,7 +10,7 @@
         <version>1.0.0</version>
     </parent>
 
-    <artifactId>1_16_1</artifactId>
+    <artifactId>1_16_3</artifactId>
     <groupId>org.plugins.rpghorses</groupId>
     <packaging>jar</packaging>
     <version>1.0.0</version>
@@ -25,8 +25,9 @@
         <dependency>
             <groupId>local.spigotmc</groupId>
             <artifactId>spigot</artifactId>
-            <version>1.16.1</version>
-            <scope>provided</scope>
+            <version>1.16.3</version>
+            <scope>system</scope>
+            <systemPath>${project.basedir}/dependencies/spigot-1.16.3.jar</systemPath>
             <optional>true</optional>
         </dependency>
     </dependencies>
