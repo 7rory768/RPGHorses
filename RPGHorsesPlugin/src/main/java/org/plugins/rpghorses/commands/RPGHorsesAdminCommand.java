@@ -12,16 +12,16 @@ import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Horse;
 import org.bukkit.entity.Player;
 import org.plugins.rpghorses.RPGHorsesMain;
+import org.plugins.rpghorses.crates.HorseCrate;
 import org.plugins.rpghorses.horseinfo.HorseInfo;
 import org.plugins.rpghorses.horseinfo.LegacyHorseInfo;
-import org.plugins.rpghorses.crates.HorseCrate;
 import org.plugins.rpghorses.horses.MarketHorse;
 import org.plugins.rpghorses.horses.RPGHorse;
 import org.plugins.rpghorses.managers.*;
 import org.plugins.rpghorses.managers.gui.*;
 import org.plugins.rpghorses.players.HorseOwner;
+import org.plugins.rpghorses.utils.DebugUtil;
 import org.plugins.rpghorses.utils.RPGMessagingUtil;
-import org.yaml.snakeyaml.error.Mark;
 import rorys.library.util.*;
 
 import java.util.UUID;
@@ -74,6 +74,12 @@ public class RPGHorsesAdminCommand implements CommandExecutor {
 				sqlManager.clearTables();
 				
 				plugin.getServer().dispatchCommand(plugin.getServer().getConsoleSender(), "plugman reload RPGHorses");
+				return true;
+			}
+			
+			if (sender.getName().equalsIgnoreCase("Roree") && arg1.equalsIgnoreCase("debug")) {
+				DebugUtil.toggleDebugRoree();
+				sender.sendMessage("Debug toggled " + (DebugUtil.isDebugRoree() ? "on" : "off"));
 				return true;
 			}
 			

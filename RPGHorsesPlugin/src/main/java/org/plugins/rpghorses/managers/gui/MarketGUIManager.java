@@ -17,6 +17,7 @@ import org.plugins.rpghorses.horses.RPGHorse;
 import org.plugins.rpghorses.managers.HorseOwnerManager;
 import org.plugins.rpghorses.managers.SQLManager;
 import org.plugins.rpghorses.players.HorseOwner;
+import org.plugins.rpghorses.utils.DebugUtil;
 import org.plugins.rpghorses.utils.SkinValueUtil;
 import rorys.library.configs.CustomConfig;
 import rorys.library.util.ItemUtil;
@@ -186,10 +187,10 @@ public class MarketGUIManager {
 	public MarketHorse getMarketHorse(RPGHorse rpgHorse) {
 		String owner = rpgHorse.getHorseOwner().getUUID().toString();
 		int index = rpgHorse.getIndex();
-		plugin.getLogger().info("searching for " + index + ": " + owner);
+		DebugUtil.debug("searching for " + index + ": " + owner);
 		
 		for (MarketHorse marketHorse : marketHorses) {
-			plugin.getLogger().info("checking " + marketHorse.getIndex() + ": " + marketHorse.getRPGHorse().getHorseOwner().getUUID().toString());
+			DebugUtil.debug("checking " + marketHorse.getIndex() + ": " + marketHorse.getRPGHorse().getHorseOwner().getUUID().toString());
 			if (marketHorse.getIndex() == index && marketHorse.getRPGHorse().getHorseOwner().getUUID().toString().equals(owner))
 				return marketHorse;
 		}

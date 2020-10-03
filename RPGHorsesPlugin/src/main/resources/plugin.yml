@@ -45,3 +45,5 @@ permissions:
     default: op
   rpghorses.help:
     default: op
+  rpghorses.debug:
+    default: false

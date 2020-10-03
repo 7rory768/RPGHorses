@@ -22,6 +22,7 @@ import org.plugins.rpghorses.horses.MarketHorse;
 import org.plugins.rpghorses.horses.RPGHorse;
 import org.plugins.rpghorses.players.HorseOwner;
 import org.plugins.rpghorses.utils.BukkitSerialization;
+import org.plugins.rpghorses.utils.DebugUtil;
 import org.plugins.rpghorses.utils.MessageType;
 import rorys.library.configs.PlayerConfigs;
 import rorys.library.util.ItemUtil;
@@ -143,7 +144,7 @@ public class SQLManager extends rorys.library.managers.SQLManager implements Plu
 						DataInputStream msgin = new DataInputStream(new ByteArrayInputStream(msgbytes));
 						
 						String typeStr = msgin.readUTF();
-						plugin.getLogger().info("RECEIVED " + typeStr);
+						DebugUtil.debug("RECEIVED " + typeStr);
 						MessageType type = MessageType.valueOf(typeStr);
 						
 						if (type == MessageType.HORSE_REMOVE) {
@@ -176,7 +177,7 @@ public class SQLManager extends rorys.library.managers.SQLManager implements Plu
 							if (p != null && p.isOnline()) {
 								horseOwner = plugin.getHorseOwnerManager().getHorseOwner(p);
 								rpgHorse = horseOwner.getRPGHorse(index);
-								plugin.getLogger().info("GOT PLAYERS HORSE");
+								DebugUtil.debug("GOT PLAYERS HORSE");
 							} else {
 								rpgHorse = getHorse(owner, index);
 							}
@@ -187,12 +188,12 @@ public class SQLManager extends rorys.library.managers.SQLManager implements Plu
 							} else if (type == MessageType.MARKET_HORSE_REMOVE) {
 								boolean horseRemoved = msgin.readBoolean();
 								MarketHorse marketHorse = plugin.getMarketGUIManager().getMarketHorse(rpgHorse);
-								plugin.getLogger().info("GOT MARKET HORSE");
+								DebugUtil.debug("GOT MARKET HORSE");
 								plugin.getMarketGUIManager().removeHorse(marketHorse, horseRemoved);
-								plugin.getLogger().info("REMOVED HORSE FROM MARKET");
+								DebugUtil.debug("REMOVED HORSE FROM MARKET");
 								
 								if (horseRemoved && p != null && p.isOnline()) {
-									plugin.getLogger().info("REMOVING P HORSE (" + index + ")");
+									DebugUtil.debug("REMOVING P HORSE (" + index + ")");
 									
 									horseOwner.removeRPGHorse(index, false);
 									plugin.getStableGuiManager().setupStableGUI(horseOwner);
@@ -304,7 +305,7 @@ public class SQLManager extends rorys.library.managers.SQLManager implements Plu
 				try {
 					Connection con = getConnection();
 					int id = marketHorse.getId();
-					plugin.getLogger().info("REMOVE MARKET HORSE: " + ownerStr);
+					DebugUtil.debug("REMOVE MARKET HORSE: " + ownerStr);
 					
 					PreparedStatement statement = con.prepareStatement(REMOVE_MARKET_HORSE);
 					statement.setInt(1, id);
@@ -445,9 +446,9 @@ public class SQLManager extends rorys.library.managers.SQLManager implements Plu
 			
 			HorseOwner horseOwner = new HorseOwner(uuid);
 			
-			plugin.getLogger().info("LOOKING FOR HORSE (" + index + ") " + uuid.toString());
+			DebugUtil.debug("LOOKING FOR HORSE (" + index + ") " + uuid.toString());
 			if (set.next()) {
-				plugin.getLogger().info("FOUND HORSE");
+				DebugUtil.debug("FOUND HORSE");
 				String name = set.getString("name");
 				int tier = set.getInt("tier");
 				double xp = set.getDouble("xp");
@@ -539,7 +540,7 @@ public class SQLManager extends rorys.library.managers.SQLManager implements Plu
 			e.printStackTrace();
 		}
 		
-		plugin.getLogger().info("  FAILED TO FIND HORSE IN MYSQL");
+		DebugUtil.debug("  FAILED TO FIND HORSE IN MYSQL");
 		
 		return null;
 	}
