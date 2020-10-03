@@ -378,6 +378,7 @@ public class RPGHorse {
 	
 	public void loadItems() {
 		if (this.horse != null) {
+			this.items.clear();
 			Inventory inventory = ((InventoryHolder) this.horse).getInventory();
 			for (int slot = 0; slot < inventory.getSize(); slot++) {
 				this.items.put(slot, inventory.getItem(slot));

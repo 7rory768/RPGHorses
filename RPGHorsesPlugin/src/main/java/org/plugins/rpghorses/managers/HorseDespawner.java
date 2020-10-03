@@ -92,6 +92,7 @@ public class HorseDespawner {
 						Location currentLocation = horseOwner.getLastHorseLocation();
 						Location lastLocation = horseDespawner.getLastLocation(currentHorse);
 						if (lastLocation != null && lastLocation.equals(currentLocation)) {
+							currentHorse.despawnEntity();
 							horseOwner.setCurrentHorse(null);
 						} else {
 							lastLocations.put(currentHorse, currentLocation);
