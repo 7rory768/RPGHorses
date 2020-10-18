@@ -407,6 +407,12 @@ public class InventoryClickListener implements Listener {
 					Bukkit.getServer().dispatchCommand(Bukkit.getConsoleSender(), MessagingUtil.format(cmd.replace("{PLAYER}", p.getName())));
 				}
 			}
+			
+			if (!p.isOnGround()) {
+				messagingUtil.sendMessageAtPath(p, "messages.not-on-ground");
+				return;
+			}
+			
 			horseOwner.setCurrentHorse(rpgHorse);
 			for (String cmd : this.plugin.getConfig().getStringList("command-options.on-spawn")) {
 				Bukkit.getServer().dispatchCommand(Bukkit.getConsoleSender(), MessagingUtil.format(cmd.replace("{PLAYER}", p.getName())));

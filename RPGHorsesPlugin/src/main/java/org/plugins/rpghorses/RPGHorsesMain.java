@@ -15,6 +15,7 @@ import org.plugins.rpghorses.listeners.*;
 import org.plugins.rpghorses.managers.*;
 import org.plugins.rpghorses.managers.gui.*;
 import org.plugins.rpghorses.players.HorseOwner;
+import org.plugins.rpghorses.utils.DebugUtil;
 import org.plugins.rpghorses.utils.RPGMessagingUtil;
 import org.plugins.rpghorses.version.Version;
 import rorys.library.configs.CustomConfig;
@@ -89,11 +90,10 @@ public class RPGHorsesMain extends JavaPlugin {
 	@Override
 	public void onEnable() {
 		plugin = this;
+		DebugUtil.setPlugin(this);
 		
 		version = Version.getByName(Bukkit.getBukkitVersion().split("-")[0]);
 		Bukkit.getLogger().info("[RPGHorses] " + version.getName() + " detected");
-		
-		Bukkit.getLogger().info(version.getAbstractName());
 		
 		try {
 			final Class<?> clazz = Class.forName("org.plugins.rpghorses." + version.getAbstractName() + ".NMSHandler");
@@ -217,8 +217,8 @@ public class RPGHorsesMain extends JavaPlugin {
 		this.marketGUIManager.saveMarketHorses();
 		
 		try {
-			sqlManager.close();
-		} catch (SQLException e) {
+			if (sqlManager != null) sqlManager.close();
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
 	}

@@ -325,7 +325,7 @@ public class RPGHorsesAdminCommand implements CommandExecutor {
 				
 				HorseOwner horseOwner = this.horseOwnerManager.getHorseOwner(p);
 				RPGHorse rpgHorse = horseOwner.getRPGHorse(Integer.valueOf(horseNumberArg) - 1);
-				if (horseOwner.getCurrentHorse().equals(horseOwner)) {
+				if (horseOwner.getCurrentHorse() != null && horseOwner.getCurrentHorse().equals(rpgHorse)) {
 					for (String cmd : this.plugin.getConfig().getStringList("command-options.on-despawn")) {
 						Bukkit.getServer().dispatchCommand(Bukkit.getConsoleSender(), MessagingUtil.format(cmd.replace("{PLAYER}", p.getName())));
 					}

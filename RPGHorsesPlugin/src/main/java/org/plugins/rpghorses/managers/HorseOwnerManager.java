@@ -156,14 +156,14 @@ public class HorseOwnerManager {
 			horseOwner.setAutoMount(config.getBoolean("auto-mount", true));
 		}
 		
-		if (!horseOwner.hasReceivedDefaultHorse() && horseCrateManager.getDefaultHorseCrate() != null) {
+		if (!horseOwner.hasReceivedDefaultHorse() && horseCrateManager.getDefaultHorseCrate() != null && horseOwner.getPlayer() != null) {
 			RPGHorse rpgHorse = horseCrateManager.getDefaultHorseCrate().getRPGHorse(horseOwner);
-			rpgHorse.setName(config.getString("horse-options.default-name", "Horse").replace("{PLAYER}", horseOwner.getPlayer().getName()));
+			rpgHorse.setName(config.getString("horse-options.default-name", "Horse").replace("{PLAYER}", Bukkit.getPlayer(uuid).getName()));
 			horseOwner.addRPGHorse(rpgHorse);
 			horseOwner.setReceivedDefaultHorse(true);
 		}
 		
-		this.horseOwners.add(horseOwner);
+		if (horseOwner.getPlayer() != null) this.horseOwners.add(horseOwner);
 		return horseOwner;
 	}
 	
