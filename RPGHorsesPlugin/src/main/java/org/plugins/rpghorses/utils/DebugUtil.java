@@ -25,9 +25,10 @@ public class DebugUtil {
 			}
 		}
 		
-		Bukkit.broadcast(arg, "rpghorses.debug");
-		
+		if (plugin != null) {
+		Bukkit.broadcast(arg, plugin.getName().toLowerCase() + ".debug");
 		DebugUtil.plugin.getLogger().info(arg);
+		}
 	}
 	
 }
