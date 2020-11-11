@@ -66,99 +66,88 @@ public class HorseOwnerManager {
 		} else {
 			horseOwner = new HorseOwner(uuid);
 			
-			if (config.getConfigurationSection("rpghorses") == null) {
-				this.playerConfigs.deleteConfig(uuid);
-				if (horseCrateManager.getDefaultHorseCrate() != null) {
-					RPGHorse rpgHorse = horseCrateManager.getDefaultHorseCrate().getRPGHorse(horseOwner);
-					rpgHorse.setName(config.getString("horse-options.default-name", "Horse").replace("{PLAYER}", horseOwner.getPlayerName()));
-					horseOwner.addRPGHorse(rpgHorse);
-					horseOwner.setReceivedDefaultHorse(true);
-					
-					this.horseOwners.add(horseOwner);
-				}
-				return horseOwner;
-			}
-			
-			for (String horseIndex : config.getConfigurationSection("rpghorses").getKeys(false)) {
-				String path = "rpghorses." + horseIndex + ".";
-				String name = config.getString(path + "name");
-				int tier = config.getInt(path + "tier");
-				double xp = config.getDouble(path + "xp");
-				double health = config.getDouble(path + "health");
-				double movementSpeed = config.getDouble(path + "movement-speed");
-				double jumpStrength = config.getDouble(path + "jump-strength");
-				EntityType entityType = EntityType.HORSE;
-				Horse.Variant variant = Horse.Variant.HORSE;
-				Horse.Color color = Horse.Color.BROWN;
-				Horse.Style style = Horse.Style.NONE;
-				try {
-					color = Horse.Color.valueOf(config.getString(path + "color", "BROWN"));
-				} catch (IllegalArgumentException e) {
-					Bukkit.getLogger().log(Level.SEVERE, "[RPGHorses] Failed to load " + uuid.toString() + "'s horse ( " + config.getString(path + "color") + " is not a valid color )");
-				}
-				try {
-					style = Horse.Style.valueOf(config.getString(path + "style", "NONE"));
-				} catch (IllegalArgumentException e) {
-					Bukkit.getLogger().log(Level.SEVERE, "[RPGHorses] Failed to load " + uuid.toString() + "'s horse ( " + config.getString(path + "style") + " is not a valid style )");
-				}
-				
-				Long deathTime = Long.valueOf(config.getString(path + "death-time", "0"));
-				boolean isDead = deathTime + (this.plugin.getConfig().getInt("horse-options.death-cooldown") * 1000) - System.currentTimeMillis() > 0;
-				
-				boolean inMarket = config.getBoolean(path + "in-market", false);
-				Particle particle = null;
-				if (RPGHorsesMain.getVersion().getWeight() >= 9 && config.isSet(path + "particle")) {
-					particle = Particle.valueOf(config.getString(path + "particle"));
-				}
-				
-				HashMap<Integer, ItemStack> items = null;
-				if (config.isSet(path + "items")) {
-					items = new HashMap<>();
-					for (String slotStr : config.getConfigurationSection(path + "items").getKeys(false)) {
-						items.put(Integer.valueOf(slotStr), config.getItemStack(path + "items." + slotStr));
-					}
-				}
-				
-				
-				AbstractHorseInfo horseInfo;
-				if (plugin.getVersion().getWeight() < 11) {
-					try {
-						variant = Horse.Variant.valueOf(config.getString(path + "variant", "HORSE"));
-					} catch (IllegalArgumentException e) {
-						Bukkit.getLogger().log(Level.SEVERE, "[RPGHorses] Failed to load " + uuid.toString() + "'s horse ( " + config.getString(path + "variant") + " is not a valid variant )");
-					}
-					horseInfo = new LegacyHorseInfo(style, color, variant);
-				} else {
-					try {
-						entityType = EntityType.valueOf(config.getString(path + "type", "HORSE"));
-					} catch (IllegalArgumentException e) {
-						Bukkit.getLogger().log(Level.SEVERE, "[RPGHorses] Failed to load " + uuid.toString() + "'s horse ( " + config.getString(path + "type") + " is not a valid entityType )");
-					}
-					horseInfo = new HorseInfo(entityType, style, color);
-				}
-				
-				if (RPGHorsesMain.getVersion().getWeight() < 9 && config.isSet(path + "particle")) {
-					Effect effect = Effect.valueOf(config.getString(path + "particle"));
-					((LegacyHorseInfo) horseInfo).setEffect(effect);
-				}
-				
-				RPGHorse rpgHorse = new RPGHorse(horseOwner, tier, xp, name, health, movementSpeed, jumpStrength, horseInfo, inMarket, particle, items);
-				
-				if (isDead) {
-					rpgHorse.setDead(true);
-					rpgHorse.setDeathTime(deathTime);
-				}
-				
-				horseOwner.addRPGHorse(rpgHorse);
-			}
-			
 			horseOwner.setReceivedDefaultHorse(config.getBoolean("received-default-horse", false));
 			horseOwner.setAutoMount(config.getBoolean("auto-mount", true));
+			
+			if (config.getConfigurationSection("rpghorses") != null) {
+				for (String horseIndex : config.getConfigurationSection("rpghorses").getKeys(false)) {
+					String path = "rpghorses." + horseIndex + ".";
+					String name = config.getString(path + "name");
+					int tier = config.getInt(path + "tier");
+					double xp = config.getDouble(path + "xp");
+					double health = config.getDouble(path + "health");
+					double movementSpeed = config.getDouble(path + "movement-speed");
+					double jumpStrength = config.getDouble(path + "jump-strength");
+					EntityType entityType = EntityType.HORSE;
+					Horse.Variant variant = Horse.Variant.HORSE;
+					Horse.Color color = Horse.Color.BROWN;
+					Horse.Style style = Horse.Style.NONE;
+					try {
+						color = Horse.Color.valueOf(config.getString(path + "color", "BROWN"));
+					} catch (IllegalArgumentException e) {
+						Bukkit.getLogger().log(Level.SEVERE, "[RPGHorses] Failed to load " + uuid.toString() + "'s horse ( " + config.getString(path + "color") + " is not a valid color )");
+					}
+					try {
+						style = Horse.Style.valueOf(config.getString(path + "style", "NONE"));
+					} catch (IllegalArgumentException e) {
+						Bukkit.getLogger().log(Level.SEVERE, "[RPGHorses] Failed to load " + uuid.toString() + "'s horse ( " + config.getString(path + "style") + " is not a valid style )");
+					}
+					
+					Long deathTime = Long.valueOf(config.getString(path + "death-time", "0"));
+					boolean isDead = deathTime + (this.plugin.getConfig().getInt("horse-options.death-cooldown") * 1000) - System.currentTimeMillis() > 0;
+					
+					boolean inMarket = config.getBoolean(path + "in-market", false);
+					Particle particle = null;
+					if (RPGHorsesMain.getVersion().getWeight() >= 9 && config.isSet(path + "particle")) {
+						particle = Particle.valueOf(config.getString(path + "particle"));
+					}
+					
+					HashMap<Integer, ItemStack> items = null;
+					if (config.isSet(path + "items")) {
+						items = new HashMap<>();
+						for (String slotStr : config.getConfigurationSection(path + "items").getKeys(false)) {
+							items.put(Integer.valueOf(slotStr), config.getItemStack(path + "items." + slotStr));
+						}
+					}
+					
+					
+					AbstractHorseInfo horseInfo;
+					if (plugin.getVersion().getWeight() < 11) {
+						try {
+							variant = Horse.Variant.valueOf(config.getString(path + "variant", "HORSE"));
+						} catch (IllegalArgumentException e) {
+							Bukkit.getLogger().log(Level.SEVERE, "[RPGHorses] Failed to load " + uuid.toString() + "'s horse ( " + config.getString(path + "variant") + " is not a valid variant )");
+						}
+						horseInfo = new LegacyHorseInfo(style, color, variant);
+					} else {
+						try {
+							entityType = EntityType.valueOf(config.getString(path + "type", "HORSE"));
+						} catch (IllegalArgumentException e) {
+							Bukkit.getLogger().log(Level.SEVERE, "[RPGHorses] Failed to load " + uuid.toString() + "'s horse ( " + config.getString(path + "type") + " is not a valid entityType )");
+						}
+						horseInfo = new HorseInfo(entityType, style, color);
+					}
+					
+					if (RPGHorsesMain.getVersion().getWeight() < 9 && config.isSet(path + "particle")) {
+						Effect effect = Effect.valueOf(config.getString(path + "particle"));
+						((LegacyHorseInfo) horseInfo).setEffect(effect);
+					}
+					
+					RPGHorse rpgHorse = new RPGHorse(horseOwner, tier, xp, name, health, movementSpeed, jumpStrength, horseInfo, inMarket, particle, items);
+					
+					if (isDead) {
+						rpgHorse.setDead(true);
+						rpgHorse.setDeathTime(deathTime);
+					}
+					
+					horseOwner.addRPGHorse(rpgHorse);
+				}
+			}
 		}
 		
 		if (!horseOwner.hasReceivedDefaultHorse() && horseCrateManager.getDefaultHorseCrate() != null && horseOwner.getPlayer() != null) {
 			RPGHorse rpgHorse = horseCrateManager.getDefaultHorseCrate().getRPGHorse(horseOwner);
-			rpgHorse.setName(config.getString("horse-options.default-name", "Horse").replace("{PLAYER}", Bukkit.getPlayer(uuid).getName()));
+			rpgHorse.setName(plugin.getConfig().getString("horse-options.default-name", "Horse").replace("{PLAYER}", Bukkit.getPlayer(uuid).getName()));
 			horseOwner.addRPGHorse(rpgHorse);
 			horseOwner.setReceivedDefaultHorse(true);
 		}
