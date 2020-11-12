@@ -63,12 +63,16 @@ public class HorseOwner {
 	}
 	
 	public void addRPGHorse(RPGHorse rpgHorse) {
+		addRPGHorse(rpgHorse, true);
+	}
+	
+	public void addRPGHorse(RPGHorse rpgHorse, boolean sql) {
 		this.rpgHorses.add(rpgHorse);
 		rpgHorse.setIndex(rpgHorses.size() - 1);
 		rpgHorse.setHorseOwner(this);
 		
 		SQLManager sqlManager = RPGHorsesMain.getInstance().getSQLManager();
-		if (sqlManager != null) sqlManager.addHorse(rpgHorse);
+		if (sqlManager != null && sql) sqlManager.addHorse(rpgHorse);
 	}
 	
 	public RPGHorse removeRPGHorse(int index) {

@@ -660,7 +660,7 @@ public class SQLManager extends rorys.library.managers.SQLManager implements Plu
 					rpgHorse.setDeathTime(deathTime);
 				}
 				
-				horseOwner.addRPGHorse(rpgHorse);
+				horseOwner.addRPGHorse(rpgHorse, false);
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
