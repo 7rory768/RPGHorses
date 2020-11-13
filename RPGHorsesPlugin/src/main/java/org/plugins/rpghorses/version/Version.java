@@ -12,7 +12,10 @@ public enum Version {
 	v1_13("1.13", 13, "v1_13_2"),
 	v1_14("1.14", 14, "v1_14_4"),
 	v1_15("1.15", 15, "v1_15_2"),
-	v1_16("1.16", 16, "v1_16_4");
+	v1_16_1("1.16.1", 16, "v1_16_3"),
+	v1_16_2("1.16.2", 16, "v1_16_3"),
+	v1_16_3("1.16.3", 16, "v1_16_3"),
+	v1_16_4("1.16.4", 17, "v1_16_4");
 	
 	private String name;
 	private int weight;
@@ -42,7 +45,7 @@ public enum Version {
 				return version;
 			}
 		}
-		return Version.v1_15;
+		return Version.v1_16_4;
 	}
 	
 	public static Version getVersion() {

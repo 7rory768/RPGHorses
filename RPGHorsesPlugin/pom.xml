@@ -14,7 +14,7 @@
     </properties>
 
     <artifactId>RPGHorsesPlugin</artifactId>
-    <version>1.2.2</version>
+    <version>1.2.3</version>
 
     <repositories>
         <repository>
@@ -98,6 +98,13 @@
         <dependency>
             <groupId>org.plugins.rpghorses</groupId>
             <artifactId>1_15_2</artifactId>
+            <version>1.0.0</version>
+            <scope>compile</scope>
+            <optional>true</optional>
+        </dependency>
+        <dependency>
+            <groupId>org.plugins.rpghorses</groupId>
+            <artifactId>1_16_3</artifactId>
             <version>1.0.0</version>
             <scope>compile</scope>
             <optional>true</optional>

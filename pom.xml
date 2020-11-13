@@ -16,6 +16,7 @@
         <module>1_16_4</module>
         <module>API</module>
         <module>RPGHorsesPlugin</module>
+        <module>1_16_3</module>
     </modules>
     <packaging>pom</packaging>
 
