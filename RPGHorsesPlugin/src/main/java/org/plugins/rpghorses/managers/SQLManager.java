@@ -22,10 +22,11 @@ import org.plugins.rpghorses.horses.MarketHorse;
 import org.plugins.rpghorses.horses.RPGHorse;
 import org.plugins.rpghorses.players.HorseOwner;
 import org.plugins.rpghorses.utils.BukkitSerialization;
-import org.plugins.rpghorses.utils.DebugUtil;
 import org.plugins.rpghorses.utils.MessageType;
-import rorys.library.configs.PlayerConfigs;
-import rorys.library.util.ItemUtil;
+import roryslibrary.configs.PlayerConfigs;
+import roryslibrary.util.ItemUtil;
+import roryslibrary.configs.PlayerConfigs;
+import roryslibrary.util.DebugUtil;
 
 import java.io.*;
 import java.sql.Connection;
@@ -38,7 +39,7 @@ import java.util.List;
 import java.util.UUID;
 import java.util.logging.Level;
 
-public class SQLManager extends rorys.library.managers.SQLManager implements PluginMessageListener {
+public class SQLManager extends roryslibrary.managers.SQLManager implements PluginMessageListener {
 	
 	private final RPGHorsesMain plugin;
 	private final PlayerConfigs playerConfigs;
@@ -599,7 +600,7 @@ public class SQLManager extends rorys.library.managers.SQLManager implements Plu
 				}
 				
 				HashMap<Integer, ItemStack> items = new HashMap<>();
-				if (!plugin.getConfig().getBoolean("mysql.save-items")) {
+				if (plugin.getConfig().getBoolean("mysql.save-items")) {
 					String itemsString = set.getString("items");
 					if (itemsString != null && !itemsString.equals("")) {
 						try {
@@ -756,16 +757,17 @@ public class SQLManager extends rorys.library.managers.SQLManager implements Plu
 					
 					itemString = BukkitSerialization.itemStackArrayToBase64(itemArray);
 				}
+			} else {
+				
+				FileConfiguration config = playerConfigs.getConfig(owner.getUUID());
+				config.createSection("rpghorses." + (index + 1) + ".items");
+				for (Integer slot : items.keySet()) {
+					config.set("rpghorses." + (index + 1) + ".items." + slot, items.get(slot));
+				}
+				playerConfigs.saveConfig(owner.getUUID());
+				playerConfigs.reloadConfig(owner.getUUID());
 			}
 			
-			FileConfiguration config = playerConfigs.getConfig(owner.getUUID());
-			config.createSection("rpghorses." + index + ".items");
-			for (Integer slot : items.keySet()) {
-				config.set("rpghorses." + index + ".items." + slot, items.get(slot));
-			}
-			
-			playerConfigs.saveConfig(owner.getUUID());
-			playerConfigs.reloadConfig(owner.getUUID());
 			
 			statement.setString(16, itemString);
 			
