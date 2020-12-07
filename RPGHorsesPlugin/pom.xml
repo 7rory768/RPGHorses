@@ -14,7 +14,7 @@
     </properties>
 
     <artifactId>RPGHorsesPlugin</artifactId>
-    <version>1.2.3</version>
+    <version>1.2.4</version>
 
     <repositories>
         <repository>
@@ -64,7 +64,7 @@
         <dependency>
             <groupId>com.github.7rory768</groupId>
             <artifactId>Rorys-Library</artifactId>
-            <version>master-7c0f7e9-1</version>
+            <version>master-SNAPSHOT</version>
             <scope>compile</scope>
         </dependency>
         <dependency>
@@ -154,7 +154,7 @@
                             <shadedPattern>org.plugins.rpghorses.utils</shadedPattern>
                         </relocation>
                         <relocation>
-                            <pattern>rorys.library</pattern>
+                            <pattern>roryslibrary</pattern>
                             <shadedPattern>org.plugins.rpghorses.roryslibrary</shadedPattern>
                         </relocation>
                     </relocations>
