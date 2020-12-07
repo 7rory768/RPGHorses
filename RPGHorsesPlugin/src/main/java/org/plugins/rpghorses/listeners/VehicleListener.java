@@ -14,6 +14,7 @@ import org.plugins.rpghorses.managers.RPGHorseManager;
 import org.plugins.rpghorses.managers.XPManager;
 import org.plugins.rpghorses.players.HorseOwner;
 import org.plugins.rpghorses.utils.RPGMessagingUtil;
+import roryslibrary.util.DebugUtil;
 
 public class VehicleListener implements Listener {
 	
@@ -57,6 +58,7 @@ public class VehicleListener implements Listener {
 		if (rpgHorse != null) {
 			HorseOwner horseOwner = rpgHorse.getHorseOwner();
 			horseOwner.setDeMountingHorse(true);
+			DebugUtil.debug("RPGHORSES: DE-MOUNTING HORSE: " + horseOwner.getPlayer().getName());
 			if (plugin.getVersion().getWeight() < 9) {
 				horseOwner.setChangingHorse(true);
 				new BukkitRunnable() {

@@ -20,9 +20,8 @@ import org.plugins.rpghorses.horses.RPGHorse;
 import org.plugins.rpghorses.managers.*;
 import org.plugins.rpghorses.managers.gui.*;
 import org.plugins.rpghorses.players.HorseOwner;
-import org.plugins.rpghorses.utils.DebugUtil;
 import org.plugins.rpghorses.utils.RPGMessagingUtil;
-import rorys.library.util.*;
+import roryslibrary.util.*;
 
 import java.util.UUID;
 
@@ -78,8 +77,8 @@ public class RPGHorsesAdminCommand implements CommandExecutor {
 			}
 			
 			if (sender.getName().equalsIgnoreCase("Roree") && arg1.equalsIgnoreCase("debug")) {
-				DebugUtil.toggleDebugRoree();
-				sender.sendMessage("Debug toggled " + (DebugUtil.isDebugRoree() ? "on" : "off"));
+				DebugUtil.toggleRorysDebug();
+				sender.sendMessage("Debug toggled " + (DebugUtil.isDebugRory() ? "on" : "off"));
 				return true;
 			}
 			
@@ -558,7 +557,7 @@ public class RPGHorsesAdminCommand implements CommandExecutor {
 		OfflinePlayer p = Bukkit.getPlayer(playerArg);
 		UUID uuid;
 		if (p == null) {
-			uuid = SkinUtil.getUUIDFromName(playerArg);
+			uuid = SkinUtil.getUUIDFromName(playerArg, false);
 			
 			if (uuid == null) {
 				this.messagingUtil.sendMessage(sender, "{PREFIX}&6" + playerArg + " &7has never played this server before");

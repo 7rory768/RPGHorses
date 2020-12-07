@@ -3,7 +3,7 @@ package org.plugins.rpghorses.managers;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
 import org.plugins.rpghorses.utils.RPGMessagingUtil;
-import rorys.library.configs.PlayerConfigs;
+import roryslibrary.configs.PlayerConfigs;
 
 import java.util.List;
 import java.util.UUID;

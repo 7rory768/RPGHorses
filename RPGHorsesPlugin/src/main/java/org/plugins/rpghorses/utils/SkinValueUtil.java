@@ -5,7 +5,7 @@ import org.bukkit.inventory.ItemStack;
 import org.plugins.rpghorses.RPGHorsesMain;
 import org.plugins.rpghorses.horseinfo.LegacyHorseInfo;
 import org.plugins.rpghorses.horses.RPGHorse;
-import rorys.library.util.ItemUtil;
+import roryslibrary.util.ItemUtil;
 
 import java.util.HashMap;
 

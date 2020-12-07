@@ -17,11 +17,11 @@ import org.plugins.rpghorses.horses.RPGHorse;
 import org.plugins.rpghorses.managers.HorseOwnerManager;
 import org.plugins.rpghorses.managers.SQLManager;
 import org.plugins.rpghorses.players.HorseOwner;
-import org.plugins.rpghorses.utils.DebugUtil;
 import org.plugins.rpghorses.utils.SkinValueUtil;
-import rorys.library.configs.CustomConfig;
-import rorys.library.util.ItemUtil;
-import rorys.library.util.MessagingUtil;
+import roryslibrary.configs.CustomConfig;
+import roryslibrary.util.DebugUtil;
+import roryslibrary.util.ItemUtil;
+import roryslibrary.util.MessagingUtil;
 
 import java.text.DecimalFormat;
 import java.text.NumberFormat;

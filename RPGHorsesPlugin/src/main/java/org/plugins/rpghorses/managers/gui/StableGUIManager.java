@@ -18,9 +18,9 @@ import org.plugins.rpghorses.managers.RPGHorseManager;
 import org.plugins.rpghorses.players.HorseOwner;
 import org.plugins.rpghorses.utils.RPGMessagingUtil;
 import org.plugins.rpghorses.utils.SkinValueUtil;
-import rorys.library.util.ItemUtil;
-import rorys.library.util.MessagingUtil;
-import rorys.library.util.TimeUtil;
+import roryslibrary.util.ItemUtil;
+import roryslibrary.util.MessagingUtil;
+import roryslibrary.util.TimeUtil;
 
 import java.text.DecimalFormat;
 import java.text.NumberFormat;

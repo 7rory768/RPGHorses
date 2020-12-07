@@ -16,7 +16,7 @@ import org.plugins.rpghorses.horseinfo.HorseInfo;
 import org.plugins.rpghorses.horseinfo.LegacyHorseInfo;
 import org.plugins.rpghorses.horses.RPGHorse;
 import org.plugins.rpghorses.players.HorseOwner;
-import rorys.library.configs.PlayerConfigs;
+import roryslibrary.configs.PlayerConfigs;
 
 import java.util.HashMap;
 import java.util.HashSet;

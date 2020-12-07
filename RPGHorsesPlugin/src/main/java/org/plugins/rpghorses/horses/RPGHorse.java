@@ -14,7 +14,7 @@ import org.plugins.rpghorses.RPGHorsesMain;
 import org.plugins.rpghorses.horseinfo.AbstractHorseInfo;
 import org.plugins.rpghorses.horseinfo.LegacyHorseInfo;
 import org.plugins.rpghorses.players.HorseOwner;
-import rorys.library.util.MessagingUtil;
+import roryslibrary.util.MessagingUtil;
 
 import java.util.HashMap;
 

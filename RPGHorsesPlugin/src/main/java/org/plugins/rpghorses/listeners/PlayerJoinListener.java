@@ -13,7 +13,7 @@ import org.plugins.rpghorses.managers.gui.MarketGUIManager;
 import org.plugins.rpghorses.managers.gui.StableGUIManager;
 import org.plugins.rpghorses.players.HorseOwner;
 import org.plugins.rpghorses.utils.RPGMessagingUtil;
-import rorys.library.util.UpdateNotifier;
+import roryslibrary.util.UpdateNotifier;
 
 public class PlayerJoinListener implements Listener {
 	

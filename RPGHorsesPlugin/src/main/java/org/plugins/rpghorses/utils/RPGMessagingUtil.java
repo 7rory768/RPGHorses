@@ -3,9 +3,10 @@ package org.plugins.rpghorses.utils;
 import org.bukkit.command.CommandSender;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.plugins.rpghorses.horses.RPGHorse;
-import rorys.library.util.MessagingUtil;
+import roryslibrary.util.MessagingUtil;
+import roryslibrary.util.PluginMessagingUtil;
 
-public class RPGMessagingUtil extends MessagingUtil {
+public class RPGMessagingUtil extends PluginMessagingUtil {
 	
 	public RPGMessagingUtil(JavaPlugin plugin) {
 		super(plugin);
@@ -16,7 +17,7 @@ public class RPGMessagingUtil extends MessagingUtil {
 	}
 	
 	public void sendMessageAtPath(CommandSender sender, String path, RPGHorse rpgHorse, String... placeholders) {
-		this.sendMessage(sender, getPlugin().getConfig().getString(path), rpgHorse, placeholders);
+		this.sendMessage(sender, getConfig().getString(path), rpgHorse, placeholders);
 	}
 	
 	public String placeholders(String arg, RPGHorse rpgHorse, String... placeholders) {

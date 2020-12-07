@@ -10,7 +10,7 @@ import org.plugins.rpghorses.crates.HorseCrate;
 import org.plugins.rpghorses.horseinfo.AbstractHorseInfo;
 import org.plugins.rpghorses.horseinfo.HorseInfo;
 import org.plugins.rpghorses.horseinfo.LegacyHorseInfo;
-import rorys.library.util.ItemUtil;
+import roryslibrary.util.ItemUtil;
 
 import java.util.HashSet;
 import java.util.Set;

@@ -12,7 +12,7 @@ import org.plugins.rpghorses.managers.XPManager;
 import org.plugins.rpghorses.managers.gui.StableGUIManager;
 import org.plugins.rpghorses.players.HorseOwner;
 import org.plugins.rpghorses.utils.RPGMessagingUtil;
-import rorys.library.util.TimeUtil;
+import roryslibrary.util.TimeUtil;
 
 public class EntityDeathListener implements Listener {
 	

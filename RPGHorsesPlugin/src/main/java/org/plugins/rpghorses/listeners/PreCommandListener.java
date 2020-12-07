@@ -15,7 +15,7 @@ import org.plugins.rpghorses.managers.gui.StableGUIManager;
 import org.plugins.rpghorses.players.HorseOwner;
 import org.plugins.rpghorses.players.RemoveHorseConfirmation;
 import org.plugins.rpghorses.utils.RPGMessagingUtil;
-import rorys.library.util.MessagingUtil;
+import roryslibrary.util.MessagingUtil;
 
 public class PreCommandListener implements Listener {
 	

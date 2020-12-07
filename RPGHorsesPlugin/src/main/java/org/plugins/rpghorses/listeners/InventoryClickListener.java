@@ -28,9 +28,9 @@ import org.plugins.rpghorses.managers.gui.*;
 import org.plugins.rpghorses.players.HorseOwner;
 import org.plugins.rpghorses.tiers.Tier;
 import org.plugins.rpghorses.utils.RPGMessagingUtil;
-import rorys.library.util.ItemUtil;
-import rorys.library.util.MessagingUtil;
-import rorys.library.util.SoundUtil;
+import roryslibrary.util.ItemUtil;
+import roryslibrary.util.MessagingUtil;
+import roryslibrary.util.SoundUtil;
 
 import java.util.Map;
 
