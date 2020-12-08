@@ -17,6 +17,7 @@ import org.plugins.rpghorses.horses.RPGHorse;
 import org.plugins.rpghorses.managers.HorseOwnerManager;
 import org.plugins.rpghorses.players.HorseOwner;
 import org.plugins.rpghorses.utils.RPGMessagingUtil;
+import org.plugins.rpghorses.version.Version;
 import roryslibrary.util.ItemUtil;
 
 import java.util.HashSet;
@@ -63,7 +64,8 @@ public class SellGUIManager {
 					sound = Sound.valueOf(soundString);
 				} catch (IllegalArgumentException e) {
 					if (soundString.equals("BLOCK_NOTE_BLOCK_PLING")) {
-						sound = Sound.valueOf("NOTE_PLING");
+						if (Version.getVersion() == Version.v1_8) sound = Sound.valueOf("NOTE_PLING");
+						else sound = Sound.valueOf("BLOCK_NOTE_PLING");
 					} else if (soundString.equals("ENTITY_PLAYER_LEVELUP")) {
 						sound = Sound.valueOf("LEVEL_UP");
 					} else if (soundString.equals("BLOCK_ANVIL_PLACE")) {
