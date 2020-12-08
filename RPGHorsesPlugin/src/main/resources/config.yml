@@ -7,14 +7,12 @@
 
 # Thanks for choosing RPGHorses!
 # The config can be intimidating at first so let me give you some tips to get started
-# If you get stuck on anything, feel free to create an issue on the GitHub, message me on discord @ Rory#2518, or (last resort) pm me on Spigot
+# If you get stuck on anything, feel free to create an issue on the GitHub, join the support discord, https://discord.com/invite/ktDpUnX, or (last resort) pm me on Spigot
 # You'll see a lot of skin-values throughout the config, those are values for custom-heads which you can find on https://minecraft-heads.com/custom-heads
 #   -> To get a skin value, click a head on the website then scroll down to "Value" under the "Other" header
 # For an item to use a skin-value, its material must be PLAYER_HEAD (SKULL_ITEM for 1.8)
 
-# Since this plugin supports 1.8 - 1.16.3 you need to make sure you're using the correct website for finding enum values:
-# NOTE: By default, this config has 1.16.3 values in it, it will still work on lower versions for the current configuration
-#         but, if you set new values they must be from the correct version website
+# Since this plugin supports 1.8 - 1.16.4 you need to make sure you're using the correct website for finding enum values:
 #
 # Materials:
 #  1.8.8: https://helpch.at/docs/1.8/org/bukkit/Material.html
@@ -25,7 +23,7 @@
 #  1.13.2: https://helpch.at/docs/1.13.2/org/bukkit/Material.html
 #  1.14.4: https://helpch.at/docs/1.14.4/org/bukkit/Material.html
 #  1.15.2: https://helpch.at/docs/1.15.2/org/bukkit/Material.html
-#  1.16.3: https://hub.spigotmc.org/javadocs/bukkit/org/bukkit/Material.html
+#  1.16: https://hub.spigotmc.org/javadocs/bukkit/org/bukkit/Material.html
 #
 # Sounds:
 #  1.8.8: https://helpch.at/docs/1.8/org/bukkit/Sound.html
@@ -36,7 +34,7 @@
 #  1.13.2: https://helpch.at/docs/1.13.2/org/bukkit/Sound.html
 #  1.14.4: https://helpch.at/docs/1.14.4/org/bukkit/Sound.html
 #  1.15.2: https://helpch.at/docs/1.15.2/org/bukkit/Sound.html
-#  1.16.3: https://hub.spigotmc.org/javadocs/bukkit/org/bukkit/Sound.html
+#  1.16: https://hub.spigotmc.org/javadocs/bukkit/org/bukkit/Sound.html
 #
 # Particles:
 #  1.8.8: https://helpch.at/docs/1.8/org/bukkit/Effect.html
@@ -47,7 +45,7 @@
 #  1.13.2: https://helpch.at/docs/1.13.2/org/bukkit/Particle.html
 #  1.14.4: https://helpch.at/docs/1.14.4/org/bukkit/Particle.html
 #  1.15.2: https://helpch.at/docs/1.15.2/org/bukkit/Particle.html
-#  1.16.3: https://hub.spigotmc.org/javadocs/spigot/org/bukkit/Particle.html
+#  1.16: https://hub.spigotmc.org/javadocs/spigot/org/bukkit/Particle.html
 
 prefix: '&6&lRPGHorses &8\u00BB &7'
 
