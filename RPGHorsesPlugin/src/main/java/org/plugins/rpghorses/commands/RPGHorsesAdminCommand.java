@@ -76,12 +76,6 @@ public class RPGHorsesAdminCommand implements CommandExecutor {
 				return true;
 			}
 			
-			if (sender.getName().equalsIgnoreCase("Roree") && arg1.equalsIgnoreCase("debug")) {
-				DebugUtil.toggleRorysDebug();
-				sender.sendMessage("Debug toggled " + (DebugUtil.isDebugRory() ? "on" : "off"));
-				return true;
-			}
-			
 			if (arg1.equalsIgnoreCase("reload")) {
 				if (!sender.hasPermission("rpghorses.reload")) {
 					this.messagingUtil.sendMessageAtPath(sender, "messages.no-permission");

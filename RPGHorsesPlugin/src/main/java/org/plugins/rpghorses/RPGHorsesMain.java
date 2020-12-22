@@ -36,7 +36,7 @@ TODO:
 public class RPGHorsesMain extends JavaPlugin {
 	
 	private static RPGHorsesMain plugin;
-	private static Version version = Version.v1_15;
+	private static Version version = Version.v1_16_4;
 	private static NMS NMS;
 	private RPGHorseManager rpgHorseManager;
 	private CustomConfig marketConfig;
@@ -88,7 +88,7 @@ public class RPGHorsesMain extends JavaPlugin {
 	@Override
 	public void onEnable() {
 		plugin = this;
-		DebugUtil.setPlugin(this);
+		new DebugUtil().setPlugin(this);
 		
 		version = Version.getByName(Bukkit.getBukkitVersion().split("-")[0]);
 		Bukkit.getLogger().info("[RPGHorses] " + version.getName() + " detected");
@@ -143,7 +143,6 @@ public class RPGHorsesMain extends JavaPlugin {
 	
 	public void initializeVariables() {
 		this.updateNotifier = new UpdateNotifier(this, messagingUtil, 76836);
-		this.updateNotifier.checkForUpdate();
 		
 		this.itemUtil = new ItemUtil(this);
 		this.horseCrateManager = new HorseCrateManager(this);
