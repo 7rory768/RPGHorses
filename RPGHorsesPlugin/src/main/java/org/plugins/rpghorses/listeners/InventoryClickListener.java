@@ -317,12 +317,15 @@ public class InventoryClickListener implements Listener {
 								if (this.economy.getBalance(p) < price) {
 									this.messagingUtil.sendMessageAtPath(p, "messages.cant-afford-market-horse", rpgHorse);
 								} else {
-									Player ownerP = rpgHorse.getHorseOwner().getPlayer();
+									OfflinePlayer ownerP = rpgHorse.getHorseOwner().getPlayer();
 									if (ownerP != null && ownerP.isOnline()) {
 										rpgHorse = horseOwnerManager.getHorseOwner(ownerP).getRPGHorse(rpgHorse.getIndex());
+									} else {
+										ownerP = Bukkit.getOfflinePlayer(rpgHorse.getHorseOwner().getUUID());
 									}
 									
 									this.economy.withdrawPlayer(p, price);
+									this.economy.depositPlayer(ownerP, price);
 									rpgHorse.setInMarket(false);
 									this.marketGUIManager.removeHorse(marketHorse, true);
 									
