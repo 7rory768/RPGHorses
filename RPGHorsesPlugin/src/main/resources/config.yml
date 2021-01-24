@@ -206,6 +206,12 @@ stable-options:
   fill-item:
     material: GRAY_STAINED_GLASS_PANE
     data: 15
+  background-items:
+    item-1:
+      material: GRAY_STAINED_GLASS_PANE
+      data: 15
+      # You can also use x-cord, y-cord instead of slot, if you prefer
+      slot: 9
 
 # Defines the gui opened after right-clicking a horse in a stable
 horse-gui-options:

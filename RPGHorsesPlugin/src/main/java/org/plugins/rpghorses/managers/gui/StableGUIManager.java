@@ -200,6 +200,14 @@ public class StableGUIManager {
 			}
 			
 			if (rpgHorsesAdded % horseSpaces == 0 || rpgHorsesAdded == rpgHorses.size()) {
+				for (String key : plugin.getConfig().getConfigurationSection("stable-options.background-items").getKeys(false)) {
+					int fillSlot = ItemUtil.getSlot(plugin.getConfig(), "stable-options.background-items." + key);
+					
+					if (gui.getItem(fillSlot) == null) {
+						gui.setItem(fillSlot, ItemUtil.getItemStack(plugin, "stable-options.background-items." + key));
+					}
+				}
+				
 				for (int fillSlot = 0; fillSlot < gui.getSize(); fillSlot++) {
 					if (gui.getItem(fillSlot) == null) {
 						gui.setItem(fillSlot, this.stableFillItem);
