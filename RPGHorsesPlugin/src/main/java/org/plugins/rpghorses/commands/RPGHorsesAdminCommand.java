@@ -61,7 +61,6 @@ public class RPGHorsesAdminCommand implements CommandExecutor {
 	
 	@Override
 	public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
-		
 		if (args.length > 0) {
 			String arg1 = args[0];
 			

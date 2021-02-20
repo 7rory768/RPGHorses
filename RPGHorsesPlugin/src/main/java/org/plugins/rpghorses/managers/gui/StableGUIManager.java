@@ -311,7 +311,7 @@ public class StableGUIManager {
 	}
 	
 	public void reloadAllStableGUIS() {
-		for (HorseOwner horseOwner : this.horseOwnerManager.getHorseOwners()) {
+		for (HorseOwner horseOwner : this.horseOwnerManager.getHorseOwners().values()) {
 			this.setupStableGUI(horseOwner);
 		}
 	}
@@ -436,7 +436,7 @@ public class StableGUIManager {
 		this.cooldownTask = new BukkitRunnable() {
 			@Override
 			public void run() {
-				for (HorseOwner horseOwner : horseOwnerManager.getHorseOwners()) {
+				for (HorseOwner horseOwner : horseOwnerManager.getHorseOwners().values()) {
 					if (horseOwner.isInGUI(GUILocation.STABLE_GUI)) {
 						StableGUIPage stableGUIPage = horseOwner.getCurrentStableGUIPage();
 						if (stableGUIPage != null) {

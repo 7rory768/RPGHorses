@@ -13,10 +13,13 @@ import org.plugins.rpghorses.guis.ItemPurpose;
 import org.plugins.rpghorses.guis.instances.HorseGUI;
 import org.plugins.rpghorses.horses.RPGHorse;
 import org.plugins.rpghorses.managers.HorseOwnerManager;
+import org.plugins.rpghorses.managers.RPGHorseManager;
 import org.plugins.rpghorses.players.HorseOwner;
+import org.plugins.rpghorses.tiers.Tier;
 import org.plugins.rpghorses.utils.RPGMessagingUtil;
 import roryslibrary.util.ItemUtil;
 import roryslibrary.util.MessagingUtil;
+import roryslibrary.util.NumberUtil;
 
 import java.util.HashSet;
 
@@ -25,6 +28,7 @@ public class HorseGUIManager {
 	private final RPGHorsesMain plugin;
 	private final HorseOwnerManager horseOwnerManager;
 	private final StableGUIManager stableGUIManager;
+	private final RPGHorseManager rpgHorseManager;
 	
 	private String title;
 	private int rows;
@@ -34,6 +38,7 @@ public class HorseGUIManager {
 		this.plugin = plugin;
 		this.horseOwnerManager = horseOwnerManager;
 		this.stableGUIManager = stableGUIManager;
+		this.rpgHorseManager = plugin.getRpgHorseManager();
 		
 		reload();
 	}
@@ -88,6 +93,10 @@ public class HorseGUIManager {
 		}
 		
 		inventory.setItem(ItemUtil.getSlot(plugin.getConfig(), "horse-gui-options.horse-item"), stableGUIManager.fillPlaceholders(stableGUIManager.getHorseItem(rpgHorse), rpgHorse));
+		
+		Tier tier = rpgHorseManager.getTier(rpgHorse.getTier());
+		GUIItem guiItem = getGUIItem(ItemPurpose.UPGRADE);
+		inventory.setItem(guiItem.getSlot(), ItemUtil.fillPlaceholders(guiItem.getItem(), "COST", NumberUtil.getCommaString((int)tier.getCost()), "HORSE-EXP-NEEDED", NumberUtil.getCommaString((int) tier.getExpCost())));
 		
 		GUIItem autoMountItem = rpgHorse.getHorseOwner().autoMountOn() ? getGUIItem(ItemPurpose.TOGGLE_AUTOMOUNT_ON) : getGUIItem(ItemPurpose.TOGGLE_AUTOMOUNT_OFF);
 		inventory.setItem(autoMountItem.getSlot(), autoMountItem.getItem());

@@ -19,8 +19,9 @@ import org.plugins.rpghorses.players.HorseOwner;
 import roryslibrary.configs.PlayerConfigs;
 
 import java.util.HashMap;
-import java.util.HashSet;
+import java.util.Map;
 import java.util.UUID;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.logging.Level;
 
 public class HorseOwnerManager {
@@ -31,7 +32,7 @@ public class HorseOwnerManager {
 	private final PlayerConfigs playerConfigs;
 	private final Permission permissions;
 	
-	private HashSet<HorseOwner> horseOwners = new HashSet<>();
+	private ConcurrentHashMap<UUID, HorseOwner> horseOwners = new ConcurrentHashMap<>();
 	
 	public HorseOwnerManager(RPGHorsesMain plugin, HorseCrateManager horseCrateManager, PlayerConfigs playerConfigs, Permission permissions) {
 		this.plugin = plugin;
@@ -152,11 +153,11 @@ public class HorseOwnerManager {
 			horseOwner.setReceivedDefaultHorse(true);
 		}
 		
-		if (horseOwner.getPlayer() != null) this.horseOwners.add(horseOwner);
+		if (horseOwner.getPlayer() != null) this.horseOwners.put(uuid, horseOwner);
 		return horseOwner;
 	}
 	
-	public HashSet<HorseOwner> getHorseOwners() {
+	public Map<UUID, HorseOwner> getHorseOwners() {
 		return horseOwners;
 	}
 	
@@ -263,16 +264,14 @@ public class HorseOwnerManager {
 	}
 	
 	private HorseOwner getHorseOwner(UUID uuid) {
-		for (HorseOwner horseOwner : this.horseOwners) {
-			if (horseOwner.getUUID().equals(uuid)) {
-				return horseOwner;
-			}
-		}
+		if (this.horseOwners.containsKey(uuid))
+			return this.horseOwners.get(uuid);
+		
 		return this.loadData(uuid);
 	}
 	
 	public void saveData() {
-		for (HorseOwner horseOwner : this.horseOwners) {
+		for (HorseOwner horseOwner : this.horseOwners.values()) {
 			this.saveData(horseOwner);
 		}
 	}

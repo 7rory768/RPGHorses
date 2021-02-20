@@ -131,7 +131,7 @@ public class MarketGUIManager {
 		this.setupMarketGUI();
 		
 		mainloop:
-		for (HorseOwner horseOwner : this.horseOwnerManager.getHorseOwners()) {
+		for (HorseOwner horseOwner : this.horseOwnerManager.getHorseOwners().values()) {
 			if (horseOwner.isInGUI(GUILocation.MARKET_GUI)) {
 				MarketGUIPage marketGUIPage = horseOwner.getCurrentMarketGUIPage();
 				int pageNum = marketGUIPage.getPageNum();
@@ -305,7 +305,7 @@ public class MarketGUIManager {
 	}
 	
 	public void setupYourHorsesGUIS() {
-		for (HorseOwner horseOwner : this.horseOwnerManager.getHorseOwners()) {
+		for (HorseOwner horseOwner : this.horseOwnerManager.getHorseOwners().values()) {
 			this.setupYourHorsesGUI(horseOwner);
 		}
 	}

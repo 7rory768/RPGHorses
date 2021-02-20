@@ -276,7 +276,7 @@ horse-gui-options:
       material: PLAYER_HEAD
       skin-value: 'eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvYTk5YWFmMjQ1NmE2MTIyZGU4ZjZiNjI2ODNmMmJjMmVlZDlhYmI4MWZkNWJlYTFiNGMyM2E1ODE1NmI2NjkifX19' # https://minecraft-heads.com/custom-heads/alphabet/11214-quartz-arrow-up
       name: '&6&lUpgrade Horse'
-      lore: ['&7Click to upgrade your horse']
+      lore: ['&7Click to upgrade your horse', '', '&7Cost: &a${COST}', '&7Horse XP Needed: &a{HORSE-EXP-NEEDED}']
       x-cord: 7
       y-cord: 2
     # Item that when clicked prompts you to confirm if you'd like to delete your horse

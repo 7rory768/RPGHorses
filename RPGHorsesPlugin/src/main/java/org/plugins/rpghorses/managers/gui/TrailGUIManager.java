@@ -105,7 +105,7 @@ public class TrailGUIManager {
 		rows = row + 3;
 		backItem.setSlot(((rows - 1) * 9) + 4);
 		
-		for (HorseOwner horseOwner : horseOwnerManager.getHorseOwners()) {
+		for (HorseOwner horseOwner : horseOwnerManager.getHorseOwners().values()) {
 			if (horseOwner.getGUILocation() == GUILocation.TRAILS_GUI) {
 				horseOwner.openTrailsGUI(setupTrailsGUI(horseOwner.getHorseGUI()));
 			}

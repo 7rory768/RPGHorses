@@ -204,7 +204,7 @@ public class RPGHorsesMain extends JavaPlugin {
 	public void onDisable() {
 		this.horseDespawner.despawnAllRPGHorses();
 		
-		for (HorseOwner horseOwner : this.horseOwnerManager.getHorseOwners()) {
+		for (HorseOwner horseOwner : this.horseOwnerManager.getHorseOwners().values()) {
 			if (horseOwner.getGUILocation() != GUILocation.NONE) {
 				horseOwner.getPlayer().closeInventory();
 			}

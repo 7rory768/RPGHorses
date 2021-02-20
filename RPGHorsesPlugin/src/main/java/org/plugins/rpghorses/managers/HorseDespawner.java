@@ -46,7 +46,7 @@ public class HorseDespawner {
 	
 	public void despawnAllRPGHorses() {
 		int horsesDespawned = 0;
-		for (HorseOwner horseOwner : this.horseOwnerManager.getHorseOwners()) {
+		for (HorseOwner horseOwner : this.horseOwnerManager.getHorseOwners().values()) {
 			RPGHorse oldCurrentHorse = horseOwner.getCurrentHorse();
 			horseOwner.setCurrentHorse(null);
 			if (oldCurrentHorse != null) {
@@ -86,7 +86,7 @@ public class HorseDespawner {
 			@Override
 			public void run() {
 				HashMap<RPGHorse, Location> lastLocations = new HashMap<>();
-				for (HorseOwner horseOwner : horseDespawner.horseOwnerManager.getHorseOwners()) {
+				for (HorseOwner horseOwner : horseDespawner.horseOwnerManager.getHorseOwners().values()) {
 					RPGHorse currentHorse = horseOwner.getCurrentHorse();
 					if (currentHorse != null) {
 						Location currentLocation = horseOwner.getLastHorseLocation();

@@ -1,5 +1,6 @@
 package org.plugins.rpghorses.listeners;
 
+import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -10,7 +11,6 @@ import org.plugins.rpghorses.horses.RPGHorse;
 import org.plugins.rpghorses.managers.HorseOwnerManager;
 import org.plugins.rpghorses.players.HorseOwner;
 import org.plugins.rpghorses.utils.RPGMessagingUtil;
-import roryslibrary.util.DebugUtil;
 
 public class PlayerTeleportListener implements Listener {
 	
@@ -33,16 +33,14 @@ public class PlayerTeleportListener implements Listener {
 		if (horseOwner != null) {
 			RPGHorse currentHorse = horseOwner.getCurrentHorse();
 			
-			if (currentHorse != null && !horseOwner.isMountingHorse() && !horseOwner.isDeMountingHorse() && !horseOwner.isChangingHorse() && p.getVehicle() != null) {
-				this.messagingUtil.sendMessage(p, this.plugin.getConfig().getString("messages.horse-sent-to-stable").replace("{PLAYER}", "CONSOLE"), currentHorse);
+			if (currentHorse != null && (!e.getFrom().getWorld().equals(e.getTo().getWorld()) || e.getTo().distance(e.getFrom()) > 10)) {
 				horseOwner.setCurrentHorse(null);
-			} else if (horseOwner.isMountingHorse()) {
-				horseOwner.setMountingHorse(false);
-			} else if (horseOwner.isDeMountingHorse()) {
-				horseOwner.setDeMountingHorse(false);
-			} else if (horseOwner.isChangingHorse()) {
-				horseOwner.setChangingHorse(false);
+				this.messagingUtil.sendMessage(p, this.plugin.getConfig().getString("messages.horse-sent-to-stable").replace("{PLAYER}", "CONSOLE"), currentHorse);
 			}
+			
+			horseOwner.setMountingHorse(false);
+			horseOwner.setDeMountingHorse(false);
+			horseOwner.setChangingHorse(false);
 		}
 	}
 	

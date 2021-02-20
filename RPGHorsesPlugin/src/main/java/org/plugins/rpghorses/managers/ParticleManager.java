@@ -36,7 +36,7 @@ public class ParticleManager {
 		this.task = new BukkitRunnable() {
 			@Override
 			public void run() {
-				for (HorseOwner horseOwner : horseOwnerManager.getHorseOwners()) {
+				for (HorseOwner horseOwner : horseOwnerManager.getHorseOwners().values()) {
 					RPGHorse currentHorse = horseOwner.getCurrentHorse();
 					if (currentHorse != null && currentHorse.getHorse().getPassenger() != null) {
 						if (RPGHorsesMain.getVersion().getWeight() >= 9) {
