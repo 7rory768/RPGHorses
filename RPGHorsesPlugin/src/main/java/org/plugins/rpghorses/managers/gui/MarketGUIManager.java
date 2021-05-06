@@ -169,7 +169,7 @@ public class MarketGUIManager {
 	}
 	
 	public void saveMarketHorses() {
-		FileConfiguration config = plugin.getConfig();
+		FileConfiguration config = marketConfig.getConfig();
 		
 		config.set("market", null);
 		config.createSection("market");
@@ -180,6 +180,7 @@ public class MarketGUIManager {
 			config.set(path + "price", marketHorse.getPrice());
 			config.set(path + "index", marketHorse.getIndex());
 		}
+		
 		this.marketConfig.saveConfig();
 		this.marketConfig.reloadConfig();
 	}
