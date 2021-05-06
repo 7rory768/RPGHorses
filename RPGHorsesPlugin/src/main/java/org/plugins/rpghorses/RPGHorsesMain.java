@@ -4,6 +4,7 @@ import lombok.Getter;
 import net.milkbowl.vault.economy.Economy;
 import net.milkbowl.vault.permission.Permission;
 import org.bstats.bukkit.Metrics;
+import org.bstats.charts.SimplePie;
 import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 import org.bukkit.plugin.RegisteredServiceProvider;
@@ -112,7 +113,7 @@ public class RPGHorsesMain extends JavaPlugin {
 			this.loadCommands();
 			setupHelpMessage();
 			Metrics metrics = new Metrics(this, 6955);
-			metrics.addCustomChart(new Metrics.SimplePie("sql", () -> getConfig().getBoolean("sql.enabled") ? "Enabled" : "Disabled"));
+			metrics.addCustomChart(new SimplePie("sql", () -> getConfig().getBoolean("sql.enabled") ? "Enabled" : "Disabled"));
 		} else {
 			messagingUtil.sendMessage(Bukkit.getConsoleSender(), "[RPGHorses] Failed to hook into &cVault&r");
 		}
