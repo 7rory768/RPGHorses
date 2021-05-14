@@ -14,7 +14,7 @@
     </properties>
 
     <artifactId>RPGHorsesPlugin</artifactId>
-    <version>1.2.7</version>
+    <version>1.2.8</version>
 
     <repositories>
         <repository>
@@ -134,15 +134,6 @@
 
     <build>
         <plugins>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-jar-plugin</artifactId>
-                <version>3.1.1</version>
-                <configuration>
-                    <finalName>${project.parent.name}-${project.version}</finalName>
-                    <outputDirectory>D:\Files\Coding\MC\Plugins\RPGHorses\</outputDirectory>
-                </configuration>
-            </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-shade-plugin</artifactId>
