@@ -255,16 +255,18 @@ public class StableGUIManager {
 		if (rpgHorse != null) {
 			HorseOwner horseOwner = rpgHorse.getHorseOwner();
 			StableGUI stableGUI = horseOwner.getStableGUI();
-			pageLoop:
-			for (StableGUIPage stableGUIPage : stableGUI.getStableGUIPages()) {
-				HashMap<Integer, RPGHorse> rpgHorses = stableGUIPage.getHorseSlots();
-				for (Integer slot : rpgHorses.keySet()) {
-					RPGHorse loopHorse = rpgHorses.get(slot);
-					if (loopHorse == rpgHorse) {
-						ItemStack item = getHorseItem(rpgHorse);
-						item = this.fillPlaceholders(item, rpgHorse);
-						stableGUIPage.getGUI().setItem(slot, item);
-						break pageLoop;
+			if (stableGUI != null) {
+				pageLoop:
+				for (StableGUIPage stableGUIPage : stableGUI.getStableGUIPages()) {
+					HashMap<Integer, RPGHorse> rpgHorses = stableGUIPage.getHorseSlots();
+					for (Integer slot : rpgHorses.keySet()) {
+						RPGHorse loopHorse = rpgHorses.get(slot);
+						if (loopHorse == rpgHorse) {
+							ItemStack item = getHorseItem(rpgHorse);
+							item = this.fillPlaceholders(item, rpgHorse);
+							stableGUIPage.getGUI().setItem(slot, item);
+							break pageLoop;
+						}
 					}
 				}
 			}

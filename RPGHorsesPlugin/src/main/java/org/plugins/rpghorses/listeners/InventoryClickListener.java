@@ -376,17 +376,18 @@ public class InventoryClickListener implements Listener {
 					this.marketGUIManager.removeHorse(marketHorse, false);
 					rpgHorse.setInMarket(false);
 					
-					if (sqlManager != null) {
+					if (sqlManager != null && sqlManager.isEnabled()) {
 						sqlManager.removeMarketHorse(marketHorse, false);
 					}
 					
-					this.marketGUIManager.setupYourHorsesGUI(horseOwner);
-					this.stableGUIManager.updateRPGHorse(rpgHorse);
+					p.closeInventory();
+					
 					int horseNumber = horseOwner.getHorseNumber(rpgHorse);
 					this.messagingUtil.sendMessage(p, this.plugin.getConfig().getString("messages.market-horse-removed").replace("{HORSE-NUMBER}", "" + horseNumber), rpgHorse);
-					p.closeInventory();
+					
+					this.marketGUIManager.setupYourHorsesGUI(horseOwner);
+					this.stableGUIManager.updateRPGHorse(rpgHorse);
 				}
-				
 			}
 			
 		} else if (horseOwner.getCurrentHorse() != null && e.getView().getTitle().equals(horseOwner.getCurrentHorse().getHorse().getName()) && e.getView().getTopInventory() == e.getClickedInventory() && e.getSlot() == 0) {

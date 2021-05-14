@@ -166,7 +166,7 @@ public class RPGHorsesCommand implements CommandExecutor {
 				rpgHorse.setInMarket(true);
 				MarketHorse marketHorse = this.marketGUIManager.addHorse(rpgHorse, price, horseNumber - 1);
 				
-				if (sqlManager != null) {
+				if (sqlManager != null && sqlManager.isEnabled()) {
 					sqlManager.addMarketHorse(marketHorse);
 				}
 				

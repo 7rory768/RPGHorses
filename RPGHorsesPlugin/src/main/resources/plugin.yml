@@ -1,6 +1,6 @@
 main: org.plugins.rpghorses.RPGHorsesMain
 name: RPGHorses
-author: 7rory768
+author: Roree
 version: ${project.version}
 api-version: 1.13
 depend: [Vault]

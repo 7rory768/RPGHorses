@@ -74,21 +74,40 @@ public class MarketGUIManager {
 	
 	public void setupMarketGUI() {
 		try {
-		int rpgHorsesAdded = -1;
-		String title = MessagingUtil.format(this.plugin.getConfig().getString("market-options.title"));
-		Inventory gui = Bukkit.createInventory(null, this.marketRows * 9, title);
-		int slot = 10, pageNum = 1;
-		List<MarketGUIPage> marketGUIPages = new ArrayList<>();
-		HashMap<Integer, MarketHorse> horseSlots = new HashMap<>();
-		
-		for (MarketHorse marketHorse : this.marketHorses) {
-			rpgHorsesAdded++;
-			RPGHorse rpgHorse = marketHorse.getRPGHorse();
-			ItemStack item = getHorseItem(rpgHorse);
-			item = fillPlaceholders(item, marketHorse);
-			gui.setItem(slot, item);
-			horseSlots.put(slot, marketHorse);
-			if (slot++ == (this.marketRows - 1) * 9 - 2 || rpgHorsesAdded == this.marketHorses.size() - 1) {
+			int rpgHorsesAdded = -1;
+			String title = MessagingUtil.format(this.plugin.getConfig().getString("market-options.title"));
+			Inventory gui = Bukkit.createInventory(null, this.marketRows * 9, title);
+			int slot = 10, pageNum = 1;
+			List<MarketGUIPage> marketGUIPages = new ArrayList<>();
+			HashMap<Integer, MarketHorse> horseSlots = new HashMap<>();
+			
+			for (MarketHorse marketHorse : this.marketHorses) {
+				rpgHorsesAdded++;
+				RPGHorse rpgHorse = marketHorse.getRPGHorse();
+				ItemStack item = getHorseItem(rpgHorse);
+				item = fillPlaceholders(item, marketHorse);
+				gui.setItem(slot, item);
+				horseSlots.put(slot, marketHorse);
+				if (slot++ == (this.marketRows - 1) * 9 - 2 || rpgHorsesAdded == this.marketHorses.size() - 1) {
+					for (int fillSlot = 0; fillSlot < gui.getSize(); fillSlot++) {
+						if (fillSlot == this.nextPageSlot && rpgHorsesAdded < this.marketHorses.size() - 1) {
+							gui.setItem(fillSlot, this.nextPageItem);
+						} else if (fillSlot == this.previousPageSlot && pageNum > 1) {
+							gui.setItem(fillSlot, this.previousPageItem);
+						} else if (fillSlot == this.yourHorsesSlot) {
+							gui.setItem(fillSlot, this.yourHorsesItem);
+						} else if (gui.getItem(fillSlot) == null) {
+							gui.setItem(fillSlot, this.marketFillItem);
+						}
+					}
+					marketGUIPages.add(new MarketGUIPage(pageNum, gui, horseSlots));
+					slot = 10;
+					horseSlots = new HashMap<>();
+					gui = Bukkit.createInventory(null, this.marketRows * 9, title);
+				}
+			}
+			
+			if (rpgHorsesAdded == -1) {
 				for (int fillSlot = 0; fillSlot < gui.getSize(); fillSlot++) {
 					if (fillSlot == this.nextPageSlot && rpgHorsesAdded < this.marketHorses.size() - 1) {
 						gui.setItem(fillSlot, this.nextPageItem);
@@ -100,28 +119,9 @@ public class MarketGUIManager {
 						gui.setItem(fillSlot, this.marketFillItem);
 					}
 				}
-				marketGUIPages.add(new MarketGUIPage(pageNum, gui, horseSlots));
-				slot = 10;
-				horseSlots = new HashMap<>();
-				gui = Bukkit.createInventory(null, this.marketRows * 9, title);
+				marketGUIPages.add(new MarketGUIPage(pageNum++, gui, horseSlots));
 			}
-		}
-		
-		if (rpgHorsesAdded == -1) {
-			for (int fillSlot = 0; fillSlot < gui.getSize(); fillSlot++) {
-				if (fillSlot == this.nextPageSlot && rpgHorsesAdded < this.marketHorses.size() - 1) {
-					gui.setItem(fillSlot, this.nextPageItem);
-				} else if (fillSlot == this.previousPageSlot && pageNum > 1) {
-					gui.setItem(fillSlot, this.previousPageItem);
-				} else if (fillSlot == this.yourHorsesSlot) {
-					gui.setItem(fillSlot, this.yourHorsesItem);
-				} else if (gui.getItem(fillSlot) == null) {
-					gui.setItem(fillSlot, this.marketFillItem);
-				}
-			}
-			marketGUIPages.add(new MarketGUIPage(pageNum++, gui, horseSlots));
-		}
-		this.marketGUIPages = marketGUIPages;
+			this.marketGUIPages = marketGUIPages;
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -174,6 +174,8 @@ public class MarketGUIManager {
 		config.set("market", null);
 		config.createSection("market");
 		
+		DebugUtil.debug("Saving " + marketHorses.size() + " market horses");
+		
 		for (MarketHorse marketHorse : marketHorses) {
 			String path = "market." + marketHorse.getId() + ".";
 			config.set(path + "horse-owner", marketHorse.getRPGHorse().getHorseOwner().getUUID().toString());
@@ -188,36 +190,36 @@ public class MarketGUIManager {
 	public MarketHorse getMarketHorse(RPGHorse rpgHorse) {
 		String owner = rpgHorse.getHorseOwner().getUUID().toString();
 		int index = rpgHorse.getIndex();
-		DebugUtil.debug("searching for " + index + ": " + owner);
 		
-		for (MarketHorse marketHorse : marketHorses) {
-			DebugUtil.debug("checking " + marketHorse.getIndex() + ": " + marketHorse.getRPGHorse().getHorseOwner().getUUID().toString());
+		for (MarketHorse marketHorse : marketHorses)
 			if (marketHorse.getIndex() == index && marketHorse.getRPGHorse().getHorseOwner().getUUID().toString().equals(owner))
 				return marketHorse;
-		}
 		
 		return null;
 	}
 	
 	public void registerDelete(RPGHorse rpgHorse) {
 		UUID uuid = rpgHorse.getHorseOwner().getUUID();
-        int index = rpgHorse.getIndex();
-        
-        for (MarketHorse marketHorse : marketHorses) {
-        	if (marketHorse.getRPGHorse().getHorseOwner().getUUID().equals(uuid) && marketHorse.getIndex() > index) {
-		        marketHorse.setIndex(marketHorse.getIndex() - 1);
-	        }
-        }
+		int index = rpgHorse.getIndex();
+		
+		for (MarketHorse marketHorse : marketHorses) {
+			if (marketHorse.getRPGHorse().getHorseOwner().getUUID().equals(uuid) && marketHorse.getIndex() > index) {
+				marketHorse.setIndex(marketHorse.getIndex() - 1);
+			}
+		}
 	}
 	
 	public MarketHorse addHorse(RPGHorse rpgHorse, double price, int index) {
+		DebugUtil.debug("ADDING MARKET HORSE");
+		
 		MarketHorse marketHorse = new MarketHorse(marketHorses.size(), rpgHorse, price, index);
 		marketHorses.add(marketHorse);
 		this.reloadMarketGUI();
+		DebugUtil.debug("  TOTAL MARKET HORSES: " + marketHorses.size());
 		
-		if (rpgHorse.getHorseOwner().getPlayer() != null && rpgHorse.getHorseOwner().getPlayer().isOnline()) {
+		if (rpgHorse.getHorseOwner().getPlayer() != null && rpgHorse.getHorseOwner().getPlayer().isOnline())
 			this.setupYourHorsesGUI(rpgHorse.getHorseOwner());
-		}
+		
 		return marketHorse;
 	}
 	
@@ -324,13 +326,21 @@ public class MarketGUIManager {
 			
 			for (RPGHorse rpgHorse : rpgHorses) {
 				horseCount++;
+				
 				if (rpgHorse.isInMarket()) {
 					MarketHorse marketHorse = this.getMarketHorse(rpgHorse);
-					ItemStack item = getHorseItem(rpgHorse);
-					item = fillPlaceholders(item, marketHorse);
-					gui.setItem(slot, item);
-					horseSlots.put(slot, marketHorse);
+					if (marketHorse != null) {
+						ItemStack item = getHorseItem(rpgHorse);
+						item = fillPlaceholders(item, marketHorse);
+						gui.setItem(slot, item);
+						horseSlots.put(slot, marketHorse);
+					} else {
+						// Sometimes these become out of sync somehow
+						rpgHorse.setInMarket(false);
+						plugin.getStableGuiManager().updateRPGHorse(rpgHorse);
+					}
 				}
+				
 				if (slot++ == (this.marketRows - 1) * 9 - 2 || horseCount == rpgHorses.size() - 1) {
 					for (int fillSlot = 0; fillSlot < gui.getSize(); fillSlot++) {
 						if (fillSlot == (this.marketRows * 9) - 1 && horseCount < rpgHorses.size() - 1) {
@@ -343,6 +353,7 @@ public class MarketGUIManager {
 							gui.setItem(fillSlot, this.marketFillItem);
 						}
 					}
+					
 					yourHorsesGUIPages.add(new YourHorsesGUIPage(pageNum++, gui, horseSlots));
 					slot = 10;
 					horseSlots = new HashMap<>();

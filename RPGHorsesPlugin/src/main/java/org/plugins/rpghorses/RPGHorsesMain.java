@@ -44,6 +44,7 @@ public class RPGHorsesMain extends JavaPlugin {
 	@Getter
 	private PlayerConfigs playerConfigs;
 	private ItemUtil itemUtil;
+	@Getter
 	private RPGMessagingUtil messagingUtil;
 	private HorseDespawner horseDespawner;
 	@Getter
@@ -162,6 +163,7 @@ public class RPGHorsesMain extends JavaPlugin {
 	}
 	
 	public void registerEvents() {
+		new ChunkUnloadListener(this);
 		new EntityDamageByEntityListener(this, this.rpgHorseManager, this.stableGuiManager);
 		new EntityDeathListener(this, this.rpgHorseManager, this.stableGuiManager, xpManager, messagingUtil);
 		new EntitySpawnListener(this, this.rpgHorseManager, this.horseOwnerManager);
