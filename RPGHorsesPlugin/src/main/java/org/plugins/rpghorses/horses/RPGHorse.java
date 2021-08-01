@@ -32,6 +32,10 @@ public class RPGHorse {
 	private Particle particle;
 	@Getter @Setter
 	private int index = -1;
+	@Getter @Setter
+	private Location lastLocation;
+	@Getter @Setter
+	private long lastMoveTime;
 	
 	public RPGHorse(HorseOwner horseOwner, int tier, double xp, String name, double health, double movementSpeed, double jumpStrength, AbstractHorseInfo horseInfo, boolean inMarket, Particle particle) {
 		this.horseOwner = horseOwner;
