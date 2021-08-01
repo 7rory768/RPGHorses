@@ -15,7 +15,7 @@ public class NMSHandler implements NMS {
 	public void removeBehaviour(LivingEntity entity) {
 		EntityCreature creature = (EntityCreature) (((CraftEntity) entity).getHandle());
 		try {
-			Field b = PathfinderGoalSelector.class.getDeclaredField("b");
+			Field b = net.minecraft.server.v1_12_R1.PathfinderGoalSelector.class.getDeclaredField("b");
 			b.setAccessible(true);
 			b.set(creature.goalSelector, Sets.newLinkedHashSet());
 			b.set(creature.targetSelector, Sets.newLinkedHashSet());

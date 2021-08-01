@@ -37,7 +37,7 @@ TODO:
 public class RPGHorsesMain extends JavaPlugin {
 	
 	private static RPGHorsesMain plugin;
-	private static Version version = Version.v1_16_4;
+	private static Version version;
 	private static NMS NMS;
 	private RPGHorseManager rpgHorseManager;
 	private CustomConfig marketConfig;

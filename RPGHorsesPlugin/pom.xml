@@ -9,12 +9,12 @@
     </parent>
     <modelVersion>4.0.0</modelVersion>
     <properties>
-        <java.version>1.8</java.version>
+        <java.version>16</java.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
 
     <artifactId>RPGHorsesPlugin</artifactId>
-    <version>1.2.8</version>
+    <version>1.2.10</version>
 
     <repositories>
         <repository>
@@ -34,6 +34,13 @@
             <url>https://jitpack.io</url>
         </repository>
     </repositories>
+
+    <pluginRepositories>
+        <pluginRepository>
+            <id>maven-snapshots</id>
+            <url>https://repository.apache.org/content/repositories/snapshots/</url>
+        </pluginRepository>
+    </pluginRepositories>
 
     <dependencies>
         <dependency>
@@ -58,7 +65,7 @@
         <dependency>
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
-            <version>1.18.4</version>
+            <version>1.18.20</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
@@ -118,6 +125,20 @@
         </dependency>
         <dependency>
             <groupId>org.plugins.rpghorses</groupId>
+            <artifactId>1_16_5</artifactId>
+            <version>1.0.0</version>
+            <scope>compile</scope>
+            <optional>true</optional>
+        </dependency>
+        <dependency>
+            <groupId>org.plugins.rpghorses</groupId>
+            <artifactId>1_17</artifactId>
+            <version>1.0.0</version>
+            <scope>compile</scope>
+            <optional>true</optional>
+        </dependency>
+        <dependency>
+            <groupId>org.plugins.rpghorses</groupId>
             <artifactId>API</artifactId>
             <version>1.0.0</version>
             <scope>compile</scope>
@@ -137,7 +158,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-shade-plugin</artifactId>
-                <version>3.1.0</version>
+                <version>3.3.0-SNAPSHOT</version>
                 <configuration>
                     <relocations>
                         <relocation>

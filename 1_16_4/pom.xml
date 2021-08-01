@@ -11,7 +11,6 @@
     </parent>
 
     <artifactId>1_16_4</artifactId>
-    <groupId>org.plugins.rpghorses</groupId>
     <packaging>jar</packaging>
     <version>1.0.0</version>
 
