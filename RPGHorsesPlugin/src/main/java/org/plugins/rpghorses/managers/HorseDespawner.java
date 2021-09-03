@@ -79,7 +79,7 @@ public class HorseDespawner {
 						Location currentLocation = currentHorse.getHorse().getLocation();
 						Location lastLocation = currentHorse.getLastLocation();
 						
-						if (lastLocation == null || lastLocation.distanceSquared(currentLocation) > 1) {
+						if (lastLocation == null || !lastLocation.getWorld().getName().equalsIgnoreCase(currentLocation.getWorld().getName()) || lastLocation.distanceSquared(currentLocation) > 1) {
 							currentHorse.setLastMoveTime(System.currentTimeMillis());
 							currentHorse.setLastLocation(currentLocation);
 						} else if (System.currentTimeMillis() - currentHorse.getLastMoveTime() >= (idleTime * 1000L)) {
