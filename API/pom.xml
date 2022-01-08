@@ -10,7 +10,6 @@
     <modelVersion>4.0.0</modelVersion>
 
     <artifactId>API</artifactId>
-    <groupId>org.plugins.rpghorses</groupId>
     <packaging>jar</packaging>
     <version>1.0.0</version>
 
@@ -20,6 +19,7 @@
             <artifactId>spigot-api</artifactId>
             <version>1.15.2-R0.1-SNAPSHOT</version>
             <scope>provided</scope>
-        </dependency></dependencies>
+        </dependency>
+    </dependencies>
 
 </project>

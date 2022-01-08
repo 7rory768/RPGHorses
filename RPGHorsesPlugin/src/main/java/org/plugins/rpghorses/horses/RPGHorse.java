@@ -152,7 +152,7 @@ public class RPGHorse {
 		if (health > 0) {
 			this.health = health;
 			
-			if (this.health != this.maxHealth) {
+			if (this.health > this.maxHealth) {
 				this.setMaxHealth(health);
 			}
 		} else {
@@ -293,7 +293,7 @@ public class RPGHorse {
 			
 			this.horse = (LivingEntity) horseLoc.getWorld().spawnEntity(horseLoc, horseInfo.getEntityType());
 			if (RPGHorsesMain.getVersion().getWeight() < 11) {
-				this.horse.setMaxHealth(health);
+				this.horse.setMaxHealth(maxHealth);
 				Horse horse = (Horse) this.horse;
 				horse.setAdult();
 				horse.setAgeLock(true);
@@ -315,7 +315,8 @@ public class RPGHorse {
 				this.horse.setCustomName(MessagingUtil.format("&7" + this.name));
 				this.horse.setCustomNameVisible(true);
 			}
-			this.horse.setHealth(horse.getMaxHealth());
+
+			this.horse.setHealth(this.health);
 			
 			this.horse.setRemoveWhenFarAway(false);
 			

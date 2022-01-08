@@ -10,7 +10,7 @@ import org.plugins.rpghorses.NMS;
 
 import java.lang.reflect.Field;
 
-public class NMSHandler implements NMS {
+public class NMSHandler extends NMS {
 	@Override
 	public void removeBehaviour(LivingEntity entity) {
 		EntityCreature creature = (EntityCreature) (((CraftEntity) entity).getHandle());
@@ -25,7 +25,7 @@ public class NMSHandler implements NMS {
 			c.set(creature.goalSelector, Sets.newLinkedHashSet());
 			c.set(creature.targetSelector, Sets.newLinkedHashSet());
 		} catch (Exception e) {
-			e.printStackTrace();
+			logError(e);
 		}
 	}
 }
