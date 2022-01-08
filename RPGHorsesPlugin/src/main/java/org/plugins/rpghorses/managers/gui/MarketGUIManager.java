@@ -261,13 +261,15 @@ public class MarketGUIManager {
 	
 	public RPGHorse getRPGHorse(String id) {
 		String path = "market." + id + ".";
-		HorseOwner horseOwner = this.horseOwnerManager.getHorseOwner(Bukkit.getOfflinePlayer(UUID.fromString(this.marketConfig.getConfig().getString(path + "horse-owner"))));
+		HorseOwner horseOwner = this.horseOwnerManager.getHorseOwner(UUID.fromString(this.marketConfig.getConfig().getString(path + "horse-owner")));
+		
 		RPGHorse rpgHorse = horseOwner.getRPGHorse(this.marketConfig.getConfig().getInt(path + ".index"));
 		if (Bukkit.getPlayer(horseOwner.getUUID()) == null) {
 			this.horseOwnerManager.flushHorseOwner(horseOwner);
 		}
 		return rpgHorse;
 	}
+	
 	
 	public ItemStack fillPlaceholders(ItemStack item, MarketHorse marketHorse) {
 		if (item != null && marketHorse != null) {

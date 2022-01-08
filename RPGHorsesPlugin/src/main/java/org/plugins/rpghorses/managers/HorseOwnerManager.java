@@ -263,7 +263,7 @@ public class HorseOwnerManager {
 		return this.getHorseOwner(p.getUniqueId());
 	}
 	
-	private HorseOwner getHorseOwner(UUID uuid) {
+	public HorseOwner getHorseOwner(UUID uuid) {
 		if (this.horseOwners.containsKey(uuid))
 			return this.horseOwners.get(uuid);
 		
