@@ -9,7 +9,7 @@ public abstract class NMS {
 
 	public abstract void removeBehaviour(LivingEntity entity);
 
-	public void logError(Exception e) {
+	public void logError(Throwable e) {
 		if (++errorCount <= 10) {
 			e.printStackTrace();
 		} else {

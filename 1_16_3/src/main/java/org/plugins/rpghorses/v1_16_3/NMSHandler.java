@@ -18,7 +18,7 @@ public class NMSHandler extends NMS {
 			d.setAccessible(true);
 			d.set(creature.goalSelector, Sets.newLinkedHashSet());
 			d.set(creature.targetSelector, Sets.newLinkedHashSet());
-		} catch (Exception e) {
+		} catch (Exception | Error e) {
 			logError(e);
 		}
 	}
