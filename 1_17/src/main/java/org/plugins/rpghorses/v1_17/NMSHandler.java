@@ -17,10 +17,6 @@ public class NMSHandler extends NMS {
 	public void removeBehaviour(LivingEntity entity) {
 		EntityCreature creature = (EntityCreature) (((CraftEntity) entity).getHandle());
 		try {
-			for (Field field : EntityInsentient.class.getDeclaredFields()) {
-				Bukkit.broadcastMessage(field.getName()+ ": " + field.getType().getSimpleName());
-			}
-
 			Field d = PathfinderGoalSelector.class.getDeclaredField("d");
 			d.setAccessible(true);
 
