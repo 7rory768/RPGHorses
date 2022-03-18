@@ -1,40 +1,28 @@
 package org.plugins.rpghorses.guis;
 
+import lombok.Getter;
+import lombok.Setter;
+import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.inventory.ItemStack;
+import roryslibrary.util.ItemUtil;
 
+@Getter
+@Setter
 public class GUIItem {
 	
 	private ItemStack item;
 	private ItemPurpose itemPurpose;
+	private boolean enabled;
 	private int slot;
+
+	public GUIItem(ConfigurationSection config) {
+		this (ItemUtil.getItemStack(config), ItemPurpose.valueOf(config.getString("purpose", "NOTHING")), config.getBoolean("enabled", true), ItemUtil.getSlot(config));
+	}
 	
-	public GUIItem(ItemStack item, ItemPurpose itemPurpose, int slot) {
+	public GUIItem(ItemStack item, ItemPurpose itemPurpose, boolean enabled, int slot) {
 		this.item = item;
 		this.itemPurpose = itemPurpose;
-		this.slot = slot;
-	}
-	
-	public ItemStack getItem() {
-		return item;
-	}
-	
-	public void setItem(ItemStack item) {
-		this.item = item;
-	}
-	
-	public ItemPurpose getItemPurpose() {
-		return itemPurpose;
-	}
-	
-	public void setItemPurpose(ItemPurpose itemPurpose) {
-		this.itemPurpose = itemPurpose;
-	}
-	
-	public int getSlot() {
-		return slot;
-	}
-	
-	public void setSlot(int slot) {
+		this.enabled = enabled;
 		this.slot = slot;
 	}
 }

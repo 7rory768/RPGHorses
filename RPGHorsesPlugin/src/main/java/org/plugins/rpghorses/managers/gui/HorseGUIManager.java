@@ -51,11 +51,8 @@ public class HorseGUIManager {
 		this.title = RPGMessagingUtil.format(config.getString(path + "title"));
 		this.rows = config.getInt(path + "rows");
 		for (String itemID : config.getConfigurationSection(path + "items").getKeys(false)) {
-			path = "horse-gui-options.items." + itemID + ".";
-			ItemStack item = ItemUtil.getItemStack(config, path);
-			ItemPurpose purpose = ItemPurpose.valueOf(config.getString(path + "purpose", "NOTHING"));
-			int slot = ItemUtil.getSlot(config, path);
-			guiItems.add(new GUIItem(item, purpose, slot));
+			path = "horse-gui-options.items." + itemID;
+			guiItems.add(new GUIItem(config.getConfigurationSection(path)));
 		}
 		
 		for (Player p : Bukkit.getOnlinePlayers()) {
@@ -87,7 +84,7 @@ public class HorseGUIManager {
 		Inventory inventory = Bukkit.createInventory(null, rows * 9, horseTitle);
 		
 		for (GUIItem guiItem : guiItems) {
-			if (guiItem.getItemPurpose() != ItemPurpose.TOGGLE_AUTOMOUNT_OFF && guiItem.getItemPurpose() != ItemPurpose.TOGGLE_AUTOMOUNT_ON) {
+			if (guiItem.isEnabled() && guiItem.getItemPurpose() != ItemPurpose.TOGGLE_AUTOMOUNT_OFF && guiItem.getItemPurpose() != ItemPurpose.TOGGLE_AUTOMOUNT_ON) {
 				inventory.setItem(guiItem.getSlot(), guiItem.getItem());
 			}
 		}
@@ -99,7 +96,7 @@ public class HorseGUIManager {
 		inventory.setItem(guiItem.getSlot(), ItemUtil.fillPlaceholders(guiItem.getItem(), "COST", NumberUtil.getCommaString(tier == null ? 0 : (int) tier.getCost()), "HORSE-EXP-NEEDED", NumberUtil.getCommaString(tier == null ? 0 : (int) tier.getExpCost())));
 		
 		GUIItem autoMountItem = rpgHorse.getHorseOwner().autoMountOn() ? getGUIItem(ItemPurpose.TOGGLE_AUTOMOUNT_ON) : getGUIItem(ItemPurpose.TOGGLE_AUTOMOUNT_OFF);
-		inventory.setItem(autoMountItem.getSlot(), autoMountItem.getItem());
+		if (autoMountItem.isEnabled()) inventory.setItem(autoMountItem.getSlot(), autoMountItem.getItem());
 		
 		ItemStack fillItem = getGUIItem(ItemPurpose.FILL).getItem();
 		for (int slot = 0; slot < inventory.getSize(); slot++) {
@@ -128,7 +125,7 @@ public class HorseGUIManager {
 	
 	public ItemPurpose getItemPurpose(int slot) {
 		for (GUIItem guiItem : guiItems) {
-			if (guiItem.getSlot() == slot && (guiItem.getItemPurpose() != ItemPurpose.NOTHING || guiItem.getItemPurpose() != ItemPurpose.FILL)) {
+			if (guiItem.isEnabled() && guiItem.getSlot() == slot && (guiItem.getItemPurpose() != ItemPurpose.NOTHING || guiItem.getItemPurpose() != ItemPurpose.FILL)) {
 				return guiItem.getItemPurpose();
 			}
 		}
@@ -137,7 +134,7 @@ public class HorseGUIManager {
 	
 	public GUIItem getGUIItem(ItemPurpose itemPurpose) {
 		for (GUIItem guiItem : guiItems) {
-			if (guiItem.getItemPurpose() == itemPurpose) {
+			if (guiItem.isEnabled() && guiItem.getItemPurpose() == itemPurpose) {
 				return guiItem;
 			}
 		}

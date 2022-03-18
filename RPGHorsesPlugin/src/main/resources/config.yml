@@ -86,8 +86,12 @@ horse-options:
   prevent-regular-horses: false
   # Should players be able to claim wild horses as RPG horses using /horses claim
   allow-claiming: true
+  # Should horses have to have saddles on before being claimable?
+  no-claiming-without-saddle: false
   # Should players be able to claim tamed horses that weren't tamed by themselves?
   horse-jacking: false
+  # Should rpg-horses wander around like they normally do?
+  allow-wandering: false
   names:
     # Min name length (does not include color codes)
     min-length: 3
@@ -95,6 +99,10 @@ horse-options:
     max-length: 32
     # Should spaces be allowed in horse names?
     allow-spaces: true
+
+trails-options:
+  # When true, players will need the permission rpghorses.trail.<horseid>.<trail> in order to use each trail for each horse
+  per-horse-permissions: false
 
 horse-tiers:
   # 1 defines the upgrades that occur from 1 -> 2
@@ -112,6 +120,10 @@ horse-tiers:
     cost: 10000
     # This is horse-exp not player exp, it is earned as players ride their horses around
     exp-cost: 10
+    # Commands to be run on upgrade, use CONSOLE: for console commands and PLAYER: for commands to be run by the upgrade player
+    commands:
+      - 'CONSOLE:say {PLAYER} upgraded their horse to tier 2'
+      - 'PLAYER:me I have just upgraded my horse to tier 2'
   2:
     health-multiplier: 1.2
     movement-speed-multiplier: 1.2
@@ -225,6 +237,8 @@ horse-gui-options:
   items:
     # Item that when clicked will open the sell-gui for players to sell their horse
     sell-item:
+      # Should this item be enabled?
+      enabled: true
       # Don't edit the purpose key or the gui will break, it tells the GUI what to do when the item is clicked
       purpose: SELL
       material: PLAYER_HEAD
@@ -236,6 +250,8 @@ horse-gui-options:
       y-cord: 2
     # Item that when clicked will open an anvil gui for a player to rename their horse
     rename-item:
+      # Should this item be enabled?
+      enabled: true
       purpose: RENAME
       material: PLAYER_HEAD
       skin-value: 'eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvMTFiYjQyNjZhMjJkY2JjNDYwNzYyMWI5Yzc2ODkzMjk1MDE2MGMyYjk2NzA4MjY3ZDcwN2Q0NDU1MTM3OGNkNyJ9fX0=' # https://minecraft-heads.com/custom-heads/alphabet/35130-red-a
@@ -245,6 +261,8 @@ horse-gui-options:
       y-cord: 2
     # Item that when clicked toggles auto-mounting for horses off
     toggle-automount-on:
+      # Should this item be enabled?
+      enabled: true
       purpose: TOGGLE_AUTOMOUNT_ON
       material: PLAYER_HEAD
       skin-value: 'eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvYTkyZTMxZmZiNTljOTBhYjA4ZmM5ZGMxZmUyNjgwMjAzNWEzYTQ3YzQyZmVlNjM0MjNiY2RiNDI2MmVjYjliNiJ9fX0=' # https://minecraft-heads.com/custom-heads/alphabet/21771-lime-checkmark
@@ -254,6 +272,8 @@ horse-gui-options:
       y-cord: 2
     # Item that when clicked toggles auto-mounting for horses off
     toggle-automount-off:
+      # Should this item be enabled?
+      enabled: true
       purpose: TOGGLE_AUTOMOUNT_OFF
       material: PLAYER_HEAD
       skin-value: 'eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvZmY5ZDlkZTYyZWNhZTliNzk4NTU1ZmQyM2U4Y2EzNWUyNjA1MjkxOTM5YzE4NjJmZTc5MDY2Njk4Yzk1MDhhNyJ9fX0=' # https://minecraft-heads.com/custom-heads/alphabet/21766-red-checkmark
@@ -263,6 +283,8 @@ horse-gui-options:
       y-cord: 2
     # Item that when clicked opens the trails GUI
     trails-item:
+      # Should this item be enabled?
+      enabled: true
       purpose: TRAILS
       material: PLAYER_HEAD
       skin-value: 'eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvYmFkYzA0OGE3Y2U3OGY3ZGFkNzJhMDdkYTI3ZDg1YzA5MTY4ODFlNTUyMmVlZWQxZTNkYWYyMTdhMzhjMWEifX19' # https://minecraft-heads.com/custom-heads/alphabet/7822-oak-wood-question-mark
@@ -272,6 +294,8 @@ horse-gui-options:
       y-cord: 2
     # Item that when clicked attempts to upgrade the horse
     upgrade-item:
+      # Should this item be enabled?
+      enabled: true
       purpose: UPGRADE
       material: PLAYER_HEAD
       skin-value: 'eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvYTk5YWFmMjQ1NmE2MTIyZGU4ZjZiNjI2ODNmMmJjMmVlZDlhYmI4MWZkNWJlYTFiNGMyM2E1ODE1NmI2NjkifX19' # https://minecraft-heads.com/custom-heads/alphabet/11214-quartz-arrow-up
@@ -281,6 +305,8 @@ horse-gui-options:
       y-cord: 2
     # Item that when clicked prompts you to confirm if you'd like to delete your horse
     delete-item:
+      # Should this item be enabled?
+      enabled: true
       purpose: DELETE
       material: PLAYER_HEAD
       # https://minecraft-heads.com/custom-heads/decoration/4517-trash-can
@@ -519,7 +545,7 @@ trail-gui-options:
     TOTEM: 'eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvYTFkMWNmMjg5MTY1ZmJiMTEyZDg5MjFkNDc3MDhlNDlmYjcwOTI1NzM5YjFjYmQxNzk4ZGFmZjQyMjgwNmU4YSJ9fX0=' # https://minecraft-heads.com/custom-heads/decoration/32234-totem-of-undying
     NAUTILUS: 'eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvODEyNmNhYzE2ZmQ4ZTQ3NTE2ZTg0NTIwY2QzOTgxYzQ1ZDcwOGY1NWQzNDU4NDk0ZDhmMDgxYzUwNWQ2ZDMwNCJ9fX0=' # https://minecraft-heads.com/custom-heads/decoration/20119-nautilus-shell
     DRIPPING_HONEY: 'eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvZTZkY2M4ZjM3YWM5OWQ5NTFlY2JjNWRmNWU4NTgyMTMzZjVmMjMwN2U3NjlhZjZiNmNmZmY0MjgyMTgwNjcifX19' # https://minecraft-heads.com/custom-heads/food%20&%20drinks/871-honey\
-    # All trails below are 1.8.8 effects, you can remove them if you're using 1.8+
+    # All trails below are 1.8.8 effects, you can remove them if you're using 1.9+
     POTION_BREAK: 'eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvZTAxZTA0MGNiMDFjZjJjY2U0NDI4MzU4YWUzMWQyZTI2NjIwN2M0N2NiM2FkMTM5NzA5YzYyMDEzMGRjOGFkNCJ9fX0=' # https://minecraft-heads.com/custom-heads/decoration/22850-orb-blue
     ENDER_SIGNAL: 'eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvMjc3ZTNkMGY3ZGQ2NmEyNjFjZjk2MmFhMGMxMzMzYjQ5YmZjZjM2MzlmYWFlZWIxNzRkNTk1NzU3ZGY2MTEifX19' # https://minecraft-heads.com/custom-heads/decoration/159-endportal-frame
     POTION_SWIRL: 'eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvN2VlYTM0NTkwOGQxN2RjNDQ5NjdkMWRjZTQyOGYyMmYyYjE5Mzk3MzcwYWJlYjc3YmRjMTJlMmRkMWNiNiJ9fX0=' # https://minecraft-heads.com/custom-heads/decoration/4103-magic-book
@@ -574,6 +600,7 @@ messages:
   claim-jacking: '{PREFIX}This horse is owned by &6{PLAYER}, &7you cannot tame it'
   claim-limit: '{PREFIX}You cannot own more than &6{HORSE-LIMIT} &7horses'
   claim-fail: '{PREFIX}You must be riding a horse to claim it'
+  claim-saddle-fail: '{PREFIX}Your horse must have a saddle equipped in order for it to be claimed'
   already-claimed: '{PREFIX}This horse is already claimed by &6{HORSE-OWNER}'
   claiming-disabled: '{PREFIX}Claiming wild horses is &6disabled'
   horse-died: '{PREFIX}&6{HORSE-NAME} &7has died, it will respawn in &6{TIME}'

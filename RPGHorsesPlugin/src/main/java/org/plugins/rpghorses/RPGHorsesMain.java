@@ -115,8 +115,6 @@ public class RPGHorsesMain extends JavaPlugin {
 			setupHelpMessage();
 			Metrics metrics = new Metrics(this, 6955);
 			metrics.addCustomChart(new SimplePie("sql", () -> getConfig().getBoolean("sql.enabled") ? "Enabled" : "Disabled"));
-		} else {
-			messagingUtil.sendMessage(Bukkit.getConsoleSender(), "[RPGHorses] Failed to hook into &cVault&r");
 		}
 	}
 	
@@ -133,11 +131,15 @@ public class RPGHorsesMain extends JavaPlugin {
 		RegisteredServiceProvider<Permission> permissionProvider = getServer().getServicesManager().getRegistration(Permission.class);
 		if (permissionProvider != null) {
 			this.permissions = permissionProvider.getProvider();
+		} else {
+			messagingUtil.sendMessage(Bukkit.getConsoleSender(), "[RPGHorses] Failed to hook into &cVault&r you're missing a permissions plugin");
 		}
 		
 		RegisteredServiceProvider<Economy> economyProvider = getServer().getServicesManager().getRegistration(Economy.class);
 		if (economyProvider != null) {
 			this.economy = economyProvider.getProvider();
+		} else {
+			messagingUtil.sendMessage(Bukkit.getConsoleSender(), "[RPGHorses] Failed to hook into &cVault&r you're missing an economy plugin");
 		}
 		
 		return this.permissions != null && this.economy != null;

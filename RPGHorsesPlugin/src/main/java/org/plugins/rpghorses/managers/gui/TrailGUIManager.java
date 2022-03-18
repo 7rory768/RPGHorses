@@ -53,7 +53,7 @@ public class TrailGUIManager {
 		unknownTrailItem = ItemUtil.getItemStack(config, path + "unknown-trail");
 		trailItem = ItemUtil.getItemStack(config, path + "trail-item");
 		fillItem = ItemUtil.getItemStack(config, path + "fill-item");
-		backItem = new GUIItem(ItemUtil.getItemStack(config, path + "back-item"), ItemPurpose.BACK, ItemUtil.getSlot(config, path + "back-item"));
+		backItem = new GUIItem(ItemUtil.getItemStack(config, path + "back-item"), ItemPurpose.BACK, true, ItemUtil.getSlot(config, path + "back-item"));
 		
 		for (String trailName : config.getConfigurationSection(path + "trails").getKeys(false)) {
 			if (particleManager.isValidParticle(trailName)) {
@@ -63,7 +63,7 @@ public class TrailGUIManager {
 				if (newMeta != null) {
 					item.setItemMeta(newMeta);
 				}
-				validTrails.add(replacePlaceholders(new TrailGUIItem(item, ItemPurpose.TRAIL, -1, trailName)));
+				validTrails.add(replacePlaceholders(new TrailGUIItem(item, ItemPurpose.TRAIL, true, -1, trailName)));
 			}
 		}
 		
@@ -120,11 +120,12 @@ public class TrailGUIManager {
 		HashSet<TrailGUIItem> trails = new HashSet<>(), unknownTrails = new HashSet<>();
 		
 		Inventory inv = Bukkit.createInventory(p, rows * 9, RPGMessagingUtil.format(plugin.getConfig().getString("trail-gui-options.title")));
-		
-		boolean hasStarPerm = p.hasPermission("rpghorses.trail.*");
+
+		boolean perHorsePerms = plugin.getConfig().getBoolean("trails-options.per-horse-permissions", false);
+		boolean hasStarPerm = perHorsePerms ? p.hasPermission("rpghorses.trail." + horseGUI.getRpgHorse().getIndex() + ".*") : p.hasPermission("rpghorses.trail.*");
 		for (TrailGUIItem trailGUIItem : validTrails) {
 			ItemStack item;
-			if (hasStarPerm || p.hasPermission("rpghorses.trail." + trailGUIItem.getTrailName().toLowerCase())) {
+			if (hasStarPerm || (perHorsePerms && p.hasPermission("rpghorses.trail." + horseGUI.getRpgHorse().getIndex() + "." + trailGUIItem.getTrailName().toLowerCase())) || (!perHorsePerms && p.hasPermission("rpghorses.trail." + trailGUIItem.getTrailName().toLowerCase()))) {
 				trails.add(trailGUIItem);
 				item = trailGUIItem.getItem();
 			} else {

@@ -52,14 +52,11 @@ public class SellGUIManager {
 		horseSlot = ItemUtil.getSlot(config, path + "horse-slot");
 		
 		for (String key : config.getConfigurationSection(path + "items").getKeys(false)) {
-			path = "sell-gui-options.items." + key + ".";
-			ItemStack item = ItemUtil.getItemStack(config, path);
-			int slot = ItemUtil.getSlot(config, path);
-			ItemPurpose itemPurpose = ItemPurpose.valueOf(config.getString(path + "purpose"));
-			GUIItem guiItem;
-			if (itemPurpose == ItemPurpose.CHANGE_PRICE) {
+			path = "sell-gui-options.items." + key;
+			GUIItem guiItem = new GUIItem(config.getConfigurationSection(path));
+			if (guiItem.getItemPurpose() == ItemPurpose.CHANGE_PRICE) {
 				Sound sound = null;
-				String soundString = config.getString(path + "sound.sound").toUpperCase();
+				String soundString = config.getString(path + ".sound.sound").toUpperCase();
 				try {
 					sound = Sound.valueOf(soundString);
 				} catch (IllegalArgumentException e) {
@@ -72,10 +69,8 @@ public class SellGUIManager {
 						sound = Sound.valueOf("ANVIL_LAND");
 					}
 				}
-				guiItem = new PriceGUIItem(item, itemPurpose, slot, config.getInt(path + "price-change"), sound, Float.valueOf(config.getString(path + "sound.volume", "1.0")), Float.valueOf(config.getString(path + "sound.pitch", "1.0")));
+				guiItem = new PriceGUIItem(guiItem.getItem(), guiItem.getItemPurpose(), guiItem.isEnabled(), guiItem.getSlot(), config.getInt(path + ".price-change"), sound, Float.parseFloat(config.getString(path + ".sound.volume", "1.0")), Float.parseFloat(config.getString(path + ".sound.pitch", "1.0")));
 				ItemUtil.fillPlaceholders(guiItem.getItem(), "PRICE-CHANGE", "" + Math.abs(((PriceGUIItem) guiItem).getPriceChange()));
-			} else {
-				guiItem = new GUIItem(item, itemPurpose, slot);
 			}
 			guiItems.add(guiItem);
 		}
@@ -96,7 +91,7 @@ public class SellGUIManager {
 		
 		for (GUIItem guiItem : guiItems) {
 			ItemPurpose itemPurpose = guiItem.getItemPurpose();
-			if (itemPurpose != ItemPurpose.FILL) {
+			if (guiItem.isEnabled() && itemPurpose != ItemPurpose.FILL) {
 				if (itemPurpose == ItemPurpose.CONFIRM) {
 					inv.setItem(guiItem.getSlot(), guiItem.getItem());
 				} else {
@@ -135,7 +130,7 @@ public class SellGUIManager {
 	
 	public GUIItem getGUIItem(ItemPurpose itemPurpose) {
 		for (GUIItem guiItem : guiItems) {
-			if (guiItem.getItemPurpose() == itemPurpose) {
+			if (guiItem.isEnabled() && guiItem.getItemPurpose() == itemPurpose) {
 				return guiItem;
 			}
 		}
@@ -144,7 +139,7 @@ public class SellGUIManager {
 	
 	public GUIItem getGUIItem(int slot) {
 		for (GUIItem item : guiItems) {
-			if (item.getSlot() == slot) {
+			if (item.isEnabled() && item.getSlot() == slot) {
 				return item;
 			}
 		}

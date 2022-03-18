@@ -320,7 +320,7 @@ public class RPGHorse {
 			
 			this.horse.setRemoveWhenFarAway(false);
 			
-			if (RPGHorsesMain.getNMS() != null) {
+			if (RPGHorsesMain.getNMS() != null && !RPGHorsesMain.getInstance().getConfig().getBoolean("horse-options.allow-wandering", false)) {
 				RPGHorsesMain.getNMS().removeBehaviour(horse);
 			}
 			

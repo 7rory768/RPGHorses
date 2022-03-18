@@ -53,6 +53,7 @@ public class RPGHorseManager {
 				double strengthMultiplier = config.getDouble(path + "jump-strength-multiplier", 1);
 				double cost = config.getDouble(path + "cost", 0);
 				double expCost = config.getDouble(path + "exp-cost", 0);
+				List<String> commands = config.getStringList(path + "commands");
 
 				Set<ItemStack> itemsNeeded = new HashSet<>();
 				if (config.isSet(path + "items-needed")) {
@@ -61,7 +62,7 @@ public class RPGHorseManager {
 					}
 				}
 
-				tiers.add(new Tier(tier, successChance, healthMultiplier, speedMultiplier, strengthMultiplier, cost, expCost, itemsNeeded));
+				tiers.add(new Tier(tier, successChance, healthMultiplier, speedMultiplier, strengthMultiplier, cost, expCost, itemsNeeded, commands));
 			} catch (IllegalArgumentException e) {
 				plugin.getLogger().severe("Invalid tier \"" + tierNum + "\", tiers must be positive integers");
 			}
@@ -179,6 +180,8 @@ public class RPGHorseManager {
 				if (passenger != null) rpgHorse.getHorse().setPassenger(passenger);
 				if (wasMax) rpgHorse.getHorse().setHealth(rpgHorse.getMaxHealth());
 			}
+
+			tier.runCommands(p.getPlayer());
 
 			return true;
 		}

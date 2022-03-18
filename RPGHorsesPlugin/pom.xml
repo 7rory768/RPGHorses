@@ -14,7 +14,7 @@
     </properties>
 
     <artifactId>RPGHorsesPlugin</artifactId>
-    <version>1.2.15</version>
+    <version>1.2.16</version>
 
     <repositories>
         <repository>
@@ -70,9 +70,9 @@
             <scope>provided</scope>
         </dependency>
         <dependency>
-            <groupId>com.github.7rory768</groupId>
-            <artifactId>Rorys-Library</artifactId>
-            <version>master-aa3a38e-1</version>
+            <groupId>org.plugins.roryslibrary</groupId>
+            <artifactId>RorysLibrary</artifactId>
+            <version>1.0.0</version>
             <scope>compile</scope>
         </dependency>
         <dependency>

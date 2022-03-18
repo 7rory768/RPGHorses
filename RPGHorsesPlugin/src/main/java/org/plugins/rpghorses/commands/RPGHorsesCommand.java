@@ -10,6 +10,7 @@ import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Tameable;
 import org.bukkit.inventory.Inventory;
+import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.inventory.ItemStack;
 import org.plugins.rpghorses.RPGHorsesMain;
 import org.plugins.rpghorses.crates.HorseCrate;
@@ -80,8 +81,13 @@ public class RPGHorsesCommand implements CommandExecutor {
 				
 				Entity entity = p.getVehicle();
 				
-				if (entity == null || !(entity instanceof LivingEntity) || !rpgHorseManager.isValidEntityType(entity.getType())) {
+				if (!(entity instanceof LivingEntity) || !rpgHorseManager.isValidEntityType(entity.getType())) {
 					messagingUtil.sendMessageAtPath(p, "messages.claim-fail");
+					return false;
+				}
+
+				if (plugin.getConfig().getBoolean("horse-options.no-claiming-without-saddle", false) && ((InventoryHolder) entity).getInventory().getItem(0) == null || ((InventoryHolder) entity).getInventory().getItem(0).getType() != Material.SADDLE) {
+					messagingUtil.sendMessageAtPath(sender, "messages.claim-saddle-fail");
 					return false;
 				}
 				
@@ -144,14 +150,14 @@ public class RPGHorsesCommand implements CommandExecutor {
 				if (!this.runHorseNumberCheck(sender, horseNumberArg, p)) {
 					return false;
 				}
-				int horseNumber = Integer.valueOf(horseNumberArg), index = horseNumber - 1;
+				int horseNumber = Integer.parseInt(horseNumberArg), index = horseNumber - 1;
 				
 				String priceArg = args[2];
 				if (!NumberUtil.isPositiveDouble(priceArg)) {
 					this.messagingUtil.sendMessage(sender, "{PREFIX}Invalid price argument &6" + priceArg);
 					return false;
 				}
-				double price = Double.valueOf(priceArg);
+				double price = Double.parseDouble(priceArg);
 				
 				HorseOwner horseOwner = this.horseOwnerManager.getHorseOwner(p);
 				RPGHorse rpgHorse = horseOwner.getRPGHorse(index);
