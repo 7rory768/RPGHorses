@@ -19,7 +19,7 @@ import roryslibrary.util.MessagingUtil;
 import java.util.HashMap;
 
 public class RPGHorse {
-	
+
 	private HorseOwner horseOwner;
 	private String name;
 	private LivingEntity horse;
@@ -36,7 +36,7 @@ public class RPGHorse {
 	private Location lastLocation;
 	@Getter @Setter
 	private long lastMoveTime;
-	
+
 	public RPGHorse(HorseOwner horseOwner, int tier, double xp, String name, double health, double movementSpeed, double jumpStrength, AbstractHorseInfo horseInfo, boolean inMarket, Particle particle) {
 		this.horseOwner = horseOwner;
 		this.horseInfo = horseInfo;
@@ -51,14 +51,14 @@ public class RPGHorse {
 		this.items.put(0, new ItemStack(Material.SADDLE));
 		setItems(this.items);
 	}
-	
+
 	public RPGHorse(HorseOwner horseOwner, int tier, double xp, String name, double health, double movementSpeed, double jumpStrength, AbstractHorseInfo horseInfo, boolean inMarket, Particle particle, HashMap<Integer, ItemStack> items) {
 		this(horseOwner, tier, xp, name, health, movementSpeed, jumpStrength, horseInfo, inMarket, particle);
 		if (items != null) {
 			this.setItems(items);
 		}
 	}
-	
+
 	public RPGHorse(HorseOwner horseOwner, LivingEntity entity, String name) {
 		this.horseOwner = horseOwner;
 		this.horseInfo = AbstractHorseInfo.getFromEntity(entity);
@@ -80,7 +80,7 @@ public class RPGHorse {
 		this.setInMarket(false);
 		this.setParticle(null);
 		Inventory inventory = ((InventoryHolder) this.horse).getInventory();
-		
+
 		ItemStack saddleSlotItem = inventory.getItem(0);
 		if (saddleSlotItem == null) {
 			inventory.setItem(0, new ItemStack(Material.SADDLE));
@@ -88,7 +88,7 @@ public class RPGHorse {
 			horse.getWorld().dropItemNaturally(horse.getLocation(), saddleSlotItem);
 			inventory.setItem(0, new ItemStack(Material.SADDLE));
 		}
-		
+
 		for (int slot = 0; slot < inventory.getSize(); slot++) {
 			ItemStack item = inventory.getItem(slot);
 			if (item != null) {
@@ -96,15 +96,15 @@ public class RPGHorse {
 			}
 		}
 	}
-	
+
 	public LivingEntity getHorse() {
 		return horse;
 	}
-	
+
 	public int getTier() {
 		return tier;
 	}
-	
+
 	public void setTier(int tier) {
 		if (tier > 0 && this.tier != tier) {
 			this.tier = tier;
@@ -112,27 +112,27 @@ public class RPGHorse {
 			gainedXP = false;
 		}
 	}
-	
+
 	public double getXp() {
 		return xp;
 	}
-	
+
 	public void setXp(double xp) {
 		this.xp = xp;
 	}
-	
+
 	public void increaseXp(double xp) {
 		this.xp += xp;
 		gainedXP = true;
 	}
-	
+
 	public String getName() {
 		if (name == null) {
 			return "";
 		}
 		return name;
 	}
-	
+
 	public void setName(String name) {
 		if (name != null) {
 			this.name = name;
@@ -142,16 +142,16 @@ public class RPGHorse {
 			}
 		}
 	}
-	
+
 	public double getHealth() {
 		loadHealth();
 		return this.health;
 	}
-	
+
 	public void setHealth(double health) {
 		if (health > 0) {
 			this.health = health;
-			
+
 			if (this.health > this.maxHealth) {
 				this.setMaxHealth(health);
 			}
@@ -160,21 +160,21 @@ public class RPGHorse {
 			this.refreshDeathTime();
 		}
 	}
-	
+
 	public double getMaxHealth() {
 		return maxHealth;
 	}
-	
+
 	public void setMaxHealth(double maxHealth) {
 		if (maxHealth > 0) {
 			this.maxHealth = maxHealth;
 		}
 	}
-	
+
 	public double getMovementSpeed() {
 		return this.movementSpeed;
 	}
-	
+
 	public void setMovementSpeed(double newSpeed) {
 		if (newSpeed > 0) {
 			this.movementSpeed = newSpeed;
@@ -185,11 +185,11 @@ public class RPGHorse {
 			}
 		}
 	}
-	
+
 	public double getJumpStrength() {
 		return this.jumpStrength;
 	}
-	
+
 	public void setJumpStrength(double jumpStrength) {
 		if (jumpStrength > 0) {
 			this.jumpStrength = jumpStrength;
@@ -202,23 +202,23 @@ public class RPGHorse {
 			}
 		}
 	}
-	
+
 	public AbstractHorseInfo getHorseInfo() {
 		return horseInfo;
 	}
-	
+
 	public Horse.Style getStyle() {
 		return this.horseInfo.getStyle();
 	}
-	
+
 	public void setStyle(Horse.Style style) {
 		this.horseInfo.setStyle(style);
 	}
-	
+
 	public HashMap<Integer, ItemStack> getItems() {
 		return items;
 	}
-	
+
 	public void setItems(HashMap<Integer, ItemStack> items) {
 		this.items = items;
 		if (this.horse != null) {
@@ -228,11 +228,11 @@ public class RPGHorse {
 			}
 		}
 	}
-	
+
 	public boolean isDead() {
 		return dead;
 	}
-	
+
 	public void setDead(boolean dead) {
 		if (this.dead == true && dead == false) {
 			this.setHealth(this.maxHealth);
@@ -242,55 +242,55 @@ public class RPGHorse {
 		}
 		this.dead = dead;
 	}
-	
+
 	public boolean hasGainedXP() {
 		return gainedXP;
 	}
-	
+
 	public void setGainedXP(boolean gainedXP) {
 		this.gainedXP = gainedXP;
 	}
-	
+
 	public Long getDeathTime() {
 		return deathTime;
 	}
-	
+
 	public void setDeathTime(Long deathTime) {
 		this.deathTime = deathTime;
 	}
-	
+
 	public void refreshDeathTime() {
 		this.deathTime = System.currentTimeMillis();
 	}
-	
+
 	public boolean isInMarket() {
 		return inMarket;
 	}
-	
+
 	public void setInMarket(boolean inMarket) {
 		this.inMarket = inMarket;
 	}
-	
+
 	public Particle getParticle() {
 		return this.particle;
 	}
-	
+
 	public void setParticle(Particle particle) {
 		this.particle = particle;
 	}
-	
+
 	public void spawnEntity() {
 		Player p = horseOwner.getPlayer();
 		if (p != null && p.isOnline()) {
 			Location horseLoc = p.getLocation();
-			
+
 			if (this.horse != null) {
 				horseLoc = this.horse.getLocation();
 				this.despawnEntity();
 			}
-			
+
 			this.horseOwner.setSpawningHorse(true);
-			
+
 			this.horse = (LivingEntity) horseLoc.getWorld().spawnEntity(horseLoc, horseInfo.getEntityType());
 			if (RPGHorsesMain.getVersion().getWeight() < 11) {
 				this.horse.setMaxHealth(maxHealth);
@@ -305,25 +305,25 @@ public class RPGHorse {
 				abstractHorse.setAgeLock(true);
 				abstractHorse.setOwner(p);
 			}
-			
+
 			if (RPGHorsesMain.getVersion().getWeight() >= 9) {
 				this.horse.getAttribute(Attribute.GENERIC_MAX_HEALTH).setBaseValue(this.maxHealth);
 				this.horse.getAttribute(Attribute.GENERIC_MOVEMENT_SPEED).setBaseValue(this.movementSpeed);
 			}
-			
+
 			if (this.name != null) {
 				this.horse.setCustomName(MessagingUtil.format("&7" + this.name));
 				this.horse.setCustomNameVisible(true);
 			}
 
 			this.horse.setHealth(this.health);
-			
+
 			this.horse.setRemoveWhenFarAway(false);
-			
+
 			if (RPGHorsesMain.getNMS() != null && !RPGHorsesMain.getInstance().getConfig().getBoolean("horse-options.allow-wandering", false)) {
 				RPGHorsesMain.getNMS().removeBehaviour(horse);
 			}
-			
+
 			if (this.horseInfo.getEntityType() == EntityType.HORSE) {
 				Horse horse = (Horse) this.horse;
 				horse.setColor(this.horseInfo.getColor());
@@ -343,9 +343,18 @@ public class RPGHorse {
 				}
 				llama.setColor(color);
 			}
-			
+
 			setItems(items);
-			
+
+			Inventory inventory = ((InventoryHolder) horse).getInventory();
+			ItemStack saddleSlotItem = inventory.getItem(0);
+			if (saddleSlotItem == null) {
+				inventory.setItem(0, new ItemStack(Material.SADDLE));
+			} else if (saddleSlotItem.getType() != Material.SADDLE) {
+				horse.getWorld().dropItemNaturally(horse.getLocation(), saddleSlotItem);
+				inventory.setItem(0, new ItemStack(Material.SADDLE));
+			}
+
 			if (horseOwner.autoMountOn()) {
 				if (RPGHorsesMain.getVersion().getWeight() < 11) {
 					horse.setPassenger(p);
@@ -355,23 +364,23 @@ public class RPGHorse {
 			}
 		}
 	}
-	
+
 	public EntityType getEntityType() {
 		return horseInfo.getEntityType();
 	}
-	
+
 	public void setEntityType(EntityType entityType) {
 		horseInfo.setEntityType(entityType);
 	}
-	
+
 	public Horse.Color getColor() {
 		return horseInfo.getColor();
 	}
-	
+
 	public void setColor(Horse.Color color) {
 		this.horseInfo.setColor(color);
 	}
-	
+
 	public void despawnEntity() {
 		if (this.horse != null) {
 			this.loadItems();
@@ -380,7 +389,7 @@ public class RPGHorse {
 			this.horse = null;
 		}
 	}
-	
+
 	public void loadItems() {
 		if (this.horse != null) {
 			this.items.clear();
@@ -390,13 +399,13 @@ public class RPGHorse {
 			}
 		}
 	}
-	
+
 	public void loadHealth() {
 		if (this.horse != null) {
 			this.health = this.horse.getHealth();
 		}
 	}
-	
+
 	@Override
 	public boolean equals(Object object) {
 		if (object == null || !(object instanceof RPGHorse)) {
@@ -404,7 +413,7 @@ public class RPGHorse {
 		}
 		return this.equals((RPGHorse) object);
 	}
-	
+
 	public boolean equals(RPGHorse rpgHorse) {
         /*Bukkit.getLogger().info("tier equals? " + (this.tier == rpgHorse.tier));
         Bukkit.getLogger().info("health equals? " + (this.health == rpgHorse.health));
@@ -417,13 +426,13 @@ public class RPGHorse {
         Bukkit.getLogger().info("horseOwner uuid equals? " + (this.horseOwner.getUUID().equals(rpgHorse.getHorseOwner().getUUID())));*/
 		return this.tier == rpgHorse.tier && this.health == rpgHorse.health && this.maxHealth == rpgHorse.maxHealth && this.movementSpeed == rpgHorse.movementSpeed && this.jumpStrength == rpgHorse.jumpStrength && this.horseInfo.equals(rpgHorse.horseInfo) && this.horseOwner.getUUID().equals(rpgHorse.getHorseOwner().getUUID());
 	}
-	
+
 	public HorseOwner getHorseOwner() {
 		return horseOwner;
 	}
-	
+
 	public void setHorseOwner(HorseOwner horseOwner) {
 		this.horseOwner = horseOwner;
 	}
-	
+
 }
