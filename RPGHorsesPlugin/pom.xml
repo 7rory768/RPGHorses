@@ -147,6 +147,13 @@
         </dependency>
         <dependency>
             <groupId>org.plugins.rpghorses</groupId>
+            <artifactId>1_18_2</artifactId>
+            <version>1.0.0</version>
+            <scope>compile</scope>
+            <optional>true</optional>
+        </dependency>
+        <dependency>
+            <groupId>org.plugins.rpghorses</groupId>
             <artifactId>API</artifactId>
             <version>1.0.0</version>
             <scope>compile</scope>
