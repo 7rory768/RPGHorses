@@ -511,12 +511,19 @@ trail-gui-options:
     material: PLAYER_HEAD
     name: '&6{TRAIL}'
     lore: ['&7Click to set your trail to &6{TRAIL}']
+  clear-trail-item:
+    purpose: CLEAR_TRAIL
+    material: BARRIER
+    name: '&c&lClear Trail'
+    lore: ['&7Click to clear your trail']
+    slot: 21
   back-item:
     purpose: BACK
     material: PLAYER_HEAD
     skin-value: 'eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvYmZlNTY3MjgyZTc4NjA3ZjJjYTJhZWY1ODNiOGVmZWJjOTE5NTlmODRjYWU0YTgzYmVkMTBkY2Q1YjBjZmNjZCJ9fX0='
     name: '&c&lBack'
     lore: ['&7Click to go back']
+    slot: 23
   fill-item:
     purpose: FILL
     material: GRAY_STAINED_GLASS_PANE
@@ -608,6 +615,7 @@ messages:
   not-enough-xp: '{PREFIX}&6{HORSE-NAME} &7doesn''t have enough XP to level up'
   no-permission-particle: '{PREFIX}You haven''t unlocked the &6{PARTICLE} &7particle effect'
   particle-set: '{PREFIX}Trail for &6{HORSE-NAME} &7set to &6{PARTICLE}'
+  particle-removed: '{PREFIX}Trail for &6{HORSE-NAME} &7removed'
   particle-fail: '{PREFIX}You must call a RPGHorse first to set it''s trail'
   horse-crate-bought: '{PREFIX}&6{HORSE-CRATE} &7bought for &6${PRICE}'
   missing-items-crate: '{PREFIX}You are missing &6{ITEMS} &7needed to buy this crate'

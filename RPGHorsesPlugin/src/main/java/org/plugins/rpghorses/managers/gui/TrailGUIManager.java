@@ -31,7 +31,7 @@ public class TrailGUIManager {
 	private final HorseOwnerManager horseOwnerManager;
 	
 	private ItemStack unknownTrailItem, trailItem, fillItem;
-	private GUIItem backItem;
+	private GUIItem clearTrailItem, backItem;
 	private List<TrailGUIItem> validTrails = new ArrayList<>();
 	private int rows = 3;
 	
@@ -52,6 +52,7 @@ public class TrailGUIManager {
 		
 		unknownTrailItem = ItemUtil.getItemStack(config, path + "unknown-trail");
 		trailItem = ItemUtil.getItemStack(config, path + "trail-item");
+		clearTrailItem = new GUIItem(ItemUtil.getItemStack(config, path + "clear-trail-item"), ItemPurpose.CLEAR_TRAIL, true, ItemUtil.getSlot(config, path + "clear-trail-item"));
 		fillItem = ItemUtil.getItemStack(config, path + "fill-item");
 		backItem = new GUIItem(ItemUtil.getItemStack(config, path + "back-item"), ItemPurpose.BACK, true, ItemUtil.getSlot(config, path + "back-item"));
 		
@@ -136,6 +137,7 @@ public class TrailGUIManager {
 		}
 		
 		inv.setItem(backItem.getSlot(), backItem.getItem());
+		inv.setItem(clearTrailItem.getSlot(), clearTrailItem.getItem());
 		
 		for (int i = 0; i < inv.getSize(); i++) {
 			if (inv.getItem(i) == null) {
@@ -174,6 +176,8 @@ public class TrailGUIManager {
 	public ItemPurpose getItemPurpose(int slot, TrailsGUI trailsGUI) {
 		if (slot == backItem.getSlot()) {
 			return ItemPurpose.BACK;
+		} else if (slot == clearTrailItem.getSlot()) {
+			return ItemPurpose.CLEAR_TRAIL;
 		}
 		
 		return trailsGUI.getItemPurpose(slot);

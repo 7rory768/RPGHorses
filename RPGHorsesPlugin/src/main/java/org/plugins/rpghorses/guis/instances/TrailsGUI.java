@@ -1,5 +1,6 @@
 package org.plugins.rpghorses.guis.instances;
 
+import lombok.Getter;
 import org.bukkit.Effect;
 import org.bukkit.Particle;
 import org.bukkit.enchantments.Enchantment;
@@ -15,9 +16,10 @@ import java.util.HashSet;
 
 public class TrailsGUI {
 
-	private RPGHorse rpgHorse;
-	private Inventory inventory;
-	private HashSet<TrailGUIItem> trails, unknownTrails;
+	private final RPGHorse              rpgHorse;
+	private final Inventory             inventory;
+	private final HashSet<TrailGUIItem> trails, unknownTrails;
+	@Getter
 	private TrailGUIItem currentTrail;
 
 	public TrailsGUI(RPGHorse rpgHorse, Inventory inventory, HashSet<TrailGUIItem> trails, HashSet<TrailGUIItem> unknownTrails) {
@@ -52,6 +54,22 @@ public class TrailsGUI {
 			((LegacyHorseInfo) rpgHorse.getHorseInfo()).setEffect(Effect.valueOf(trailName.toUpperCase()));
 		} else {
 			rpgHorse.setParticle(Particle.valueOf(trailName.toUpperCase()));
+		}
+
+		return true;
+	}
+
+	public boolean removeTrail() {
+		if (currentTrail != null) {
+			currentTrail.getItem().removeEnchantment(Enchantment.DURABILITY);
+		}
+
+		currentTrail = null;
+
+		if (RPGHorsesMain.getVersion().getWeight() < 9) {
+			((LegacyHorseInfo) rpgHorse.getHorseInfo()).setEffect(null);
+		} else {
+			rpgHorse.setParticle(null);
 		}
 
 		return true;

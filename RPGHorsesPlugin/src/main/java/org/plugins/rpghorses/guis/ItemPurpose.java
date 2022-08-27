@@ -8,6 +8,7 @@ public enum ItemPurpose {
 	UPGRADE(),
 	TRAILS(),
 	TRAIL(),
+	CLEAR_TRAIL(),
 	UNKNOWN_TRAIL(),
 	TOGGLE_AUTOMOUNT_ON(),
 	TOGGLE_AUTOMOUNT_OFF(),

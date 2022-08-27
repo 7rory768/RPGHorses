@@ -13,10 +13,7 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.plugins.rpghorses.RPGHorsesMain;
-import org.plugins.rpghorses.guis.GUIItem;
-import org.plugins.rpghorses.guis.GUILocation;
-import org.plugins.rpghorses.guis.ItemPurpose;
-import org.plugins.rpghorses.guis.PriceGUIItem;
+import org.plugins.rpghorses.guis.*;
 import org.plugins.rpghorses.guis.instances.*;
 import org.plugins.rpghorses.horses.MarketHorse;
 import org.plugins.rpghorses.horses.RPGHorse;
@@ -35,7 +32,7 @@ import roryslibrary.util.SoundUtil;
 import java.util.Map;
 
 public class InventoryClickListener implements Listener {
-	
+
 	private final RPGHorsesMain plugin;
 	private final HorseOwnerManager horseOwnerManager;
 	private final RPGHorseManager rpgHorseManager;
@@ -48,7 +45,7 @@ public class InventoryClickListener implements Listener {
 	private final Economy economy;
 	private final MessageQueuer messageQueuer;
 	private final RPGMessagingUtil messagingUtil;
-	
+
 	public InventoryClickListener(RPGHorsesMain plugin, HorseOwnerManager horseOwnerManager, RPGHorseManager rpgHorseManager, StableGUIManager stableGUIManager, MarketGUIManager marketGUIManager, HorseGUIManager horseGUIManager, TrailGUIManager trailGUIManager, SellGUIManager sellGUIManager, Economy economy, MessageQueuer messageQueuer, RPGMessagingUtil messagingUtil) {
 		this.plugin = plugin;
 		this.horseOwnerManager = horseOwnerManager;
@@ -62,20 +59,20 @@ public class InventoryClickListener implements Listener {
 		this.economy = economy;
 		this.messageQueuer = messageQueuer;
 		this.messagingUtil = messagingUtil;
-		
+
 		plugin.getServer().getPluginManager().registerEvents(this, plugin);
 	}
-	
+
 	@EventHandler
 	public void onClick(InventoryClickEvent e) {
 		Player p = (Player) e.getWhoClicked();
 		HorseOwner horseOwner = this.horseOwnerManager.getHorseOwner(p);
 		int slot = e.getSlot();
-		
+
 		if (horseOwner.getGUILocation() != GUILocation.NONE) {
 			e.setCancelled(true);
 		}
-		
+
 		if (horseOwner.isInGUI(GUILocation.STABLE_GUI)) {
 			if (e.getClickedInventory() == p.getOpenInventory().getTopInventory()) {
 				StableGUIPage stableGUIPage = horseOwner.getCurrentStableGUIPage();
@@ -83,9 +80,9 @@ public class InventoryClickListener implements Listener {
 					horseOwner.setGUILocation(GUILocation.NONE);
 					return;
 				}
-				
+
 				Inventory inv = p.getOpenInventory().getTopInventory();
-				
+
 				if (slot == inv.getSize() - 1) {
 					horseOwner.openStableGUIPage(stableGUIPage.getPageNum() + 1);
 				} else if (slot == inv.getSize() - 9) {
@@ -135,12 +132,12 @@ public class InventoryClickListener implements Listener {
 								}
 							} else {
 								SoundUtil.playSound(p, plugin.getConfig(), "upgrade-options.failure-sound");
-								
+
 								String items = "";
 								int totalMissing = itemsMissing.size(), count = 0;
 								for (ItemStack item : itemsMissing.keySet()) {
 									int amount = itemsMissing.get(item);
-									
+
 									String name = "";
 									if (item.getItemMeta().hasDisplayName()) {
 										name = item.getItemMeta().getDisplayName();
@@ -152,9 +149,9 @@ public class InventoryClickListener implements Listener {
 										}
 										name = name.trim();
 									}
-									
+
 									items += ChatColor.GRAY + "" + amount + "x " + name + ChatColor.GRAY;
-									
+
 									if (++count < totalMissing) {
 										if (count == totalMissing - 1) {
 											items += " and ";
@@ -163,9 +160,9 @@ public class InventoryClickListener implements Listener {
 										}
 									}
 								}
-								
+
 								items = MessagingUtil.format(items);
-								
+
 								this.messagingUtil.sendMessage(p, this.plugin.getConfig().getString("messages.missing-items-upgrade").replace("{HORSE-NUMBER}", "" + horseNumber), rpgHorse, "ITEMS", items);
 								p.closeInventory();
 							}
@@ -191,7 +188,7 @@ public class InventoryClickListener implements Listener {
 						if (!plugin.getConfig().getBoolean("horse-options.names.allow-spaces")) {
 							name = name.replace(" ", "");
 						}
-						
+
 						int length = ChatColor.stripColor(MessagingUtil.format(name)).length(), minLength = plugin.getConfig().getInt("horse-options.names.min-length"), maxLength = plugin.getConfig().getInt("horse-options.names.max-length");
 						if (length < minLength) {
 							messagingUtil.sendMessageAtPath(p, "messages.short-name", "HORSE-NAME", name, "MIN-LENGTH", "" + minLength, "MAX-LENGTH", "" + maxLength);
@@ -242,11 +239,22 @@ public class InventoryClickListener implements Listener {
 					}
 				} else if (itemPurpose == ItemPurpose.BACK) {
 					horseOwner.openHorseGUI(horseOwner.getHorseGUI());
+				} else if (itemPurpose == ItemPurpose.CLEAR_TRAIL)
+				{
+					TrailGUIItem currentTrail = trailsGUI.getCurrentTrail();
+					if (trailsGUI.removeTrail())
+					{
+						horseOwner.openHorseGUI(horseOwner.getHorseGUI());
+
+						RPGHorse rpgHorse = trailsGUI.getRpgHorse();
+						this.messagingUtil.sendMessage(p, this.plugin.getConfig().getString("messages.particle-removed").replace("{HORSE-NUMBER}", "" + horseOwner.getHorseNumber(rpgHorse)).replace("{PARTICLE}", currentTrail.getTrailName().toUpperCase()), rpgHorse);
+					}
 				}
 			}
 		} else if (horseOwner.isInGUI(GUILocation.SELL_GUI)) {
 			if (e.getClickedInventory() == p.getOpenInventory().getTopInventory()) {
 				SellGUI sellGUI = horseOwner.getSellGUI();
+
 				GUIItem guiItem = sellGUIManager.getGUIItem(slot);
 				if (guiItem != null) {
 					ItemPurpose itemPurpose = guiItem.getItemPurpose();
@@ -260,17 +268,17 @@ public class InventoryClickListener implements Listener {
 							SoundUtil.playSound(p, plugin.getConfig(), "sell-gui-options.failure-sound");
 							return;
 						}
-						
+
 						RPGHorse rpgHorse = sellGUI.getRpgHorse();
 						int horseNumber = rpgHorse.getHorseOwner().getHorseNumber(rpgHorse);
-						
+
 						rpgHorse.setInMarket(true);
 						MarketHorse marketHorse = this.marketGUIManager.addHorse(rpgHorse, price, horseNumber - 1);
-						
+
 						if (sqlManager != null) {
 							sqlManager.addMarketHorse(marketHorse);
 						}
-						
+
 						this.stableGUIManager.updateRPGHorse(rpgHorse);
 						SoundUtil.playSound(p, plugin.getConfig(), "sell-gui-options.success-sound");
 						this.messagingUtil.sendMessage(p, this.plugin.getConfig().getString("messages.horse-added-to-market").replace("{HORSE-NUMBER}", "" + horseNumber), rpgHorse);
@@ -281,22 +289,22 @@ public class InventoryClickListener implements Listener {
 				}
 			}
 		} else if (horseOwner.isInGUI(GUILocation.MARKET_GUI)) {
-			
+
 			e.setCancelled(true);
 			if (e.getClickedInventory() == p.getOpenInventory().getTopInventory()) {
-				
+
 				MarketGUIPage marketGUIPage = horseOwner.getCurrentMarketGUIPage();
 				if (marketGUIPage == null) {
 					horseOwner.setGUILocation(GUILocation.NONE);
 					return;
 				}
-				
+
 				if (slot == this.marketGUIManager.getNextPageSlot()) {
 					horseOwner.openMarketGUIPage(this.marketGUIManager.getPage(marketGUIPage.getPageNum() + 1));
 				} else if (slot == this.marketGUIManager.getPreviousPageSlot()) {
 					horseOwner.openMarketGUIPage(this.marketGUIManager.getPage(marketGUIPage.getPageNum() - 1));
 				} else if (slot == this.marketGUIManager.getYourHorsesSlot()) {
-					
+
 					if (horseOwner.getYourHorsesGUI() == null || horseOwner.getYourHorsesGUI().getPage(1) == null) {
 						this.marketGUIManager.setupYourHorsesGUI(horseOwner);
 					}
@@ -308,11 +316,11 @@ public class InventoryClickListener implements Listener {
 						if (rpgHorse.getHorseOwner().getUUID().equals(p.getUniqueId())) {
 							this.messagingUtil.sendMessageAtPath(p.getPlayer(), "messages.market-buy-own-horse", rpgHorse);
 						} else {
-							
+
 							if (this.horseOwnerManager.getHorseCount(p) >= this.horseOwnerManager.getHorseLimit(p)) {
 								this.messagingUtil.sendMessageAtPath(p.getPlayer(), "messages.market-horse-limit", rpgHorse);
 							} else {
-								
+
 								double price = marketHorse.getPrice();
 								if (this.economy.getBalance(p) < price) {
 									this.messagingUtil.sendMessageAtPath(p, "messages.cant-afford-market-horse", rpgHorse);
@@ -323,16 +331,16 @@ public class InventoryClickListener implements Listener {
 									} else {
 										ownerP = Bukkit.getOfflinePlayer(rpgHorse.getHorseOwner().getUUID());
 									}
-									
+
 									this.economy.withdrawPlayer(p, price);
 									this.economy.depositPlayer(ownerP, price);
 									rpgHorse.setInMarket(false);
 									this.marketGUIManager.removeHorse(marketHorse, true);
-									
+
 									if (sqlManager != null) {
 										sqlManager.removeMarketHorse(marketHorse, true);
 									}
-									
+
 									String oldPlayerName = "null";
 									if (rpgHorse.getHorseOwner().getPlayer() != null) {
 										HorseOwner oldHorseOwner = rpgHorse.getHorseOwner();
@@ -368,33 +376,33 @@ public class InventoryClickListener implements Listener {
 					horseOwner.openMarketGUIPage(this.marketGUIManager.getPage(1));
 					return;
 				}
-				
+
 				YourHorsesGUIPage yourHorsesGUIPage = horseOwner.getCurrentYourHorsesGUIPage();
 				MarketHorse marketHorse = yourHorsesGUIPage.getMarketHorse(slot);
 				if (marketHorse != null) {
 					RPGHorse rpgHorse = marketHorse.getRPGHorse();
 					this.marketGUIManager.removeHorse(marketHorse, false);
 					rpgHorse.setInMarket(false);
-					
+
 					if (sqlManager != null && sqlManager.isEnabled()) {
 						sqlManager.removeMarketHorse(marketHorse, false);
 					}
-					
+
 					p.closeInventory();
-					
+
 					int horseNumber = horseOwner.getHorseNumber(rpgHorse);
 					this.messagingUtil.sendMessage(p, this.plugin.getConfig().getString("messages.market-horse-removed").replace("{HORSE-NUMBER}", "" + horseNumber), rpgHorse);
-					
+
 					this.marketGUIManager.setupYourHorsesGUI(horseOwner);
 					this.stableGUIManager.updateRPGHorse(rpgHorse);
 				}
 			}
-			
+
 		} else if (horseOwner.getCurrentHorse() != null && e.getView().getTitle().equals(horseOwner.getCurrentHorse().getHorse().getName()) && e.getView().getTopInventory() == e.getClickedInventory() && e.getSlot() == 0) {
 			e.setCancelled(true);
 		}
 	}
-	
+
 	public void clickRPGHorse(Player p, HorseOwner horseOwner, RPGHorse rpgHorse) {
 		if (horseOwner.getCurrentHorse() == rpgHorse) {
 			horseOwner.setCurrentHorse(null);
@@ -411,23 +419,23 @@ public class InventoryClickListener implements Listener {
 					Bukkit.getServer().dispatchCommand(Bukkit.getConsoleSender(), MessagingUtil.format(cmd.replace("{PLAYER}", p.getName())));
 				}
 			}
-			
+
 			if (!p.isOnGround()) {
 				messagingUtil.sendMessageAtPath(p, "messages.not-on-ground");
 				return;
 			}
-			
+
 			horseOwner.setCurrentHorse(rpgHorse);
 			for (String cmd : this.plugin.getConfig().getStringList("command-options.on-spawn")) {
 				Bukkit.getServer().dispatchCommand(Bukkit.getConsoleSender(), MessagingUtil.format(cmd.replace("{PLAYER}", p.getName())));
 			}
 		}
-		
+
 		if (horseOwner.getGUILocation() == GUILocation.HORSE_GUI) {
 			horseOwner.openHorseGUI(horseOwner.getHorseGUI());
 		} else if (horseOwner.getGUILocation() == GUILocation.STABLE_GUI) {
 			horseOwner.openStableGUIPage(horseOwner.getCurrentStableGUIPage());
 		}
 	}
-	
+
 }
