@@ -24,9 +24,8 @@ import org.plugins.rpghorses.players.HorseOwner;
 import org.plugins.rpghorses.utils.BukkitSerialization;
 import org.plugins.rpghorses.utils.MessageType;
 import roryslibrary.configs.PlayerConfigs;
-import roryslibrary.util.ItemUtil;
-import roryslibrary.configs.PlayerConfigs;
 import roryslibrary.util.DebugUtil;
+import roryslibrary.util.ItemUtil;
 
 import java.io.*;
 import java.sql.Connection;
@@ -212,8 +211,8 @@ public class SQLManager extends roryslibrary.managers.SQLManager implements Plug
 	public List<MarketHorse> loadMarket() {
 		List<MarketHorse> marketHorses = new ArrayList<>();
 		
-		try {
-			Connection con = getConnection();
+		try (Connection con = getConnection()) {
+
 			PreparedStatement statement = con.prepareStatement(LOAD_MARKET);
 			
 			ResultSet set = statement.executeQuery();
@@ -245,8 +244,8 @@ public class SQLManager extends roryslibrary.managers.SQLManager implements Plug
 		new BukkitRunnable() {
 			@Override
 			public void run() {
-				try {
-					Connection con = getConnection();
+				try (Connection con = getConnection()) {
+
 					String owner = horse.getRPGHorse().getHorseOwner().getUUID().toString();
 					
 					PreparedStatement statement = con.prepareStatement(ADD_MARKET_HORSE);
@@ -303,8 +302,8 @@ public class SQLManager extends roryslibrary.managers.SQLManager implements Plug
 		new BukkitRunnable() {
 			@Override
 			public void run() {
-				try {
-					Connection con = getConnection();
+				try (Connection con = getConnection()) {
+
 					int id = marketHorse.getId();
 					DebugUtil.debug("REMOVE MARKET HORSE: " + ownerStr);
 					
@@ -381,8 +380,7 @@ public class SQLManager extends roryslibrary.managers.SQLManager implements Plug
 		new BukkitRunnable() {
 			@Override
 			public void run() {
-				try {
-					Connection con = getConnection();
+				try (Connection con = getConnection()) {
 					PreparedStatement statement = con.prepareStatement(DELETE_HORSE);
 				} catch (SQLException e) {
 				
@@ -395,8 +393,8 @@ public class SQLManager extends roryslibrary.managers.SQLManager implements Plug
 		new BukkitRunnable() {
 			@Override
 			public void run() {
-				try {
-					Connection con = getConnection();
+				try (Connection con = getConnection()) {
+
 					PreparedStatement statement = con.prepareStatement(DELETE_HORSE);
 					statement.setString(1, horse.getHorseOwner().getUUID().toString());
 					statement.setInt(2, horse.getIndex());
@@ -436,9 +434,8 @@ public class SQLManager extends roryslibrary.managers.SQLManager implements Plug
 	}
 	
 	public RPGHorse getHorse(UUID uuid, int index) {
-		try {
-			Connection con = getConnection();
-			
+		try (Connection con = getConnection()) {
+
 			PreparedStatement statement = con.prepareStatement(GET_HORSE);
 			statement.setString(1, uuid.toString());
 			statement.setInt(2, index);
@@ -551,8 +548,7 @@ public class SQLManager extends roryslibrary.managers.SQLManager implements Plug
 		
 		HorseOwner horseOwner = new HorseOwner(uuid);
 		
-		try {
-			Connection con = getConnection();
+		try (Connection con = getConnection()) {
 			
 			// LOAD: Player data
 			PreparedStatement preparedStatement = con.prepareStatement(LOAD_PLAYER);
@@ -671,7 +667,7 @@ public class SQLManager extends roryslibrary.managers.SQLManager implements Plug
 	}
 	
 	public void savePlayer(HorseOwner owner) {
-		if (plugin.isEnabled()) {
+		if (plugin.isEnabled() && Bukkit.isPrimaryThread()) {
 			new BukkitRunnable() {
 				@Override
 				public void run() {
@@ -684,7 +680,7 @@ public class SQLManager extends roryslibrary.managers.SQLManager implements Plug
 	}
 	
 	public void addHorse(RPGHorse horse) {
-		if (plugin.isEnabled()) {
+		if (plugin.isEnabled() && Bukkit.isPrimaryThread()) {
 			new BukkitRunnable() {
 				@Override
 				public void run() {
@@ -695,14 +691,38 @@ public class SQLManager extends roryslibrary.managers.SQLManager implements Plug
 			saveHorse(horse);
 		}
 	}
-	
-	public void saveHorse(RPGHorse horse) {
-		try {
-			Connection con = getConnection();
-			HorseOwner owner = horse.getHorseOwner();
-			String ownerStr = owner.getUUID().toString();
-			int index = horse.getIndex();
-			
+
+	public void addHorse(RPGHorse horse, Connection con) {
+		if (plugin.isEnabled() && Bukkit.isPrimaryThread()) {
+			new BukkitRunnable() {
+				@Override
+				public void run() {
+					saveHorse(horse, con);
+				}
+			}.runTaskAsynchronously(plugin);
+		} else {
+			saveHorse(horse, con);
+		}
+	}
+
+	public void saveHorse(RPGHorse horse)
+	{
+		try (Connection con = getConnection())
+		{
+			saveHorse(horse, con);
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+	}
+
+	public void saveHorse(RPGHorse horse, Connection con)
+	{
+		try
+		{
+			HorseOwner owner    = horse.getHorseOwner();
+			String     ownerStr = owner.getUUID().toString();
+			int        index    = horse.getIndex();
+
 			PreparedStatement statement = con.prepareStatement(SAVE_HORSE);
 			statement.setInt(1, index);
 			statement.setString(2, ownerStr);
@@ -715,64 +735,75 @@ public class SQLManager extends roryslibrary.managers.SQLManager implements Plug
 			statement.setString(9, horse.getColor().name());
 			statement.setString(10, horse.getStyle().name());
 			statement.setString(11, horse.getEntityType().name());
-			
+
 			String variant = "";
-			if (plugin.getVersion().getWeight() < 11) {
+			if (plugin.getVersion().getWeight() < 11)
+			{
 				variant = ((LegacyHorseInfo) horse.getHorseInfo()).getVariant().name();
 			}
 			statement.setString(12, variant);
-			
+
 			Long deathTime = horse.getDeathTime();
 			statement.setLong(13, deathTime == null ? 0L : deathTime);
-			
+
 			statement.setBoolean(14, horse.isInMarket());
-			
+
 			String particle = "";
-			if (plugin.getVersion().getWeight() < 9) {
+			if (plugin.getVersion().getWeight() < 9)
+			{
 				Effect effect = ((LegacyHorseInfo) horse.getHorseInfo()).getEffect();
-				if (effect != null) {
+				if (effect != null)
+				{
 					particle = effect.name();
 				}
-			} else if (horse.getParticle() != null) {
+			} else if (horse.getParticle() != null)
+			{
 				particle = horse.getParticle().name();
 			}
 			statement.setString(15, particle);
-			
+
 			String itemString = "";
-			
+
 			if (horse.getHorse() != null && horse.getHorse().isValid()) horse.loadItems();
 			HashMap<Integer, ItemStack> items = horse.getItems();
-			
-			if (plugin.getConfig().getBoolean("mysql.save-items")) {
+
+			if (plugin.getConfig().getBoolean("mysql.save-items"))
+			{
 				int maxSlot = -1;
-				for (Integer slot : items.keySet()) {
+				for (Integer slot : items.keySet())
+				{
 					if (slot > maxSlot) maxSlot = slot;
 				}
-				
-				if (maxSlot > -1) {
+
+				if (maxSlot > -1)
+				{
 					ItemStack[] itemArray = new ItemStack[maxSlot + 1];
-					for (Integer slot : items.keySet()) {
+					for (Integer slot : items.keySet())
+					{
 						itemArray[slot] = items.get(slot);
 					}
-					
+
 					itemString = BukkitSerialization.itemStackArrayToBase64(itemArray);
 				}
-			} else {
-				
+			} else
+			{
+
 				FileConfiguration config = playerConfigs.getConfig(owner.getUUID());
 				config.createSection("rpghorses." + (index + 1) + ".items");
-				for (Integer slot : items.keySet()) {
+				for (Integer slot : items.keySet())
+				{
 					config.set("rpghorses." + (index + 1) + ".items." + slot, items.get(slot));
 				}
 				playerConfigs.saveConfig(owner.getUUID());
 				playerConfigs.reloadConfig(owner.getUUID());
 			}
-			
-			
+
+
 			statement.setString(16, itemString);
-			
+
 			statement.executeUpdate();
-		} catch (SQLException e) {
+		} catch (SQLException e)
+		{
 			e.printStackTrace();
 		}
 	}
@@ -780,9 +811,8 @@ public class SQLManager extends roryslibrary.managers.SQLManager implements Plug
 	private void save(HorseOwner owner) {
 		String uuidStr = owner.getUUID().toString();
 		
-		try {
-			Connection con = getConnection();
-			
+		try (Connection con = getConnection()) {
+
 			PreparedStatement statement = con.prepareStatement(SAVE_PLAYER);
 			statement.setString(1, uuidStr);
 			statement.setBoolean(2, owner.hasReceivedDefaultHorse());
@@ -794,7 +824,7 @@ public class SQLManager extends roryslibrary.managers.SQLManager implements Plug
 			statement.executeUpdate();
 			
 			for (RPGHorse horse : owner.getRPGHorses()) {
-				addHorse(horse);
+				addHorse(horse, con);
 			}
 			
 		} catch (SQLException e) {

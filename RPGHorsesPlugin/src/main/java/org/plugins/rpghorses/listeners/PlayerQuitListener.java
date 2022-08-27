@@ -21,11 +21,11 @@ public class PlayerQuitListener implements Listener {
 		plugin.getServer().getPluginManager().registerEvents(this, plugin);
 	}
 	
-	@EventHandler(priority = EventPriority.MONITOR)
+	@EventHandler(priority = EventPriority.LOWEST)
 	public void onQuit(PlayerQuitEvent e) {
 		HorseOwner horseOwner = this.horseOwnerManager.getHorseOwner(e.getPlayer());
-		this.xpManager.removeHorseOwner(horseOwner);
 		this.horseOwnerManager.flushHorseOwner(horseOwner);
+		this.xpManager.removeHorseOwner(horseOwner);
 	}
 	
 }
