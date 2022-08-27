@@ -21,7 +21,7 @@ public enum Version {
 	v1_17_1("1.17.1", 20, "v1_17"),
 	v1_18("1.18", 21, "v1_18"),
 	v1_18_1("1.18.1", 22, "v1_18"),
-	v1_18_2("1.18.2", 23, "v1_18"),
+	v1_18_2("1.18.2", 23, "v1_18_2"),
 	v1_19("1.19", 24, "v1_19"),
 	LATEST("", 100, "");
 	
@@ -48,13 +48,13 @@ public enum Version {
 	}
 	
 	public static Version getByName(String name) {
-		for (Version version : values()) {
-			if (name.startsWith(version.name)) {
-				return version;
-			}
-		}
+		Version highestMatch = Version.LATEST;
+
+		for (Version version : values())
+			if (version != Version.LATEST && name.startsWith(version.name))
+				highestMatch = version;
 		
-		return Version.LATEST;
+		return highestMatch;
 	}
 	
 	public static Version getVersion() {
