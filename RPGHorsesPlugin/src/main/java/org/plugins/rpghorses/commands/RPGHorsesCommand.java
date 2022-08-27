@@ -86,7 +86,9 @@ public class RPGHorsesCommand implements CommandExecutor {
 					return false;
 				}
 
-				if (plugin.getConfig().getBoolean("horse-options.no-claiming-without-saddle", false) && ((InventoryHolder) entity).getInventory().getItem(0) == null || ((InventoryHolder) entity).getInventory().getItem(0).getType() != Material.SADDLE) {
+				ItemStack saddleItem = ((InventoryHolder) entity).getInventory().getItem(0);
+
+				if (plugin.getConfig().getBoolean("horse-options.no-claiming-without-saddle", false) && (saddleItem == null || saddleItem.getType() != Material.SADDLE)) {
 					messagingUtil.sendMessageAtPath(sender, "messages.claim-saddle-fail");
 					return false;
 				}
