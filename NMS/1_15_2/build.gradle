@@ -1,0 +1,6 @@
+dependencies {
+    compileOnly project(':API')
+    compileOnly 'org.spigotmc:spigot:1.15.2-R0.1-SNAPSHOT'
+}
+
+description = '1_15_2'

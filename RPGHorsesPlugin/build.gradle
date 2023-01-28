@@ -1,0 +1,71 @@
+import java.text.SimpleDateFormat
+
+plugins {
+	id 'com.github.johnrengelman.shadow' version '7.1.2'
+}
+
+tasks.withType(Jar) {
+    destinationDirectory = file("$rootDir/target")
+}
+
+dependencies {
+    implementation 'org.bstats:bstats-bukkit:2.2.1'
+    implementation 'net.wesjd:anvilgui:1.6.3-SNAPSHOT'
+    implementation project(':1_11_2')
+    implementation project(':1_12_2')
+    implementation project(':1_13_2')
+    implementation project(':1_14_4')
+    implementation project(':1_15_2')
+    implementation project(':1_16_3')
+    implementation project(':1_16_4')
+    implementation project(':1_16_5')
+    implementation project(':1_17')
+    implementation project(':1_18_1')
+    implementation project(':1_18_2')
+    implementation project(':1_19_2')
+    implementation project(':1_19_3')
+    implementation project(':API')
+	implementation fileTree(dir: 'libs', include: ['*.jar'])
+    compileOnly 'org.projectlombok:lombok:1.18.24'
+	annotationProcessor 'org.projectlombok:lombok:1.18.24'
+    compileOnly 'org.spigotmc:spigot-api:1.16.5-R0.1-SNAPSHOT'
+    compileOnly 'com.github.MilkBowl:VaultAPI:1.7'
+}
+
+description = 'RPGHorsesPlugin'
+
+artifacts {
+    archives shadowJar
+}
+
+def pluginVersion = rootProject.ext.pluginVersion
+
+defaultTasks 'clean', 'build'
+
+processResources {
+    filesMatching(['plugin.yml']) {
+        expand version: pluginVersion
+    }
+}
+
+shadowJar {
+    relocate("org.bstats", "${shadePath}.bstats")
+    relocate("roryslibrary", "${shadePath}.roryslibrary")
+    relocate("net.wesjd.anvilgui", "${shadePath}.anvilgui")
+	
+    archiveBaseName = 'RPGHorse'
+	version = pluginVersion
+    archiveClassifier.set('')
+    manifest {
+        attributes(
+        'Built-By': System.properties['user.name'],
+        'Version': pluginVersion,
+		'Build-Timestamp': new SimpleDateFormat("yyyy-MM-dd' 'HH:mm:ss.SSSZ").format(new Date()),
+		'Created-By': "Gradle ${gradle.gradleVersion}",
+		'Build-Jdk': "${System.properties['java.version']} " +
+		    "(${System.properties['java.vendor']} ${System.properties['java.vm.version']})",
+			'Build-OS': "${System.properties['os.name']} ${System.properties['os.arch']} " +
+			"${System.properties['os.version']}"
+		)
+	}
+}

@@ -1,7 +1,7 @@
 main: org.plugins.rpghorses.RPGHorsesMain
 name: RPGHorses
 author: Roree
-version: ${project.version}
+version: ${version}
 api-version: 1.13
 depend: [Vault]
 load: POSTWORLD

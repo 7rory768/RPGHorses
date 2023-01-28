@@ -1,0 +1,55 @@
+plugins {
+    id 'java-library'
+    id 'maven-publish'
+}
+
+ext {
+  pluginVersion = '1.2.19'
+  shadePath = 'org.plugins.rpghorses.lib'
+}
+
+logger.lifecycle("""
+*******************************************
+You are building RPGHorse.
+
+Supported Version: 1.8 - 1.19.3
+
+SpigotMC: https://www.spigotmc.org/resources/76836/
+GitHub: https://github.com/7rory768/RPGHorses
+
+Output files will be in target
+*******************************************
+""")
+
+allprojects {
+	group = 'org.plugins.rpghorses'
+	java.sourceCompatibility = JavaVersion.VERSION_1_8
+	
+    apply plugin: 'java-library'
+	repositories {
+		mavenLocal()
+		maven { url = uri('https://repo.maven.apache.org/maven2/') }
+		maven { url = uri('https://jitpack.io') }
+		// codemc
+		maven { url = uri('https://repo.codemc.org/repository/maven-public/') }
+		// nms
+		maven { url = uri('https://repo.codemc.io/repository/nms-local/') }
+		// spigot
+		maven { url = uri('https://hub.spigotmc.org/nexus/content/repositories/snapshots/') }
+		maven { url = uri('https://libraries.minecraft.net/') }
+		maven { url = uri('https://oss.sonatype.org/content/groups/public/') }
+	}
+
+	tasks.withType(JavaCompile) {
+		options.encoding = 'UTF-8'
+	}
+}
+
+
+publishing {
+    publications {
+        maven(MavenPublication) {
+            from(components.java)
+        }
+    }
+}
