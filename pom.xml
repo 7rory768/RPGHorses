@@ -8,6 +8,7 @@
     <artifactId>RPGHorses</artifactId>
     <version>1.0.0</version>
     <modules>
+        <module>API</module>
         <module>1_11_2</module>
         <module>1_12_2</module>
         <module>1_13_2</module>
@@ -19,9 +20,9 @@
         <module>1_17</module>
         <module>1_18_1</module>
         <module>1_18_2</module>
-        <module>API</module>
-        <module>RPGHorsesPlugin</module>
         <module>1_19</module>
+        <module>1_20</module>
+        <module>RPGHorsesPlugin</module>
     </modules>
     <packaging>pom</packaging>
 

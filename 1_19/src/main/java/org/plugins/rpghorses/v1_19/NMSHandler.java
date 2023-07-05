@@ -29,8 +29,8 @@ public class NMSHandler extends NMS
 				selector = PathfinderGoalSelector.class.getDeclaredField("availableGoals");
 			}
 
-			Field b0F = EntityInsentient.class.getField("b0");
-			Field bPF = EntityInsentient.class.getField("bP");
+			Field b0F = EntityInsentient.class.getField("bS");
+			Field bPF = EntityInsentient.class.getField("bT");
 
 			b0F.setAccessible(true);
 			bPF.setAccessible(true);

@@ -29,6 +29,7 @@ import roryslibrary.util.ItemUtil;
 import roryslibrary.util.MessagingUtil;
 import roryslibrary.util.SoundUtil;
 
+import java.util.Collections;
 import java.util.Map;
 
 public class InventoryClickListener implements Listener {
@@ -183,8 +184,8 @@ public class InventoryClickListener implements Listener {
 						public void run() {
 							horseOwner.openHorseGUI(horseOwner.getHorseGUI());
 						}
-					}.runTaskLater(plugin, 1L)).onComplete((player, text) -> {
-						String oldName = rpgHorse.getName(), name = text;
+					}.runTaskLater(plugin, 1L)).onClick((clickSlot, state) -> {
+						String oldName = rpgHorse.getName(), name = state.getText();
 						if (!plugin.getConfig().getBoolean("horse-options.names.allow-spaces")) {
 							name = name.replace(" ", "");
 						}
@@ -202,9 +203,9 @@ public class InventoryClickListener implements Listener {
 							this.messagingUtil.sendMessage(p, this.plugin.getConfig().getString("messages.horse-renamed").replace("{OLD-HORSE-NAME}", oldName), rpgHorse);
 							horseOwner.openHorseGUI(horseGUIManager.getHorseGUI(rpgHorse));
 						}
-						return AnvilGUI.Response.close();
+						return Collections.singletonList(AnvilGUI.ResponseAction.close());
 					});
-					builder.title(RPGMessagingUtil.format("&6Type the new name")).item(horseGUI.getInventory().getItem(ItemUtil.getSlot(plugin.getConfig(), "horse-gui-options.horse-item")).clone()).text(rpgHorse.getName()).open(p);
+					builder.title(RPGMessagingUtil.format("&6Type the new name")).itemOutput(horseGUI.getInventory().getItem(ItemUtil.getSlot(plugin.getConfig(), "horse-gui-options.horse-item")).clone()).text(rpgHorse.getName()).open(p);
 				} else if (itemPurpose == ItemPurpose.TOGGLE_AUTOMOUNT_OFF || itemPurpose == ItemPurpose.TOGGLE_AUTOMOUNT_ON) {
 					horseGUIManager.toggleAutoMount(horseGUI);
 				} else if (itemPurpose == ItemPurpose.TRAILS) {
