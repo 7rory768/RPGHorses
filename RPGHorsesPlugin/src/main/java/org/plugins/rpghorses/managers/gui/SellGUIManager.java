@@ -18,7 +18,7 @@ import org.plugins.rpghorses.managers.HorseOwnerManager;
 import org.plugins.rpghorses.players.HorseOwner;
 import org.plugins.rpghorses.utils.RPGMessagingUtil;
 import org.plugins.rpghorses.version.Version;
-import roryslibrary.util.ItemUtil;
+import org.plugins.rpghorses.utils.ItemUtil;
 
 import java.util.HashSet;
 

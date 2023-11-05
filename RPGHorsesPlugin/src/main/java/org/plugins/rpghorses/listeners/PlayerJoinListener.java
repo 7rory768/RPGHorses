@@ -16,7 +16,7 @@ import org.plugins.rpghorses.utils.RPGMessagingUtil;
 import roryslibrary.util.UpdateNotifier;
 
 public class PlayerJoinListener implements Listener {
-	
+
 	private final RPGHorsesMain plugin;
 	private final HorseOwnerManager horseOwnerManager;
 	private final StableGUIManager stableGuiManager;
@@ -24,7 +24,7 @@ public class PlayerJoinListener implements Listener {
 	private final RPGMessagingUtil messagingUtil;
 	private final MessageQueuer messageQueuer;
 	private final UpdateNotifier updateNotifier;
-	
+
 	public PlayerJoinListener(RPGHorsesMain plugin, HorseOwnerManager horseOwnerManager, StableGUIManager stableGuiManager, MarketGUIManager marketGUIManager, RPGMessagingUtil messagingUtil, MessageQueuer messageQueuer, UpdateNotifier updateNotifier) {
 		this.plugin = plugin;
 		this.horseOwnerManager = horseOwnerManager;
@@ -33,33 +33,34 @@ public class PlayerJoinListener implements Listener {
 		this.messagingUtil = messagingUtil;
 		this.messageQueuer = messageQueuer;
 		this.updateNotifier = updateNotifier;
-		
+
 		plugin.getServer().getPluginManager().registerEvents(this, plugin);
 	}
-	
+
 	@EventHandler(priority = EventPriority.MONITOR)
 	public void onJoin(PlayerJoinEvent e) {
 		Player p = e.getPlayer();
-		
-		new BukkitRunnable() {
-			@Override
-			public void run() {
+
+		plugin.getExecutorService().execute(() -> {
+			if (p.isOnline()) {
 				HorseOwner horseOwner = horseOwnerManager.loadData(p);
 				stableGuiManager.setupStableGUI(horseOwner);
 			}
-		}.runTaskAsynchronously(plugin);
-		
+		});
+
 		new BukkitRunnable() {
 			@Override
 			public void run() {
-				HorseOwner horseOwner = horseOwnerManager.getHorseOwner(p);
-				marketGUIManager.setupYourHorsesGUI(horseOwner);
-				messageQueuer.sendQueuedMessages(p);
-				if (p.isOp() && updateNotifier.needsUpdate()) {
-					p.sendMessage(updateNotifier.getUpdateMsg());
+				if (p.isOnline()) {
+					HorseOwner horseOwner = horseOwnerManager.getHorseOwner(p);
+					marketGUIManager.setupYourHorsesGUI(horseOwner);
+					messageQueuer.sendQueuedMessages(p);
+					if (p.isOp() && updateNotifier.needsUpdate()) {
+						p.sendMessage(updateNotifier.getUpdateMsg());
+					}
 				}
 			}
 		}.runTaskLaterAsynchronously(this.plugin, 10L);
 	}
-	
+
 }

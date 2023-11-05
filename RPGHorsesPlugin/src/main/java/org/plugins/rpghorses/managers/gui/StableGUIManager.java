@@ -17,8 +17,8 @@ import org.plugins.rpghorses.managers.HorseOwnerManager;
 import org.plugins.rpghorses.managers.RPGHorseManager;
 import org.plugins.rpghorses.players.HorseOwner;
 import org.plugins.rpghorses.utils.RPGMessagingUtil;
+import org.plugins.rpghorses.utils.ItemUtil;
 import org.plugins.rpghorses.utils.SkinValueUtil;
-import roryslibrary.util.ItemUtil;
 import roryslibrary.util.MessagingUtil;
 import roryslibrary.util.TimeUtil;
 
@@ -134,7 +134,7 @@ public class StableGUIManager {
 		} else {
 			item = rpgHorse.isDead() ? this.deadHorseItem.clone() : this.aliveHorseItem.clone();
 		}
-		
+
 		return SkinValueUtil.applySkin(rpgHorse, item);
 	}
 	
@@ -177,7 +177,7 @@ public class StableGUIManager {
 				slot++;
 				skipSlot = -1;
 			}
-			
+
 			gui.setItem(slot, item);
 			rpgHorseSlots.put(slot, rpgHorse);
 			

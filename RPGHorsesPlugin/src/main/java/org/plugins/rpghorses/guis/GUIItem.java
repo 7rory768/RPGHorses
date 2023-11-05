@@ -4,7 +4,7 @@ import lombok.Getter;
 import lombok.Setter;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.inventory.ItemStack;
-import roryslibrary.util.ItemUtil;
+import org.plugins.rpghorses.utils.ItemUtil;
 
 @Getter
 @Setter

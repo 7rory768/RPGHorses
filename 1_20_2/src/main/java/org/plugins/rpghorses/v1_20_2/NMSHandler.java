@@ -1,32 +1,30 @@
-package org.plugins.rpghorses.v1_20;
+package org.plugins.rpghorses.v1_20_2;
 
 import com.google.common.collect.Sets;
 import net.minecraft.world.entity.EntityCreature;
 import net.minecraft.world.entity.EntityInsentient;
 import net.minecraft.world.entity.ai.goal.PathfinderGoalSelector;
-import org.bukkit.craftbukkit.v1_20_R1.entity.CraftEntity;
+import org.bukkit.craftbukkit.v1_20_R2.entity.CraftEntity;
 import org.bukkit.entity.LivingEntity;
 import org.plugins.rpghorses.NMS;
 
 import java.lang.reflect.Field;
 
-public class NMSHandler extends NMS
-{
+/*
+ * @author Rory Skipper (Roree) on 2023-10-27
+ */
+public class NMSHandler extends NMS {
 
 	@Override
-	public void removeBehaviour(LivingEntity entity)
-	{
-		try
-		{
+	public void removeBehaviour(LivingEntity entity) {
+		try {
 			EntityCreature creature = (EntityCreature) (((CraftEntity) entity).getHandle());
 
 			Field goalsField;
 
-			try
-			{
+			try {
 				goalsField = PathfinderGoalSelector.class.getDeclaredField("d");
-			} catch (NoSuchFieldException ignored)
-			{
+			} catch (NoSuchFieldException ignored) {
 				goalsField = PathfinderGoalSelector.class.getDeclaredField("availableGoals");
 			}
 
@@ -42,8 +40,7 @@ public class NMSHandler extends NMS
 			goalsField.setAccessible(true);
 			goalsField.set(selector1, Sets.newLinkedHashSet());
 			goalsField.set(selector2, Sets.newLinkedHashSet());
-		} catch (Exception | Error e)
-		{
+		} catch (Exception | Error e) {
 			logError(e);
 		}
 	}

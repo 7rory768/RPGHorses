@@ -12,7 +12,7 @@ import org.plugins.rpghorses.horseinfo.LegacyHorseInfo;
 import org.plugins.rpghorses.horses.RPGHorse;
 import org.plugins.rpghorses.managers.RPGHorseManager;
 import org.plugins.rpghorses.players.HorseOwner;
-import roryslibrary.util.ItemUtil;
+import org.plugins.rpghorses.utils.ItemUtil;
 
 import java.util.HashMap;
 import java.util.Map;

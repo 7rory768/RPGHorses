@@ -17,7 +17,7 @@ import org.plugins.rpghorses.managers.RPGHorseManager;
 import org.plugins.rpghorses.players.HorseOwner;
 import org.plugins.rpghorses.tiers.Tier;
 import org.plugins.rpghorses.utils.RPGMessagingUtil;
-import roryslibrary.util.ItemUtil;
+import org.plugins.rpghorses.utils.ItemUtil;
 import roryslibrary.util.MessagingUtil;
 import roryslibrary.util.NumberUtil;
 

@@ -1,5 +1,6 @@
 package org.plugins.rpghorses;
 
+import com.google.common.util.concurrent.ThreadFactoryBuilder;
 import lombok.Getter;
 import net.milkbowl.vault.economy.Economy;
 import net.milkbowl.vault.permission.Permission;
@@ -22,11 +23,13 @@ import roryslibrary.configs.CustomConfig;
 import roryslibrary.configs.PlayerConfigs;
 import roryslibrary.util.CustomConfigUtil;
 import roryslibrary.util.DebugUtil;
-import roryslibrary.util.ItemUtil;
+import org.plugins.rpghorses.utils.ItemUtil;
 import roryslibrary.util.UpdateNotifier;
 
 import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 /*
 TODO:
@@ -39,6 +42,9 @@ public class RPGHorsesMain extends JavaPlugin {
 	private static RPGHorsesMain plugin;
 	private static Version version;
 	private static NMS NMS;
+
+	@Getter
+	private ExecutorService executorService;
 	private RPGHorseManager rpgHorseManager;
 	private CustomConfig marketConfig;
 	@Getter
@@ -91,6 +97,8 @@ public class RPGHorsesMain extends JavaPlugin {
 	public void onEnable() {
 		plugin = this;
 		new DebugUtil().setPlugin(this);
+
+		executorService = Executors.newSingleThreadExecutor(new ThreadFactoryBuilder().setNameFormat("RPGHorses").build());
 		
 		version = Version.getByName(Bukkit.getBukkitVersion().split("-")[0]);
 		Bukkit.getLogger().info("[RPGHorses] " + version.getName() + " detected");

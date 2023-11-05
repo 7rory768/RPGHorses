@@ -20,7 +20,7 @@ import org.plugins.rpghorses.players.HorseOwner;
 import org.plugins.rpghorses.utils.SkinValueUtil;
 import roryslibrary.configs.CustomConfig;
 import roryslibrary.util.DebugUtil;
-import roryslibrary.util.ItemUtil;
+import org.plugins.rpghorses.utils.ItemUtil;
 import roryslibrary.util.MessagingUtil;
 
 import java.text.DecimalFormat;

@@ -10,7 +10,7 @@ import org.plugins.rpghorses.guis.ItemPurpose;
 import org.plugins.rpghorses.guis.TrailGUIItem;
 import org.plugins.rpghorses.horseinfo.LegacyHorseInfo;
 import org.plugins.rpghorses.horses.RPGHorse;
-import roryslibrary.util.ItemUtil;
+import org.plugins.rpghorses.utils.ItemUtil;
 
 import java.util.HashSet;
 
