@@ -16,18 +16,19 @@ import org.bukkit.inventory.meta.LeatherArmorMeta;
 import org.bukkit.inventory.meta.SkullMeta;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.profile.PlayerProfile;
+import org.bukkit.profile.PlayerTextures;
 import roryslibrary.guis.GUIItem;
 import roryslibrary.util.MessagingUtil;
 import roryslibrary.util.Version;
 
 import java.lang.reflect.Field;
 import java.net.MalformedURLException;
+import java.net.URI;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.UUID;
-import java.util.logging.Level;
 
 /*
  * @author Rory Skipper (Roree) on 2023-10-27
@@ -161,9 +162,9 @@ public class ItemUtil extends roryslibrary.util.ItemUtil {
 				item.setDurability((short) 3);
 			}
 
-			if (section.isSet("skin-value")) {
+			if (section.isSet("skin-value") || section.isSet("textures-url")) {
 				ItemMeta oldItemMeta = itemMeta;
-				itemMeta = applyCustomHead(itemMeta, section.getString("skin-value"));
+				itemMeta = applyCustomHead(itemMeta, section.getString("textures-url", ""), section.getString("skin-value", ""));
 				if (itemMeta == null) {
 					itemMeta = oldItemMeta;
 					pluginName = ChatColor.stripColor(MessagingUtil.format(section.getString("prefix", "ItemUtil").split("\\s")[0], new String[0]));
@@ -187,40 +188,37 @@ public class ItemUtil extends roryslibrary.util.ItemUtil {
 	}
 
 	public static SkullMeta applyCustomHead(ItemMeta itemMeta, String value) {
-		try {
-			if (value.length() <= 16) {
-				SkullMeta skullMeta = (SkullMeta) itemMeta;
-				skullMeta.setOwner(value);
-				return skullMeta;
-			}
+		return applyCustomHead(itemMeta, value, value);
+	}
 
-			UUID uuid = UUID.fromString(value);
-			if (uuid != null) {
-				return applyCustomHead(itemMeta, uuid);
-			}
-		} catch (Exception var9) {
-		}
-
+	public static SkullMeta applyCustomHead(ItemMeta itemMeta, String texturesURL, String value) {
 		boolean isURL = false;
 		URL url = null;
 
 		try {
-			url = new URL(value);
+			url = URI.create(texturesURL).toURL();
 			isURL = true;
-		} catch (MalformedURLException var8) {
+		} catch (Exception var8) {
 		}
 
 		SkullMeta skullMeta = (SkullMeta) itemMeta;
-		if (isURL && value.contains("textures.minecraft.net")) {
-			PlayerProfile playerProfile = Bukkit.getServer().createPlayerProfile(UUID.randomUUID(), "");
+		if (isURL && texturesURL.contains("textures.minecraft.net")) {
+			PlayerProfile playerProfile = Bukkit.createPlayerProfile(UUID.randomUUID());
 			playerProfile.getTextures().setSkin(url);
-			playerProfile.getTextures().setCape(url);
 			skullMeta.setOwnerProfile(playerProfile);
 		} else {
-			/*if (Version.getVersion().getWeight() >= Version.v1_20.getWeight()) {
-				Bukkit.getLogger().log(Level.SEVERE, "[RPGHorses] Failed to apply legacy skull skin-value " + value + " (1.20+)", new IllegalArgumentException());
-				return skullMeta;
-			}*/
+			try {
+				if (value.length() <= 16) {
+					skullMeta.setOwner(value);
+					return skullMeta;
+				}
+
+				UUID uuid = UUID.fromString(value);
+				if (uuid != null) {
+					return applyCustomHead(itemMeta, uuid);
+				}
+			} catch (Exception var9) {
+			}
 
 			try {
 				GameProfile gameProfile = new GameProfile(UUID.randomUUID(), value);

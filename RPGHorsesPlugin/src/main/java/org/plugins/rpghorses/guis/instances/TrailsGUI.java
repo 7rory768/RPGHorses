@@ -12,21 +12,27 @@ import org.plugins.rpghorses.horseinfo.LegacyHorseInfo;
 import org.plugins.rpghorses.horses.RPGHorse;
 import org.plugins.rpghorses.utils.ItemUtil;
 
+import java.util.HashMap;
 import java.util.HashSet;
 
 public class TrailsGUI {
 
-	private final RPGHorse              rpgHorse;
-	private final Inventory             inventory;
+	private final RPGHorse rpgHorse;
+	private final Inventory inventory;
 	private final HashSet<TrailGUIItem> trails, unknownTrails;
 	@Getter
 	private TrailGUIItem currentTrail;
 
-	public TrailsGUI(RPGHorse rpgHorse, Inventory inventory, HashSet<TrailGUIItem> trails, HashSet<TrailGUIItem> unknownTrails) {
+	public TrailsGUI(RPGHorse rpgHorse, Inventory inventory, HashSet<TrailGUIItem> trails, HashSet<TrailGUIItem> unknownTrails, TrailGUIItem currentTrail) {
 		this.rpgHorse = rpgHorse;
 		this.inventory = inventory;
 		this.trails = trails;
 		this.unknownTrails = unknownTrails;
+		this.currentTrail = currentTrail;
+
+		if (currentTrail != null) {
+			ItemUtil.addDurabilityGlow(inventory.getItem(currentTrail.getSlot()));
+		}
 	}
 
 	public RPGHorse getRpgHorse() {
@@ -43,11 +49,11 @@ public class TrailsGUI {
 		if (trailGUIItem == null || unknownTrails.contains(trailGUIItem)) return false;
 
 		if (currentTrail != null) {
-			currentTrail.getItem().removeEnchantment(Enchantment.DURABILITY);
+			inventory.getItem(currentTrail.getSlot()).removeEnchantment(Enchantment.DURABILITY);
 		}
 
 		currentTrail = trailGUIItem;
-		ItemUtil.addDurabilityGlow(currentTrail.getItem());
+		ItemUtil.addDurabilityGlow(inventory.getItem(currentTrail.getSlot()));
 		String trailName = currentTrail.getTrailName();
 
 		if (RPGHorsesMain.getVersion().getWeight() < 9) {
@@ -60,6 +66,8 @@ public class TrailsGUI {
 	}
 
 	public boolean removeTrail() {
+		boolean hadTrail = false;
+
 		if (currentTrail != null) {
 			currentTrail.getItem().removeEnchantment(Enchantment.DURABILITY);
 		}
@@ -67,12 +75,14 @@ public class TrailsGUI {
 		currentTrail = null;
 
 		if (RPGHorsesMain.getVersion().getWeight() < 9) {
+			hadTrail = ((LegacyHorseInfo) rpgHorse.getHorseInfo()).getEffect() != null;
 			((LegacyHorseInfo) rpgHorse.getHorseInfo()).setEffect(null);
 		} else {
+			hadTrail = rpgHorse.getParticle() != null;
 			rpgHorse.setParticle(null);
 		}
 
-		return true;
+		return hadTrail;
 	}
 
 	public TrailGUIItem getTrailGUIItem(int slot) {

@@ -16,9 +16,9 @@ import org.plugins.rpghorses.horses.RPGHorse;
 import org.plugins.rpghorses.managers.HorseOwnerManager;
 import org.plugins.rpghorses.managers.RPGHorseManager;
 import org.plugins.rpghorses.players.HorseOwner;
+import org.plugins.rpghorses.utils.HorseSkins;
 import org.plugins.rpghorses.utils.RPGMessagingUtil;
 import org.plugins.rpghorses.utils.ItemUtil;
-import org.plugins.rpghorses.utils.SkinValueUtil;
 import roryslibrary.util.MessagingUtil;
 import roryslibrary.util.TimeUtil;
 
@@ -128,14 +128,14 @@ public class StableGUIManager {
 		ItemStack item;
 		if (rpgHorse.isInMarket()) {
 			item = marketHorseItem.clone();
-			if (plugin.getConfig().isSet("stable-options.market-horse-item.skin-value")) {
+			if (plugin.getConfig().isSet("stable-options.market-horse-item.skin-value") || plugin.getConfig().isSet("stable-options.market-horse-item.textures-url")) {
 				return item;
 			}
 		} else {
 			item = rpgHorse.isDead() ? this.deadHorseItem.clone() : this.aliveHorseItem.clone();
 		}
 
-		return SkinValueUtil.applySkin(rpgHorse, item);
+		return HorseSkins.applySkin(rpgHorse, item);
 	}
 	
 	public void setupStableGUI(HorseOwner horseOwner) {

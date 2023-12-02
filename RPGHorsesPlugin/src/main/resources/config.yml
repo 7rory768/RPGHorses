@@ -48,6 +48,8 @@
 #  1.16: https://hub.spigotmc.org/javadocs/spigot/org/bukkit/Particle.html
 
 prefix: '&6&lRPGHorses &8\u00BB &7'
+# Don't change this, used for automatic config updates
+version: 1
 
 # This is used to sync data between servers, there's not much point in using this unless that is your goal
 mysql:
@@ -194,7 +196,8 @@ stable-options:
     material: PLAYER_HEAD
     # If you want the horse to remain as its regular horse head in the stable gui, just remove the line below (skin-value)
     # After /horseadmin reload, players may have to re-log to see this change
-    skin-value: 'eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvMTYyMzRhZTdkNTU5MDNlYThiYzM0NDEzY2Q1MmRlZDNiMzdjOTJlZWU1YWU1MzNmYzUxMjZhNjU0NjFmMTFmIn19fQ=='
+    skin-value: 'eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvMTYyMzRhZTdkNTU5MDNlYThiYzM0NDEzY2Q1MmRlZDNiMzdjOTJlZWU1YWU1MzNmYzUxMjZhNjU0NjFmMTFmIn19fQ==' # https://minecraft-heads.com/custom-heads/decoration/134-present-brown
+    textures-url: 'https://textures.minecraft.net/texture/16234ae7d55903ea8bc34413cd52ded3b37c92eee5ae533fc5126a65461f11f' # https://minecraft-heads.com/custom-heads/decoration/134-present-brown
     name: '&8\u00BB &7{HORSE-NAME} &8(&7In Market&8) &8\u00AB'
     lore:
       - '   &7Movement Speed: &6{MOVEMENT-SPEED} &7miles/second'
@@ -206,12 +209,14 @@ stable-options:
   previous-page-item:
     material: PLAYER_HEAD
     skin-value: 'eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvYmQ2OWUwNmU1ZGFkZmQ4NGU1ZjNkMWMyMTA2M2YyNTUzYjJmYTk0NWVlMWQ0ZDcxNTJmZGM1NDI1YmMxMmE5In19fQ==' # https://minecraft-heads.com/custom-heads/alphabet/7827-oak-wood-arrow-left
+    textures-url: 'https://textures.minecraft.net/texture/bd69e06e5dadfd84e5f3d1c21063f2553b2fa945ee1d4d7152fdc5425bc12a9' # https://minecraft-heads.com/custom-heads/alphabet/7827-oak-wood-arrow-left
     name: '&6&lPrevious page'
     lore: ['&7Click to view the previous page']
   # Item to view the next page
   next-page-item:
     material: PLAYER_HEAD
     skin-value: 'eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvMTliZjMyOTJlMTI2YTEwNWI1NGViYTcxM2FhMWIxNTJkNTQxYTFkODkzODgyOWM1NjM2NGQxNzhlZDIyYmYifX19' # https://minecraft-heads.com/custom-heads/alphabet/7826-oak-wood-arrow-right
+    textures-url: 'https://textures.minecraft.net/texture/19bf3292e126a105b54eba713aa1b152d541a1d8938829c56364d178ed22bf' # https://minecraft-heads.com/custom-heads/alphabet/7826-oak-wood-arrow-right
     name: '&6&lNext page'
     lore: ['&7Click to view the next page']
   # This item will fill all empty slots within the stable gui
@@ -242,8 +247,8 @@ horse-gui-options:
       # Don't edit the purpose key or the gui will break, it tells the GUI what to do when the item is clicked
       purpose: SELL
       material: PLAYER_HEAD
-      # https://minecraft-heads.com/custom-heads/decoration/33098-minecraft-earth-shop
       skin-value: 'eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvN2UzZGViNTdlYWEyZjRkNDAzYWQ1NzI4M2NlOGI0MTgwNWVlNWI2ZGU5MTJlZTJiNGVhNzM2YTlkMWY0NjVhNyJ9fX0='
+      textures-url: 'https://textures.minecraft.net/texture/7e3deb57eaa2f4d403ad57283ce8b41805ee5b6de912ee2b4ea736a9d1f465a7' # https://minecraft-heads.com/custom-heads/decoration/33098-minecraft-earth-shop
       name: '&6&lSell Horse'
       lore: ['&7Click to sell your horse in the market']
       x-cord: 2
@@ -255,6 +260,7 @@ horse-gui-options:
       purpose: RENAME
       material: PLAYER_HEAD
       skin-value: 'eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvMTFiYjQyNjZhMjJkY2JjNDYwNzYyMWI5Yzc2ODkzMjk1MDE2MGMyYjk2NzA4MjY3ZDcwN2Q0NDU1MTM3OGNkNyJ9fX0=' # https://minecraft-heads.com/custom-heads/alphabet/35130-red-a
+      textures-url: 'https://textures.minecraft.net/texture/11bb4266a22dcbc4607621b9c768932950160c2b96708267d707d44551378cd7' # https://minecraft-heads.com/custom-heads/alphabet/35130-red-a
       name: '&6&lRename Horse'
       lore: ['&7Click to rename your horse']
       x-cord: 3
@@ -266,6 +272,7 @@ horse-gui-options:
       purpose: TOGGLE_AUTOMOUNT_ON
       material: PLAYER_HEAD
       skin-value: 'eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvYTkyZTMxZmZiNTljOTBhYjA4ZmM5ZGMxZmUyNjgwMjAzNWEzYTQ3YzQyZmVlNjM0MjNiY2RiNDI2MmVjYjliNiJ9fX0=' # https://minecraft-heads.com/custom-heads/alphabet/21771-lime-checkmark
+      textures-url: 'https://textures.minecraft.net/texture/a92e31ffb59c90ab08fc9dc1fe26802035a3a47c42fee63423bcdb4262ecb9b6' # https://minecraft-heads.com/custom-heads/alphabet/21771-lime-checkmark
       name: '&6&lToggle Auto-Mount'
       lore: ['&7Click to toggle auto-mount &coff']
       x-cord: 4
@@ -277,6 +284,7 @@ horse-gui-options:
       purpose: TOGGLE_AUTOMOUNT_OFF
       material: PLAYER_HEAD
       skin-value: 'eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvZmY5ZDlkZTYyZWNhZTliNzk4NTU1ZmQyM2U4Y2EzNWUyNjA1MjkxOTM5YzE4NjJmZTc5MDY2Njk4Yzk1MDhhNyJ9fX0=' # https://minecraft-heads.com/custom-heads/alphabet/21766-red-checkmark
+      textures-url: 'https://textures.minecraft.net/texture/ff9d9de62ecae9b798555fd23e8ca35e2605291939c1862fe79066698c9508a7' # https://minecraft-heads.com/custom-heads/alphabet/21766-red-checkmark
       name: '&6&lToggle Auto-Mount'
       lore: ['&7Click to toggle auto-mount &aon']
       x-cord: 4
@@ -288,6 +296,7 @@ horse-gui-options:
       purpose: TRAILS
       material: PLAYER_HEAD
       skin-value: 'eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvYmFkYzA0OGE3Y2U3OGY3ZGFkNzJhMDdkYTI3ZDg1YzA5MTY4ODFlNTUyMmVlZWQxZTNkYWYyMTdhMzhjMWEifX19' # https://minecraft-heads.com/custom-heads/alphabet/7822-oak-wood-question-mark
+      textures-url: 'https://textures.minecraft.net/texture/badc048a7ce78f7dad72a07da27d85c0916881e5522eeed1e3daf217a38c1a' # https://minecraft-heads.com/custom-heads/alphabet/7822-oak-wood-question-mark
       name: '&6&lTrails'
       lore: ['&7Click to change your horse''s trail']
       x-cord: 6
@@ -299,6 +308,7 @@ horse-gui-options:
       purpose: UPGRADE
       material: PLAYER_HEAD
       skin-value: 'eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvYTk5YWFmMjQ1NmE2MTIyZGU4ZjZiNjI2ODNmMmJjMmVlZDlhYmI4MWZkNWJlYTFiNGMyM2E1ODE1NmI2NjkifX19' # https://minecraft-heads.com/custom-heads/alphabet/11214-quartz-arrow-up
+      textures-url: 'https://textures.minecraft.net/texture/a99aaf2456a6122de8f6b62683f2bc2eed9abb81fd5bea1b4c23a58156b669' # https://minecraft-heads.com/custom-heads/alphabet/11214-quartz-arrow-up
       name: '&6&lUpgrade Horse'
       lore: ['&7Click to upgrade your horse', '', '&7Cost: &a${COST}', '&7Horse XP Needed: &a{HORSE-EXP-NEEDED}']
       x-cord: 7
@@ -309,8 +319,8 @@ horse-gui-options:
       enabled: true
       purpose: DELETE
       material: PLAYER_HEAD
-      # https://minecraft-heads.com/custom-heads/decoration/4517-trash-can
-      skin-value: 'eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvMWQ5YmZlNWYyYmM1YTY0MDI0Zjc1OTFiMjRmOTUxMTI1MDhkN2Q2NmFkYzk5OGJmZDNjZTVhZmRmMTQ5YWU0ZiJ9fX0='
+      skin-value: 'eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvMWQ5YmZlNWYyYmM1YTY0MDI0Zjc1OTFiMjRmOTUxMTI1MDhkN2Q2NmFkYzk5OGJmZDNjZTVhZmRmMTQ5YWU0ZiJ9fX0=' # https://minecraft-heads.com/custom-heads/decoration/4517-trash-can
+      textures-url: 'https://textures.minecraft.net/texture/1d9bfe5f2bc5a64024f7591b24f95112508d7d66adc998bfd3ce5afdf149ae4f' # https://minecraft-heads.com/custom-heads/decoration/4517-trash-can
       name: '&6&lDelete Horse'
       lore: ['&7Click to delete your horse']
       x-cord: 8
@@ -319,7 +329,8 @@ horse-gui-options:
     back-item:
       purpose: BACK
       material: PLAYER_HEAD
-      skin-value: 'eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvYmZlNTY3MjgyZTc4NjA3ZjJjYTJhZWY1ODNiOGVmZWJjOTE5NTlmODRjYWU0YTgzYmVkMTBkY2Q1YjBjZmNjZCJ9fX0='
+      skin-value: 'eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvYmZlNTY3MjgyZTc4NjA3ZjJjYTJhZWY1ODNiOGVmZWJjOTE5NTlmODRjYWU0YTgzYmVkMTBkY2Q1YjBjZmNjZCJ9fX0=' # https://minecraft-heads.com/custom-heads/decoration/18241-hay-bale
+      textures-url: 'https://textures.minecraft.net/texture/bfe567282e78607f2ca2aef583b8efebc91959f84cae4a83bed10dcd5b0cfccd' # https://minecraft-heads.com/custom-heads/decoration/18241-hay-bale
       name: '&c&lBack'
       lore: ['&7Click to go back to your stable']
       x-cord: 5
@@ -358,6 +369,7 @@ market-options:
   your-horses-item:
     material: PLAYER_HEAD
     skin-value: 'eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvYmZlNTY3MjgyZTc4NjA3ZjJjYTJhZWY1ODNiOGVmZWJjOTE5NTlmODRjYWU0YTgzYmVkMTBkY2Q1YjBjZmNjZCJ9fX0='
+    textures-url: 'https://textures.minecraft.net/texture/bfe567282e78607f2ca2aef583b8efebc91959f84cae4a83bed10dcd5b0cfccd' # https://minecraft-heads.com/custom-heads/decoration/18241-hay-bale
     name: '&6&lYour Market Horses'
     lore: ['&7Click to view the horses you''re selling in the market']
     x-cord: 5
@@ -366,6 +378,7 @@ market-options:
   back-item:
     material: PLAYER_HEAD
     skin-value: 'eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvYmZlNTY3MjgyZTc4NjA3ZjJjYTJhZWY1ODNiOGVmZWJjOTE5NTlmODRjYWU0YTgzYmVkMTBkY2Q1YjBjZmNjZCJ9fX0='
+    textures-url: 'https://textures.minecraft.net/texture/bfe567282e78607f2ca2aef583b8efebc91959f84cae4a83bed10dcd5b0cfccd' # https://minecraft-heads.com/custom-heads/decoration/18241-hay-bale
     name: '&c&lBack'
     lore: ['&7Click to go back to the market']
     x-cord: 5
@@ -373,11 +386,13 @@ market-options:
   previous-page-item:
     material: PLAYER_HEAD
     skin-value: 'eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvYmQ2OWUwNmU1ZGFkZmQ4NGU1ZjNkMWMyMTA2M2YyNTUzYjJmYTk0NWVlMWQ0ZDcxNTJmZGM1NDI1YmMxMmE5In19fQ==' # https://minecraft-heads.com/custom-heads/alphabet/7827-oak-wood-arrow-left
+    textures-url: 'https://textures.minecraft.net/texture/bd69e06e5dadfd84e5f3d1c21063f2553b2fa945ee1d4d7152fdc5425bc12a9' # https://minecraft-heads.com/custom-heads/alphabet/7827-oak-wood-arrow-left
     name: '&6&lPrevious page'
     lore: ['&7Click to view the previous page']
   next-page-item:
     material: PLAYER_HEAD
     skin-value: 'eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvMTliZjMyOTJlMTI2YTEwNWI1NGViYTcxM2FhMWIxNTJkNTQxYTFkODkzODgyOWM1NjM2NGQxNzhlZDIyYmYifX19' # https://minecraft-heads.com/custom-heads/alphabet/7826-oak-wood-arrow-right
+    textures-url: 'https://textures.minecraft.net/texture/19bf3292e126a105b54eba713aa1b152d541a1d8938829c56364d178ed22bf' # https://minecraft-heads.com/custom-heads/alphabet/7826-oak-wood-arrow-right
     name: '&6&lNext page'
     lore: ['&7Click to view the next page']
   fill-item:
@@ -407,6 +422,7 @@ sell-gui-options:
       price-change: -1000
       material: PLAYER_HEAD
       skin-value: 'eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvNzQzNzM0NmQ4YmRhNzhkNTI1ZDE5ZjU0MGE5NWU0ZTc5ZGFlZGE3OTVjYmM1YTEzMjU2MjM2MzEyY2YifX19' # https://minecraft-heads.com/custom-heads/alphabet/7824-oak-wood-arrow-down
+      textures-url: 'https://textures.minecraft.net/texture/7437346d8bda78d525d19f540a95e4e79daeda795cbca5a13256236312cf' # https://minecraft-heads.com/custom-heads/alphabet/7824-oak-wood-arrow-down
       name: '&c- ${PRICE-CHANGE}'
       lore: ['&7Click to decrease the sell price by &c${PRICE-CHANGE}']
       x-cord: 4
@@ -419,6 +435,7 @@ sell-gui-options:
       price-change: -10000
       material: PLAYER_HEAD
       skin-value: 'eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvOWI3Y2U2ODNkMDg2OGFhNDM3OGFlYjYwY2FhNWVhODA1OTZiY2ZmZGFiNmI1YWYyZDEyNTk1ODM3YTg0ODUzIn19fQ==' # https://minecraft-heads.com/custom-heads/alphabet/515-stone-arrow-down
+      textures-url: 'https://textures.minecraft.net/texture/9b7ce683d0868aa4378aeb60caa5ea80596bcffdaab6b5af2d12595837a84853' # https://minecraft-heads.com/custom-heads/alphabet/515-stone-arrow-down
       name: '&c- ${PRICE-CHANGE}'
       lore: ['&7Click to decrease the sell price by &c${PRICE-CHANGE}']
       x-cord: 3
@@ -431,6 +448,7 @@ sell-gui-options:
       price-change: -100000
       material: PLAYER_HEAD
       skin-value: 'eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvMzkxMmQ0NWIxYzc4Y2MyMjQ1MjcyM2VlNjZiYTJkMTU3NzdjYzI4ODU2OGQ2YzFiNjJhNTQ1YjI5YzcxODcifX19' # https://minecraft-heads.com/custom-heads/alphabet/11221-quartz-arrow-down
+      textures-url: 'https://textures.minecraft.net/texture/3912d45b1c78cc22452723ee66ba2d15777cc288568d6c1b62a545b29c7187' # https://minecraft-heads.com/custom-heads/alphabet/11221-quartz-arrow-down
       name: '&c- ${PRICE-CHANGE}'
       lore: ['&7Click to decrease the sell price by &c${PRICE-CHANGE}']
       x-cord: 2
@@ -444,6 +462,7 @@ sell-gui-options:
       price-change: 1000
       material: PLAYER_HEAD
       skin-value: 'eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvMzA0MGZlODM2YTZjMmZiZDJjN2E5YzhlYzZiZTUxNzRmZGRmMWFjMjBmNTVlMzY2MTU2ZmE1ZjcxMmUxMCJ9fX0=' # https://minecraft-heads.com/custom-heads/alphabet/7825-oak-wood-arrow-up
+      textures-url: 'https://textures.minecraft.net/texture/3040fe836a6c2fbd2c7a9c8ec6be5174fdfdfa1a2f55e366156fa5f712e10' # https://minecraft-heads.com/custom-heads/alphabet/7825-oak-wood-arrow-up
       name: '&a+ ${PRICE-CHANGE}'
       lore: ['&7Click to increase the sell price by &a${PRICE-CHANGE}']
       x-cord: 6
@@ -456,6 +475,7 @@ sell-gui-options:
       price-change: 10000
       material: PLAYER_HEAD
       skin-value: 'eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvNThmZTI1MWE0MGU0MTY3ZDM1ZDA4MWMyNzg2OWFjMTUxYWY5NmI2YmQxNmRkMjgzNGQ1ZGM3MjM1ZjQ3NzkxZCJ9fX0=' # https://minecraft-heads.com/custom-heads/alphabet/514-stone-arrow-up
+      textures-url: 'https://textures.minecraft.net/texture/58fe251a40e4167d35d081c27868ac151af96b6bd16dd2834d5dc7235f47791d' # https://minecraft-heads.com/custom-heads/alphabet/514-stone-arrow-up
       name: '&a+ ${PRICE-CHANGE}'
       lore: ['&7Click to increase the sell price by &a${PRICE-CHANGE}']
       x-cord: 7
@@ -468,6 +488,7 @@ sell-gui-options:
       price-change: 100000
       material: PLAYER_HEAD
       skin-value: 'eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvYTk5YWFmMjQ1NmE2MTIyZGU4ZjZiNjI2ODNmMmJjMmVlZDlhYmI4MWZkNWJlYTFiNGMyM2E1ODE1NmI2NjkifX19' # https://minecraft-heads.com/custom-heads/alphabet/11214-quartz-arrow-up
+      textures-url: 'https://textures.minecraft.net/texture/a99aaf2456a6122de8f6b62683f2bc2eed9abb81fd5bea1b4c23a58156b669' # https://minecraft-heads.com/custom-heads/alphabet/11214-quartz-arrow-up
       name: '&a+ ${PRICE-CHANGE}'
       lore: ['&7Click to increase the sell price by &a${PRICE-CHANGE}']
       x-cord: 8
@@ -480,6 +501,7 @@ sell-gui-options:
       purpose: CONFIRM
       material: PLAYER_HEAD
       skin-value: 'eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvYTkyZTMxZmZiNTljOTBhYjA4ZmM5ZGMxZmUyNjgwMjAzNWEzYTQ3YzQyZmVlNjM0MjNiY2RiNDI2MmVjYjliNiJ9fX0=' # https://minecraft-heads.com/custom-heads/alphabet/21771-lime-checkmark
+      textures-url: 'https://textures.minecraft.net/texture/a92e31ffb59c90ab08fc9dc1fe26802035a3a47c42fee63423bcdb4262ecb9b6' # https://minecraft-heads.com/custom-heads/alphabet/21771-lime-checkmark
       name: '&a&lConfirm &8(&a${PRICE}&8)'
       lore: ['&7Click to sell &6{HORSE-NAME} &7for &a${PRICE}']
       x-cord: 6
@@ -487,7 +509,8 @@ sell-gui-options:
     back-item:
       purpose: BACK
       material: PLAYER_HEAD
-      skin-value: 'eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvYmZlNTY3MjgyZTc4NjA3ZjJjYTJhZWY1ODNiOGVmZWJjOTE5NTlmODRjYWU0YTgzYmVkMTBkY2Q1YjBjZmNjZCJ9fX0='
+      skin-value: 'eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvYmZlNTY3MjgyZTc4NjA3ZjJjYTJhZWY1ODNiOGVmZWJjOTE5NTlmODRjYWU0YTgzYmVkMTBkY2Q1YjBjZmNjZCJ9fX0=' # https://minecraft-heads.com/custom-heads/decoration/18241-hay-bale
+      textures-url: 'https://textures.minecraft.net/texture/bfe567282e78607f2ca2aef583b8efebc91959f84cae4a83bed10dcd5b0cfccd' # https://minecraft-heads.com/custom-heads/decoration/18241-hay-bale
       name: '&c&lBack'
       lore: ['&7Click to go back']
       x-cord: 4
@@ -503,6 +526,7 @@ trail-gui-options:
     purpose: UNKNOWN_TRAIL
     material: PLAYER_HEAD
     skin-value: 'eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvYmM4ZWExZjUxZjI1M2ZmNTE0MmNhMTFhZTQ1MTkzYTRhZDhjM2FiNWU5YzZlZWM4YmE3YTRmY2I3YmFjNDAifX19' # https://minecraft-heads.com/custom-heads/alphabet/9236-white-question-mark
+    textures-url: 'https://textures.minecraft.net/texture/bc8ea1f51f253ff5142ca11ae45193a4ad8c3ab5e9c6eec8ba7a4fcb7bac40' # https://minecraft-heads.com/custom-heads/alphabet/9236-white-question-mark
     name: '&c&l?'
     lore: ['&7You haven''t unlocked this trail']
   # Trails are known if the player has the permission rpghorses.trail.* or rpghorses.trail.<trail>
@@ -521,6 +545,7 @@ trail-gui-options:
     purpose: BACK
     material: PLAYER_HEAD
     skin-value: 'eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvYmZlNTY3MjgyZTc4NjA3ZjJjYTJhZWY1ODNiOGVmZWJjOTE5NTlmODRjYWU0YTgzYmVkMTBkY2Q1YjBjZmNjZCJ9fX0='
+    textures-url: 'https://textures.minecraft.net/texture/bfe567282e78607f2ca2aef583b8efebc91959f84cae4a83bed10dcd5b0cfccd' # https://minecraft-heads.com/custom-heads/decoration/18241-hay-bale
     name: '&c&lBack'
     lore: ['&7Click to go back']
     slot: 23
@@ -533,35 +558,83 @@ trail-gui-options:
   # Make sure you use particle values that are included in the corresponding link for your version at the top of the config
   # ex: PARTICLE_NAME: '<skin value>'
   trails:
-    DRIP_WATER: 'eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvMzRmY2JjMjU2ZDBiZTdlNjgzYWY4NGUzOGM0YmNkYjcxYWZiOTM5ODUzOGEyOWFhOTZjYmZhMzE4YjJlYSJ9fX0=' # https://minecraft-heads.com/custom-heads/blocks/13980-water'
-    CRIT: 'eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvYzdlNmM0MGY2OGI3NzVmMmVmY2Q3YmQ5OTE2YjMyNzg2OWRjZjI3ZTI0Yzg1NWQwYTE4ZTA3YWMwNGZlMSJ9fX0=' # https://minecraft-heads.com/custom-heads/miscellaneous/2361-sword
-    CRIT_MAGIC: 'eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvN2VlYTM0NTkwOGQxN2RjNDQ5NjdkMWRjZTQyOGYyMmYyYjE5Mzk3MzcwYWJlYjc3YmRjMTJlMmRkMWNiNiJ9fX0=' # https://minecraft-heads.com/custom-heads/decoration/4103-magic-book
-    SPELL: 'eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvNDY2YjEwYmY2ZWUyY2Q3ZTNhYzk2ZDk3NDllYTYxNmFhOWM3MzAzMGJkY2FlZmZhZWQyNDllNTVjODQ5OTRhYyJ9fX0=' # https://minecraft-heads.com/custom-heads/decoration/19792-cloud
-    SPELL_INSTANT: 'eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvOTUzZGQ0NTc5ZWRjMmE2ZjIwMzJmOTViMWMxODk4MTI5MWI2YzdjMTFlYjM0YjZhOGVkMzZhZmJmYmNlZmZmYiJ9fX0=' # https://minecraft-heads.com/custom-heads/miscellaneous/2300-repeat
-    SPELL_MOB: 'eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvNDRiMDM3OTRiOWIzZTNiNWQwN2UzYmU2OGI5NmFmODdkZjIxNWMzNzUyZTU0NzM2YzgwZjdkNTBiZDM0MzdhNCJ9fX0=' # https://minecraft-heads.com/custom-heads/blocks/18667-wool-rainbow
-    DRIP_LAVA: 'eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvYjY5NjVlNmE1ODY4NGMyNzdkMTg3MTdjZWM5NTlmMjgzM2E3MmRmYTk1NjYxMDE5ZGJjZGYzZGJmNjZiMDQ4In19fQ==' # https://minecraft-heads.com/custom-heads/blocks/1055-lava
-    VILLAGER_ANGRY: 'eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvZmJiMTI1NmViOWY2NjdjMDVmYjIxZTAyN2FhMWQ1MzU1OGJkYTc0ZTI0MGU0ZmE5ZTEzN2Q4NTFjNDE2ZmU5OCJ9fX0=' # https://minecraft-heads.com/custom-heads/miscellaneous/34653-angry-particle
-    VILLAGER_HAPPY: 'eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvYjcyYzA1ZGQ3NjI4OGY0MzI4YTI0MzkxYmY0NzI1ZmQyMjYwNTkyZGIzY2Y5YjJiYzIwMzJkZDA1OTZjZjQ0MCJ9fX0=' # https://minecraft-heads.com/custom-heads/blocks/22339-emerald-block
-    NOTE: 'eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvNGNlZWI3N2Q0ZDI1NzI0YTljYWYyYzdjZGYyZDg4Mzk5YjE0MTdjNmI5ZmY1MjEzNjU5YjY1M2JlNDM3NmUzIn19fQ==' # https://minecraft-heads.com/custom-heads/decoration/1104-note-block
-    PORTAL: 'eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvYjBiZmMyNTc3ZjZlMjZjNmM2ZjczNjVjMmM0MDc2YmNjZWU2NTMxMjQ5ODkzODJjZTkzYmNhNGZjOWUzOWIifX19' # https://minecraft-heads.com/custom-heads/blocks/1109-nether-portal
-    ENCHANTMENT_TABLE: 'eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvYjJmNzkwMTZjYWQ4NGQxYWUyMTYwOWM0ODEzNzgyNTk4ZTM4Nzk2MWJlMTNjMTU2ODI3NTJmMTI2ZGNlN2EifX19' # https://minecraft-heads.com/custom-heads/decoration/763-enchantment-table
-    SNOWBALL: 'eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvMzAyOTFlOTMyNjI5NmFhYWYyN2YyNTVkZTk4MWU3ODc4NjhiYzYyZmU0NjYzOWVlODdiMjhhMTk1ZTlkOTliZiJ9fX0=' # https://minecraft-heads.com/custom-heads/decoration/11470-snowball
-    SLIME: 'eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvNDkzNGE5ZjVhYjE3ODlhN2Q4ZGQ5NmQzMjQ5M2NkYWNmZjU3N2Q4YzgxZTdiMjM5MTdkZmYyZTMyYmQwYmMxMCJ9fX0=' # https://minecraft-heads.com/custom-heads/blocks/1157-slime-ball
-    HEART: 'eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvZjEyNjZiNzQ4MjQyMTE1YjMwMzcwOGQ1OWNlOWQ1NTIzYjdkNzljMTNmNmRiNGViYzkxZGQ0NzIwOWViNzU5YyJ9fX0=' # https://minecraft-heads.com/custom-heads/miscellaneous/34655-heart-particle
-    BARRIER: 'eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvM2VkMWFiYTczZjYzOWY0YmM0MmJkNDgxOTZjNzE1MTk3YmUyNzEyYzNiOTYyYzk3ZWJmOWU5ZWQ4ZWZhMDI1In19fQ==' # https://minecraft-heads.com/custom-heads/blocks/3229-barrier
-    TOTEM: 'eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvYTFkMWNmMjg5MTY1ZmJiMTEyZDg5MjFkNDc3MDhlNDlmYjcwOTI1NzM5YjFjYmQxNzk4ZGFmZjQyMjgwNmU4YSJ9fX0=' # https://minecraft-heads.com/custom-heads/decoration/32234-totem-of-undying
-    NAUTILUS: 'eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvODEyNmNhYzE2ZmQ4ZTQ3NTE2ZTg0NTIwY2QzOTgxYzQ1ZDcwOGY1NWQzNDU4NDk0ZDhmMDgxYzUwNWQ2ZDMwNCJ9fX0=' # https://minecraft-heads.com/custom-heads/decoration/20119-nautilus-shell
-    DRIPPING_HONEY: 'eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvZTZkY2M4ZjM3YWM5OWQ5NTFlY2JjNWRmNWU4NTgyMTMzZjVmMjMwN2U3NjlhZjZiNmNmZmY0MjgyMTgwNjcifX19' # https://minecraft-heads.com/custom-heads/food%20&%20drinks/871-honey\
+    DRIP_WATER:
+      skin-value: 'eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvMzRmY2JjMjU2ZDBiZTdlNjgzYWY4NGUzOGM0YmNkYjcxYWZiOTM5ODUzOGEyOWFhOTZjYmZhMzE4YjJlYSJ9fX0=' # https://minecraft-heads.com/custom-heads/blocks/13980-water'
+      textures-url: 'https://textures.minecraft.net/texture/34fcbc256d0be7e683af84e38' # https://minecraft-heads.com/custom-heads/blocks/13980-water'
+    CRIT:
+      skin-value: 'eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvYzdlNmM0MGY2OGI3NzVmMmVmY2Q3YmQ5OTE2YjMyNzg2OWRjZjI3ZTI0Yzg1NWQwYTE4ZTA3YWMwNGZlMSJ9fX0=' # https://minecraft-heads.com/custom-heads/miscellaneous/2361-sword
+      textures-url: 'https://textures.minecraft.net/texture/c7e6c40f68b775f2efcd7bd9916b327869dcf27e24c855d0a18e07ac04fe1' # https://minecraft-heads.com/custom-heads/miscellaneous/2361-sword
+    CRIT_MAGIC:
+      skin-value: 'eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvN2VlYTM0NTkwOGQxN2RjNDQ5NjdkMWRjZTQyOGYyMmYyYjE5Mzk3MzcwYWJlYjc3YmRjMTJlMmRkMWNiNiJ9fX0=' # https://minecraft-heads.com/custom-heads/decoration/4103-magic-book
+      textures-url: 'https://textures.minecraft.net/texture/7eea345908d17dc44967d1dce428f22f2b19397370abeb77bdc12e2dd1cb6' # https://minecraft-heads.com/custom-heads/decoration/4103-magic-book
+    SPELL:
+      skin-value: 'eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvNDY2YjEwYmY2ZWUyY2Q3ZTNhYzk2ZDk3NDllYTYxNmFhOWM3MzAzMGJkY2FlZmZhZWQyNDllNTVjODQ5OTRhYyJ9fX0=' # https://minecraft-heads.com/custom-heads/decoration/19792-cloud
+      textures-url: 'https://textures.minecraft.net/texture/466b10bf6ee2cd7e3ac96d9749ea616aa9c73030bdcbaeffaed249e55c84994ac' # https://minecraft-heads.com/custom-heads/decoration/19792-cloud
+    SPELL_INSTANT:
+      skin-value: 'eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvOTUzZGQ0NTc5ZWRjMmE2ZjIwMzJmOTViMWMxODk4MTI5MWI2YzdjMTFlYjM0YjZhOGVkMzZhZmJmYmNlZmZmYiJ9fX0=' # https://minecraft-heads.com/custom-heads/miscellaneous/2300-repeat
+      textures-url: 'https://textures.minecraft.net/texture/953dd4579edc2a6f2032f95b1c18981291b6c7c11eb34b6a8ed36afbbfcfefb' # https://minecraft-heads.com/custom-heads/miscellaneous/2300-repeat
+    SPELL_MOB:
+      skin-value: 'eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvNDRiMDM3OTRiOWIzZTNiNWQwN2UzYmU2OGI5NmFmODdkZjIxNWMzNzUyZTU0NzM2YzgwZjdkNTBiZDM0MzdhNCJ9fX0=' # https://minecraft-heads.com/custom-heads/blocks/18667-wool-rainbow
+      textures-url: 'https://textures.minecraft.net/texture/44b03794b9b3e3b5d07e3be68b96af87df215c3752e54736c80f7d50bd3437a4' # https://minecraft-heads.com/custom-heads/blocks/18667-wool-rainbow
+    DRIP_LAVA:
+      skin-value: 'eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvYjY5NjVlNmE1ODY4NGMyNzdkMTg3MTdjZWM5NTlmMjgzM2E3MmRmYTk1NjYxMDE5ZGJjZGYzZGJmNjZiMDQ4In19fQ==' # https://minecraft-heads.com/custom-heads/blocks/1055-lava
+      textures-url: 'https://textures.minecraft.net/texture/b6965e6a58684c277d18717cec959f2833a72dfa95661019dbcdfd3dbf66b048' # https://minecraft-heads.com/custom-heads/blocks/1055-lava
+    VILLAGER_ANGRY:
+      skin-value: 'eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvZmJiMTI1NmViOWY2NjdjMDVmYjIxZTAyN2FhMWQ1MzU1OGJkYTc0ZTI0MGU0ZmE5ZTEzN2Q4NTFjNDE2ZmU5OCJ9fX0=' # https://minecraft-heads.com/custom-heads/miscellaneous/34653-angry-particle
+      textures-url: 'https://textures.minecraft.net/texture/fbb1256eb9f667c05fb21e027aa1d53558bda74e240e4fa9e137d851c416fe98' # https://minecraft-heads.com/custom-heads/miscellaneous/34653-angry-particle
+    VILLAGER_HAPPY:
+      skin-value: 'eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvYjcyYzA1ZGQ3NjI4OGY0MzI4YTI0MzkxYmY0NzI1ZmQyMjYwNTkyZGIzY2Y5YjJiYzIwMzJkZDA1OTZjZjQ0MCJ9fX0=' # https://minecraft-heads.com/custom-heads/blocks/22339-emerald-block
+      textures-url: 'https://textures.minecraft.net/texture/b72c05dd76288f4328a24391bf4725fd2260592db3cf9b2bc2032dd0596cf440' # https://minecraft-heads.com/custom-heads/blocks/22339-emerald-block
+    NOTE:
+      skin-value: 'eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvNGNlZWI3N2Q0ZDI1NzI0YTljYWYyYzdjZGYyZDg4Mzk5YjE0MTdjNmI5ZmY1MjEzNjU5YjY1M2JlNDM3NmUzIn19fQ==' # https://minecraft-heads.com/custom-heads/decoration/1104-note-block
+      textures-url: 'https://textures.minecraft.net/texture/4ceeb77d4d25724a9caf2c7cdf2d88399b1417c6b9ff5213659b653be4376e3' # https://minecraft-heads.com/custom-heads/decoration/1104-note-block
+    PORTAL:
+      skin-value: 'eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvYjBiZmMyNTc3ZjZlMjZjNmM2ZjczNjVjMmM0MDc2YmNjZWU2NTMxMjQ5ODkzODJjZTkzYmNhNGZjOWUzOWIifX19' # https://minecraft-heads.com/custom-heads/blocks/1109-nether-portal
+      textures-url: 'https://textures.minecraft.net/texture/b0bfc2577f6e26c6c6f7365c2c4076bccee653124989382ce93bca4fc9e39b' # https://minecraft-heads.com/custom-heads/blocks/1109-nether-portal
+    ENCHANTMENT_TABLE:
+      skin-value: 'eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvYjJmNzkwMTZjYWQ4NGQxYWUyMTYwOWM0ODEzNzgyNTk4ZTM4Nzk2MWJlMTNjMTU2ODI3NTJmMTI2ZGNlN2EifX19' # https://minecraft-heads.com/custom-heads/decoration/763-enchantment-table
+      textures-url: 'https://textures.minecraft.net/texture/b2f79016cad84d1ae21609c4813782598e387961be13c15682752f126dce7a' # https://minecraft-heads.com/custom-heads/decoration/763-enchantment-table
+    SNOWBALL:
+      skin-value: 'eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvMzAyOTFlOTMyNjI5NmFhYWYyN2YyNTVkZTk4MWU3ODc4NjhiYzYyZmU0NjYzOWVlODdiMjhhMTk1ZTlkOTliZiJ9fX0=' # https://minecraft-heads.com/custom-heads/decoration/11470-snowball
+      textures-url: 'https://textures.minecraft.net/texture/30291e9326296aaaf27f255de981e787868bc62fe466369ee87b28a195e9d99bf' # https://minecraft-heads.com/custom-heads/decoration/11470-snowball
+    SLIME:
+      skin-value: 'eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvNDkzNGE5ZjVhYjE3ODlhN2Q4ZGQ5NmQzMjQ5M2NkYWNmZjU3N2Q4YzgxZTdiMjM5MTdkZmYyZTMyYmQwYmMxMCJ9fX0=' # https://minecraft-heads.com/custom-heads/blocks/1157-slime-ball
+      textures-url: 'https://textures.minecraft.net/texture/4934a9f5ab1789a7d8dd96d32493cdacff577d8c81e7b23917dff2e32bd0bc10' # https://minecraft-heads.com/custom-heads/blocks/1157-slime-ball
+    HEART:
+      skin-value: 'eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvZjEyNjZiNzQ4MjQyMTE1YjMwMzcwOGQ1OWNlOWQ1NTIzYjdkNzljMTNmNmRiNGViYzkxZGQ0NzIwOWViNzU5YyJ9fX0=' # https://minecraft-heads.com/custom-heads/miscellaneous/34655-heart-particle
+      textures-url: 'https://textures.minecraft.net/texture/f1266b748242115b303708d59ce9d5523b7c79c13f6db4ebc91dd47209eb759c' # https://minecraft-heads.com/custom-heads/miscellaneous/34655-heart-particle
+    BARRIER:
+      skin-value: 'eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvM2VkMWFiYTczZjYzOWY0YmM0MmJkNDgxOTZjNzE1MTk3YmUyNzEyYzNiOTYyYzk3ZWJmOWU5ZWQ4ZWZhMDI1In19fQ==' # https://minecraft-heads.com/custom-heads/blocks/3229-barrier
+      textures-url: 'https://textures.minecraft.net/texture/3ed1aba73f639f4bc42bd48196c715197be2712c3b962c97ebf9e9ed8efa025' # https://minecraft-heads.com/custom-heads/blocks/3229-barrier
+    TOTEM:
+      skin-value: 'eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvYTFkMWNmMjg5MTY1ZmJiMTEyZDg5MjFkNDc3MDhlNDlmYjcwOTI1NzM5YjFjYmQxNzk4ZGFmZjQyMjgwNmU4YSJ9fX0=' # https://minecraft-heads.com/custom-heads/decoration/32234-totem-of-undying
+      textures-url: 'https://textures.minecraft.net/texture/a1d1cf289165fbb112d8921d47708e49fb70925739b1cbd1798daff428060e8a' # https://minecraft-heads.com/custom-heads/decoration/32234-totem-of-undying
+    NAUTILUS:
+      skin-value: 'eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvODEyNmNhYzE2ZmQ4ZTQ3NTE2ZTg0NTIwY2QzOTgxYzQ1ZDcwOGY1NWQzNDU4NDk0ZDhmMDgxYzUwNWQ2ZDMwNCJ9fX0=' # https://minecraft-heads.com/custom-heads/decoration/20119-nautilus-shell
+      textures-url: 'https://textures.minecraft.net/texture/8126cac16fd8e47516e84520cd3981c45d708f55d3458494d8f081c505d6d304' # https://minecraft-heads.com/custom-heads/decoration/20119-nautilus-shell
+    DRIPPING_HONEY:
+      skin-value: 'eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvZTZkY2M4ZjM3YWM5OWQ5NTFlY2JjNWRmNWU4NTgyMTMzZjVmMjMwN2U3NjlhZjZiNmNmZmY0MjgyMTgwNjcifX19' # https://minecraft-heads.com/custom-heads/food%20&%20drinks/871-honey
+      textures-url: 'https://textures.minecraft.net/texture/e6dcc8f37ac99d951ecbc5df5e8582133f5f2307e769af6b6cff4f428218067' # https://minecraft-heads.com/custom-heads/food%20&%20drinks/871-honey
     # All trails below are 1.8.8 effects, you can remove them if you're using 1.9+
-    POTION_BREAK: 'eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvZTAxZTA0MGNiMDFjZjJjY2U0NDI4MzU4YWUzMWQyZTI2NjIwN2M0N2NiM2FkMTM5NzA5YzYyMDEzMGRjOGFkNCJ9fX0=' # https://minecraft-heads.com/custom-heads/decoration/22850-orb-blue
-    ENDER_SIGNAL: 'eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvMjc3ZTNkMGY3ZGQ2NmEyNjFjZjk2MmFhMGMxMzMzYjQ5YmZjZjM2MzlmYWFlZWIxNzRkNTk1NzU3ZGY2MTEifX19' # https://minecraft-heads.com/custom-heads/decoration/159-endportal-frame
-    POTION_SWIRL: 'eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvN2VlYTM0NTkwOGQxN2RjNDQ5NjdkMWRjZTQyOGYyMmYyYjE5Mzk3MzcwYWJlYjc3YmRjMTJlMmRkMWNiNiJ9fX0=' # https://minecraft-heads.com/custom-heads/decoration/4103-magic-book
-    FLYING_GLYPH: 'eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvYjJmNzkwMTZjYWQ4NGQxYWUyMTYwOWM0ODEzNzgyNTk4ZTM4Nzk2MWJlMTNjMTU2ODI3NTJmMTI2ZGNlN2EifX19' # https://minecraft-heads.com/custom-heads/decoration/763-enchantment-table
-    FOOTSTEP: 'eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvNGQ5YjY4OTE1YjE0NzJkODllNWUzYTliYTZjOTM1YWFlNjAzZDEyYzE0NTRmMzgyMjgyNWY0M2RmZThhMmNhYyJ9fX0=' # https://minecraft-heads.com/custom-heads/miscellaneous/34657-footstep-particle
-    COLOURED_DUST: 'eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvNDRiMDM3OTRiOWIzZTNiNWQwN2UzYmU2OGI5NmFmODdkZjIxNWMzNzUyZTU0NzM2YzgwZjdkNTBiZDM0MzdhNCJ9fX0=' # https://minecraft-heads.com/custom-heads/blocks/18667-wool-rainbow
-    SNOWBALL_BREAK: 'eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvMzAyOTFlOTMyNjI5NmFhYWYyN2YyNTVkZTk4MWU3ODc4NjhiYzYyZmU0NjYzOWVlODdiMjhhMTk1ZTlkOTliZiJ9fX0=' # https://minecraft-heads.com/custom-heads/decoration/11470-snowball
-    VILLAGER_THUNDERCLOUD: 'eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvZmJiMTI1NmViOWY2NjdjMDVmYjIxZTAyN2FhMWQ1MzU1OGJkYTc0ZTI0MGU0ZmE5ZTEzN2Q4NTFjNDE2ZmU5OCJ9fX0=' # https://minecraft-heads.com/custom-heads/miscellaneous/34653-angry-particle
-    HAPPY_VILLAGER: 'eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvYjcyYzA1ZGQ3NjI4OGY0MzI4YTI0MzkxYmY0NzI1ZmQyMjYwNTkyZGIzY2Y5YjJiYzIwMzJkZDA1OTZjZjQ0MCJ9fX0=' # https://minecraft-heads.com/custom-heads/blocks/22339-emerald-block
+    POTION_BREAK:
+      skin-value: 'eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvZTAxZTA0MGNiMDFjZjJjY2U0NDI4MzU4YWUzMWQyZTI2NjIwN2M0N2NiM2FkMTM5NzA5YzYyMDEzMGRjOGFkNCJ9fX0=' # https://minecraft-heads.com/custom-heads/decoration/22850-orb-blue
+    ENDER_SIGNAL:
+      skin-value: 'eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvMjc3ZTNkMGY3ZGQ2NmEyNjFjZjk2MmFhMGMxMzMzYjQ5YmZjZjM2MzlmYWFlZWIxNzRkNTk1NzU3ZGY2MTEifX19' # https://minecraft-heads.com/custom-heads/decoration/159-endportal-frame
+    POTION_SWIRL:
+      skin-value: 'eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvN2VlYTM0NTkwOGQxN2RjNDQ5NjdkMWRjZTQyOGYyMmYyYjE5Mzk3MzcwYWJlYjc3YmRjMTJlMmRkMWNiNiJ9fX0=' # https://minecraft-heads.com/custom-heads/decoration/4103-magic-book
+    FLYING_GLYPH:
+      skin-value: 'eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvYjJmNzkwMTZjYWQ4NGQxYWUyMTYwOWM0ODEzNzgyNTk4ZTM4Nzk2MWJlMTNjMTU2ODI3NTJmMTI2ZGNlN2EifX19' # https://minecraft-heads.com/custom-heads/decoration/763-enchantment-table
+    FOOTSTEP:
+      skin-value: 'eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvNGQ5YjY4OTE1YjE0NzJkODllNWUzYTliYTZjOTM1YWFlNjAzZDEyYzE0NTRmMzgyMjgyNWY0M2RmZThhMmNhYyJ9fX0=' # https://minecraft-heads.com/custom-heads/miscellaneous/34657-footstep-particle
+    COLOURED_DUST:
+      skin-value: 'eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvNDRiMDM3OTRiOWIzZTNiNWQwN2UzYmU2OGI5NmFmODdkZjIxNWMzNzUyZTU0NzM2YzgwZjdkNTBiZDM0MzdhNCJ9fX0=' # https://minecraft-heads.com/custom-heads/blocks/18667-wool-rainbow
+    SNOWBALL_BREAK:
+      skin-value: 'eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvMzAyOTFlOTMyNjI5NmFhYWYyN2YyNTVkZTk4MWU3ODc4NjhiYzYyZmU0NjYzOWVlODdiMjhhMTk1ZTlkOTliZiJ9fX0=' # https://minecraft-heads.com/custom-heads/decoration/11470-snowball
+    VILLAGER_THUNDERCLOUD:
+      skin-value: 'eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvZmJiMTI1NmViOWY2NjdjMDVmYjIxZTAyN2FhMWQ1MzU1OGJkYTc0ZTI0MGU0ZmE5ZTEzN2Q4NTFjNDE2ZmU5OCJ9fX0=' # https://minecraft-heads.com/custom-heads/miscellaneous/34653-angry-particle
+    HAPPY_VILLAGER:
+      skin-value: 'eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvYjcyYzA1ZGQ3NjI4OGY0MzI4YTI0MzkxYmY0NzI1ZmQyMjYwNTkyZGIzY2Y5YjJiYzIwMzJkZDA1OTZjZjQ0MCJ9fX0=' # https://minecraft-heads.com/custom-heads/blocks/22339-emerald-block
+
 
 # Supports seconds, minutes, hours, days, weeks, months, years
 # Here you can change the placeholders for time denominations

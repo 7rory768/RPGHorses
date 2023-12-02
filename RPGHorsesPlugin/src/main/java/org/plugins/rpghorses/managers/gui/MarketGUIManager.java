@@ -17,7 +17,7 @@ import org.plugins.rpghorses.horses.RPGHorse;
 import org.plugins.rpghorses.managers.HorseOwnerManager;
 import org.plugins.rpghorses.managers.SQLManager;
 import org.plugins.rpghorses.players.HorseOwner;
-import org.plugins.rpghorses.utils.SkinValueUtil;
+import org.plugins.rpghorses.utils.HorseSkins;
 import roryslibrary.configs.CustomConfig;
 import roryslibrary.util.DebugUtil;
 import org.plugins.rpghorses.utils.ItemUtil;
@@ -69,7 +69,7 @@ public class MarketGUIManager {
 	
 	public ItemStack getHorseItem(RPGHorse rpgHorse) {
 		ItemStack item = horseItem.clone();
-		return SkinValueUtil.applySkin(rpgHorse, item);
+		return HorseSkins.applySkin(rpgHorse, item);
 	}
 	
 	public void setupMarketGUI() {
