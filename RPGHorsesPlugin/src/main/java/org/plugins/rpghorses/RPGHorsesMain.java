@@ -71,7 +71,9 @@ public class RPGHorsesMain extends JavaPlugin {
 	private SQLManager sqlManager;
 	private UpdateNotifier updateNotifier;
 	private MessageQueuer messageQueuer;
+	@Getter
 	private Permission permissions;
+	@Getter
 	private Economy economy;
 
 	private Map<String, String> helpMessages = new LinkedHashMap<>();
@@ -113,16 +115,22 @@ public class RPGHorsesMain extends JavaPlugin {
 		}
 
 		this.messagingUtil = new RPGMessagingUtil(this);
-		if (this.loadHooks()) {
-			messagingUtil.sendMessage(Bukkit.getConsoleSender(), "[RPGHorses] Successfully hooked into &aVault");
-			this.loadConfigs();
-			this.initializeVariables();
-			this.registerEvents();
-			this.loadCommands();
-			setupHelpMessage();
-			Metrics metrics = new Metrics(this, 6955);
-			metrics.addCustomChart(new SimplePie("sql", () -> getConfig().getBoolean("sql.enabled") ? "Enabled" : "Disabled"));
-		}
+
+		this.loadConfigs();
+		this.initializeVariables();
+		this.registerEvents();
+		this.loadCommands();
+		setupHelpMessage();
+		Metrics metrics = new Metrics(this, 6955);
+		metrics.addCustomChart(new SimplePie("sql", () -> getConfig().getBoolean("sql.enabled") ? "Enabled" : "Disabled"));
+
+		Bukkit.getScheduler().runTaskLater(this, () -> {
+			if (this.loadHooks()) {
+				messagingUtil.sendMessage(Bukkit.getConsoleSender(), "[RPGHorses] Successfully hooked into &aVault");
+			} else {
+				messagingUtil.sendMessage(Bukkit.getConsoleSender(), "[RPGHorses] Failed to hook into &cVault&7, some features may be broken");
+			}
+		}, 1L);
 	}
 
 	public void loadConfigs() {
@@ -160,21 +168,21 @@ public class RPGHorsesMain extends JavaPlugin {
 			config.setInlineComments("stable-options.next-page-item.textures-url", Collections.singletonList("https://minecraft-heads.com/custom-heads/alphabet/7828-oak-wood-arrow-right"));
 
 			config.set("horse-gui-options.items.sell-item.skin-value", null);
-			config.set("horse-gui-options.items.sell-item.textures-url","https://textures.minecraft.net/texture/7e3deb57eaa2f4d403ad57283ce8b41805ee5b6de912ee2b4ea736a9d1f465a7");
+			config.set("horse-gui-options.items.sell-item.textures-url", "https://textures.minecraft.net/texture/7e3deb57eaa2f4d403ad57283ce8b41805ee5b6de912ee2b4ea736a9d1f465a7");
 			config.setInlineComments("horse-gui-options.items.sell-item.textures-url", Collections.singletonList("https://minecraft-heads.com/custom-heads/decoration/33098-minecraft-earth-shop"));
 
 			config.set("horse-gui-options.items.rename-item.skin-value", null);
 			config.set("horse-gui-options.items.rename-item.textures-url", "https://textures.minecraft.net/texture/11bb4266a22dcbc4607621b9c768932950160c2b96708267d707d44551378cd7");
 			config.setInlineComments("horse-gui-options.items.rename-item.textures-url", Collections.singletonList("https://minecraft-heads.com/custom-heads/alphabet/35130-red-a"));
-			
+
 			config.set("horse-gui-options.items.toggle-automount-on.skin-value", null);
 			config.set("horse-gui-options.items.toggle-automount-on.textures-url", "https://textures.minecraft.net/texture/a92e31ffb59c90ab08fc9dc1fe26802035a3a47c42fee63423bcdb4262ecb9b6");
 			config.setInlineComments("horse-gui-options.items.toggle-automount-on.textures-url", Collections.singletonList("https://minecraft-heads.com/custom-heads/alphabet/21771-lime-checkmarkp"));
-			
+
 			config.set("horse-gui-options.items.toggle-automount-off.skin-value", null);
 			config.set("horse-gui-options.items.toggle-automount-off.textures-url", "https://textures.minecraft.net/texture/ff9d9de62ecae9b798555fd23e8ca35e2605291939c1862fe79066698c9508a7");
 			config.setInlineComments("horse-gui-options.items.toggle-automount-off.textures-url", Collections.singletonList("https://minecraft-heads.com/custom-heads/alphabet/21766-red-checkmark"));
-			
+
 			config.set("horse-gui-options.items.trails-item.skin-value", null);
 			config.set("horse-gui-options.items.trails-item.textures-url", "https://textures.minecraft.net/texture/badc048a7ce78f7dad72a07da27d85c0916881e5522eeed1e3daf217a38c1a");
 			config.setInlineComments("horse-gui-options.items.trails-item.textures-url", Collections.singletonList("https://minecraft-heads.com/custom-heads/alphabet/7822-oak-wood-question-mark"));
@@ -183,93 +191,93 @@ public class RPGHorsesMain extends JavaPlugin {
 			config.set("horse-gui-options.items.upgrade-item.skin-value", null);
 			config.set("horse-gui-options.items.upgrade-item.textures-url", "https://textures.minecraft.net/texture/a99aaf2456a6122de8f6b62683f2bc2eed9abb81fd5bea1b4c23a58156b669");
 			config.setInlineComments("horse-gui-options.items.upgrade-item.textures-url", Collections.singletonList("https://minecraft-heads.com/custom-heads/alphabet/11214-quartz-arrow-up"));
-			
+
 			// delete-item
 			config.set("horse-gui-options.items.delete-item.skin-value", null);
 			config.set("horse-gui-options.items.delete-item.textures-url", "https://textures.minecraft.net/texture/1d9bfe5f2bc5a64024f7591b24f95112508d7d66adc998bfd3ce5afdf149ae4f");
 			config.setInlineComments("horse-gui-options.items.delete-item.textures-url", Collections.singletonList("https://minecraft-heads.com/custom-heads/decoration/4517-trash-can"));
-			
+
 			// back-item
 			config.set("horse-gui-options.items.back-item.skin-value", null);
 			config.set("horse-gui-options.items.back-item.textures-url", "https://textures.minecraft.net/texture/bfe567282e78607f2ca2aef583b8efebc91959f84cae4a83bed10dcd5b0cfccd");
 			config.setInlineComments("horse-gui-options.items.back-item.textures-url", Collections.singletonList("https://minecraft-heads.com/custom-heads/decoration/18241-hay-bale"));
-			
+
 			config.set("market-options.your-horses-item.skin-value", null);
 			config.set("market-options.your-horses-item.textures-url", "https://textures.minecraft.net/texture/bfe567282e78607f2ca2aef583b8efebc91959f84cae4a83bed10dcd5b0cfccd");
 			config.setInlineComments("market-options.your-horses-item.textures-url", Collections.singletonList("https://minecraft-heads.com/custom-heads/decoration/18241-hay-bale"));
-			
+
 			// back-item
 			config.set("market-options.back-item.skin-value", null);
 			config.set("market-options.back-item.textures-url", "https://textures.minecraft.net/texture/bfe567282e78607f2ca2aef583b8efebc91959f84cae4a83bed10dcd5b0cfccd");
 			config.setInlineComments("market-options.back-item.textures-url", Collections.singletonList("https://minecraft-heads.com/custom-heads/decoration/18241-hay-bale"));
-			
+
 			// previous-page-item
 			config.set("market-options.previous-page-item.skin-value", null);
 			config.set("market-options.previous-page-item.textures-url", "https://textures.minecraft.net/texture/bd69e06e5dadfd84e5f3d1c21063f2553b2fa945ee1d4d7152fdc5425bc12a9");
 			config.setInlineComments("market-options.previous-page-item.textures-url", Collections.singletonList("https://minecraft-heads.com/custom-heads/alphabet/7827-oak-wood-arrow-left"));
-			
+
 			// next-page-item
 			config.set("market-options.next-page-item.skin-value", null);
 			config.set("market-options.next-page-item.textures-url", "https://textures.minecraft.net/texture/19bf3292e126a105b54eba713aa1b152d541a1d8938829c56364d178ed22bf");
 			config.setInlineComments("market-options.next-page-item.textures-url", Collections.singletonList("https://minecraft-heads.com/custom-heads/alphabet/7828-oak-wood-arrow-right"));
-			
+
 			// sell-gui-options.items.decrease-item1
 			config.set("sell-gui-options.items.decrease-item1.skin-value", null);
 			config.set("sell-gui-options.items.decrease-item1.textures-url", "https://textures.minecraft.net/texture/7437346d8bda78d525d19f540a95e4e79daeda795cbca5a13256236312cf");
 			config.setInlineComments("sell-gui-options.items.decrease-item1.textures-url", Collections.singletonList("https://minecraft-heads.com/custom-heads/alphabet/7824-oak-wood-arrow-down"));
-			
+
 			// sell-gui-options.items.decrease-item2
 			config.set("sell-gui-options.items.decrease-item2.skin-value", null);
 			config.set("sell-gui-options.items.decrease-item2.textures-url", "https://textures.minecraft.net/texture/9b7ce683d0868aa4378aeb60caa5ea80596bcffdaab6b5af2d12595837a84853");
 			config.setInlineComments("sell-gui-options.items.decrease-item2.textures-url", Collections.singletonList("https://minecraft-heads.com/custom-heads/alphabet/515-stone-arrow-down"));
-			
+
 			// sell-gui-options.items.decrease-item3
 			config.set("sell-gui-options.items.decrease-item3.skin-value", null);
 			config.set("sell-gui-options.items.decrease-item3.textures-url", "https://textures.minecraft.net/texture/3912d45b1c78cc22452723ee66ba2d15777cc288568d6c1b62a545b29c7187");
 			config.setInlineComments("sell-gui-options.items.decrease-item3.textures-url", Collections.singletonList("https://minecraft-heads.com/custom-heads/alphabet/11221-quartz-arrow-down"));
-			
+
 			// sell-gui-options.items.increase-item1
 			config.set("sell-gui-options.items.increase-item1.skin-value", null);
 			config.set("sell-gui-options.items.increase-item1.textures-url", "https://textures.minecraft.net/texture/3040fe836a6c2fbd2c7a9c8ec6be5174fdfdfa1a2f55e366156fa5f712e10");
 			config.setInlineComments("sell-gui-options.items.increase-item1.textures-url", Collections.singletonList("https://minecraft-heads.com/custom-heads/alphabet/7825-oak-wood-arrow-up"));
-			
+
 			// sell-gui-options.items.increase-item2
 			config.set("sell-gui-options.items.increase-item2.skin-value", null);
 			config.set("sell-gui-options.items.increase-item2.textures-url", "https://textures.minecraft.net/texture/58fe251a40e4167d35d081c27868ac151af96b6bd16dd2834d5dc7235f47791d");
 			config.setInlineComments("sell-gui-options.items.increase-item2.textures-url", Collections.singletonList("https://minecraft-heads.com/custom-heads/alphabet/514-stone-arrow-up"));
-			
+
 			// sell-gui-options.items.increase-item3
 			config.set("sell-gui-options.items.increase-item3.skin-value", null);
 			config.set("sell-gui-options.items.increase-item3.textures-url", "https://textures.minecraft.net/texture/a99aaf2456a6122de8f6b62683f2bc2eed9abb81fd5bea1b4c23a58156b669");
 			config.setInlineComments("sell-gui-options.items.increase-item3.textures-url", Collections.singletonList("https://minecraft-heads.com/custom-heads/alphabet/11214-quartz-arrow-up"));
-			
+
 			// confirm-item
 			config.set("sell-gui-options.items.confirm-item.skin-value", null);
 			config.set("sell-gui-options.items.confirm-item.textures-url", "https://textures.minecraft.net/texture/a92e31ffb59c90ab08fc9dc1fe26802035a3a47c42fee63423bcdb4262ecb9b6");
 			config.setInlineComments("sell-gui-options.items.confirm-item.textures-url", Collections.singletonList("https://minecraft-heads.com/custom-heads/alphabet/21771-lime-checkmark"));
-			
+
 			// back-item
 			config.set("sell-gui-options.items.back-item.skin-value", null);
 			config.set("sell-gui-options.items.back-item.textures-url", "https://textures.minecraft.net/texture/bfe567282e78607f2ca2aef583b8efebc91959f84cae4a83bed10dcd5b0cfccd");
 			config.setInlineComments("sell-gui-options.items.back-item.textures-url", Collections.singletonList("https://minecraft-heads.com/custom-heads/decoration/18241-hay-bale"));
-			
+
 			// trail-gui-options.unknown-trail
 			config.set("trail-gui-options.unknown-trail.skin-value", null);
 			config.set("trail-gui-options.unknown-trail.textures-url", "https://textures.minecraft.net/texture/bc8ea1f51f253ff5142ca11ae45193a4ad8c3ab5e9c6eec8ba7a4fcb7bac40");
 			config.setInlineComments("trail-gui-options.unknown-trail.textures-url", Collections.singletonList("https://minecraft-heads.com/custom-heads/alphabet/9236-white-question-mark"));
-			
+
 			// back-item
 			config.set("trail-gui-options.back-item.skin-value", null);
 			config.set("trail-gui-options.back-item.textures-url", "https://textures.minecraft.net/texture/bfe567282e78607f2ca2aef583b8efebc91959f84cae4a83bed10dcd5b0cfccd");
 			config.setInlineComments("trail-gui-options.back-item.textures-url", Collections.singletonList("https://minecraft-heads.com/custom-heads/decoration/18241-hay-bale"));
-			
+
 			// trails.DRIP_WATER
 			config.set("trail-gui-options.trails.DRIP_WATER", null);
 			config.set("trail-gui-options.trails.DRIP_WATER.skin-value", "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvMzRmY2JjMjU2ZDBiZTdlNjgzYWY4NGUzOGM0YmNkYjcxYWZiOTM5ODUzOGEyOWFhOTZjYmZhMzE4YjJlYSJ9fX0=");
 			config.setInlineComments("trail-gui-options.trails.DRIP_WATER.slin-value", Collections.singletonList("https://minecraft-heads.com/custom-heads/blocks/13980-water"));
 			config.set("trail-gui-options.trails.DRIP_WATER.textures-url", "https://textures.minecraft.net/texture/34fcbc256d0be7e683af84e38c4bcdb71afb9398538a29aa96cbfa318b2ea");
 			config.setInlineComments("trail-gui-options.trails.DRIP_WATER.textures-url", Collections.singletonList("https://minecraft-heads.com/custom-heads/blocks/13980-water"));
-			
+
 			// trails.CRIT
 			config.set("trail-gui-options.trails.CRIT", null);
 			config.set("trail-gui-options.trails.CRIT.skin-value", "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvYzdlNmM0MGY2OGI3NzVmMmVmY2Q3YmQ5OTE2YjMyNzg2OWRjZjI3ZTI0Yzg1NWQwYTE4ZTA3YWMwNGZlMSJ9fX0=");
@@ -427,8 +435,8 @@ public class RPGHorsesMain extends JavaPlugin {
 		this.itemUtil = new ItemUtil(this);
 		this.horseCrateManager = new HorseCrateManager(this);
 		if (plugin.getConfig().getBoolean("mysql.enabled", false)) this.sqlManager = new SQLManager(this);
-		this.horseOwnerManager = new HorseOwnerManager(this, this.horseCrateManager, this.playerConfigs, this.permissions);
-		this.rpgHorseManager = new RPGHorseManager(this, this.horseOwnerManager, this.economy);
+		this.horseOwnerManager = new HorseOwnerManager(this, this.horseCrateManager, this.playerConfigs);
+		this.rpgHorseManager = new RPGHorseManager(this, this.horseOwnerManager);
 		this.stableGuiManager = new StableGUIManager(this, this.horseOwnerManager, this.rpgHorseManager, this.itemUtil, this.messagingUtil);
 		this.marketGUIManager = new MarketGUIManager(this, this.horseOwnerManager, this.marketConfig, this.itemUtil);
 		this.horseGUIManager = new HorseGUIManager(this, this.horseOwnerManager, this.stableGuiManager);
@@ -445,7 +453,7 @@ public class RPGHorsesMain extends JavaPlugin {
 		new EntityDamageByEntityListener(this, this.rpgHorseManager, this.stableGuiManager);
 		new EntityDeathListener(this, this.rpgHorseManager, this.stableGuiManager, xpManager, messagingUtil);
 		new EntitySpawnListener(this, this.rpgHorseManager, this.horseOwnerManager);
-		new InventoryClickListener(this, this.horseOwnerManager, this.rpgHorseManager, this.stableGuiManager, this.marketGUIManager, this.horseGUIManager, this.trailGUIManager, this.sellGUIManager, this.economy, this.messageQueuer, this.messagingUtil);
+		new InventoryClickListener(this, this.horseOwnerManager, this.rpgHorseManager, this.stableGuiManager, this.marketGUIManager, this.horseGUIManager, this.trailGUIManager, this.sellGUIManager, this.messageQueuer, this.messagingUtil);
 		new InventoryCloseListener(this, this.horseOwnerManager, this.stableGuiManager);
 		new PlayerChatListener(this, this.rpgHorseManager, this.stableGuiManager, this.messagingUtil);
 		new PlayerInteractEntityListener(this, this.rpgHorseManager, this.messagingUtil);
@@ -457,7 +465,7 @@ public class RPGHorsesMain extends JavaPlugin {
 	}
 
 	public void loadCommands() {
-		this.getCommand("rpghorses").setExecutor(new RPGHorsesCommand(this, this.horseOwnerManager, this.rpgHorseManager, this.stableGuiManager, this.marketGUIManager, this.horseCrateManager, this.particleManager, this.economy, this.messagingUtil));
+		this.getCommand("rpghorses").setExecutor(new RPGHorsesCommand(this, this.horseOwnerManager, this.rpgHorseManager, this.stableGuiManager, this.marketGUIManager, this.horseCrateManager, this.particleManager, this.messagingUtil));
 		this.getCommand("rpghorsesadmin").setExecutor(new RPGHorsesAdminCommand(this, this.horseOwnerManager, this.rpgHorseManager, this.stableGuiManager, this.horseGUIManager, this.sellGUIManager, this.trailGUIManager, this.horseDespawner, this.horseCrateManager, this.marketGUIManager, this.particleManager, this.messageQueuer, this.messagingUtil));
 	}
 

@@ -39,10 +39,9 @@ public class RPGHorsesCommand implements CommandExecutor {
 	private final HorseCrateManager horseCrateManager;
 	private final ParticleManager particleManager;
 	private final SQLManager sqlManager;
-	private final Economy economy;
 	private final RPGMessagingUtil messagingUtil;
 	
-	public RPGHorsesCommand(RPGHorsesMain plugin, HorseOwnerManager horseOwnerManager, RPGHorseManager rpgHorseManager, StableGUIManager stableGUIManager, MarketGUIManager marketGUIManager, HorseCrateManager horseCrateManager, ParticleManager particleManager, Economy economy, RPGMessagingUtil messagingUtil) {
+	public RPGHorsesCommand(RPGHorsesMain plugin, HorseOwnerManager horseOwnerManager, RPGHorseManager rpgHorseManager, StableGUIManager stableGUIManager, MarketGUIManager marketGUIManager, HorseCrateManager horseCrateManager, ParticleManager particleManager, RPGMessagingUtil messagingUtil) {
 		this.plugin = plugin;
 		this.horseOwnerManager = horseOwnerManager;
 		this.rpgHorseManager = rpgHorseManager;
@@ -51,7 +50,6 @@ public class RPGHorsesCommand implements CommandExecutor {
 		this.horseCrateManager = horseCrateManager;
 		this.particleManager = particleManager;
 		this.sqlManager = plugin.getSQLManager();
-		this.economy = economy;
 		this.messagingUtil = messagingUtil;
 	}
 	
@@ -214,12 +212,12 @@ public class RPGHorsesCommand implements CommandExecutor {
 					return false;
 				}
 				
-				if (economy != null && this.economy.getBalance(p) < horseCrate.getPrice()) {
+				if (plugin.getEconomy() != null && plugin.getEconomy().getBalance(p) < horseCrate.getPrice()) {
 					this.messagingUtil.sendMessageAtPath(p, "messages.cant-afford-crate");
 					return false;
 				}
 				
-				if (economy != null) this.economy.withdrawPlayer(p, horseCrate.getPrice());
+				if (plugin.getEconomy() != null) plugin.getEconomy().withdrawPlayer(p, horseCrate.getPrice());
 				
 				Map<ItemStack, Integer> itemsMissing = horseCrate.getMissingItems(p);
 				

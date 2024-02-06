@@ -43,11 +43,10 @@ public class InventoryClickListener implements Listener {
 	private final TrailGUIManager trailGUIManager;
 	private final SellGUIManager sellGUIManager;
 	private final SQLManager sqlManager;
-	private final Economy economy;
 	private final MessageQueuer messageQueuer;
 	private final RPGMessagingUtil messagingUtil;
 
-	public InventoryClickListener(RPGHorsesMain plugin, HorseOwnerManager horseOwnerManager, RPGHorseManager rpgHorseManager, StableGUIManager stableGUIManager, MarketGUIManager marketGUIManager, HorseGUIManager horseGUIManager, TrailGUIManager trailGUIManager, SellGUIManager sellGUIManager, Economy economy, MessageQueuer messageQueuer, RPGMessagingUtil messagingUtil) {
+	public InventoryClickListener(RPGHorsesMain plugin, HorseOwnerManager horseOwnerManager, RPGHorseManager rpgHorseManager, StableGUIManager stableGUIManager, MarketGUIManager marketGUIManager, HorseGUIManager horseGUIManager, TrailGUIManager trailGUIManager, SellGUIManager sellGUIManager, MessageQueuer messageQueuer, RPGMessagingUtil messagingUtil) {
 		this.plugin = plugin;
 		this.horseOwnerManager = horseOwnerManager;
 		this.rpgHorseManager = rpgHorseManager;
@@ -57,7 +56,6 @@ public class InventoryClickListener implements Listener {
 		this.trailGUIManager = trailGUIManager;
 		this.sellGUIManager = sellGUIManager;
 		this.sqlManager = plugin.getSQLManager();
-		this.economy = economy;
 		this.messageQueuer = messageQueuer;
 		this.messagingUtil = messagingUtil;
 
@@ -113,7 +111,7 @@ public class InventoryClickListener implements Listener {
 						SoundUtil.playSound(p, plugin.getConfig(), "upgrade-options.success-sound");
 						this.messagingUtil.sendMessage(p, this.plugin.getConfig().getString("messages.max-tier-horse").replace("{HORSE-NUMBER}", "" + horseNumber), rpgHorse);
 					} else if (rpgHorse.getXp() >= tier.getExpCost()) {
-						if (economy == null || tier.getCost() <= this.economy.getBalance(p)) {
+						if (plugin.getEconomy() == null || tier.getCost() <= plugin.getEconomy().getBalance(p)) {
 							Map<ItemStack, Integer> itemsMissing = rpgHorseManager.getMissingItems(p, tier);
 							if (itemsMissing.isEmpty()) {
 								String tierStr = "" + (rpgHorse.getTier() + 1);
@@ -323,7 +321,7 @@ public class InventoryClickListener implements Listener {
 							} else {
 
 								double price = marketHorse.getPrice();
-								if (this.economy.getBalance(p) < price) {
+								if (plugin.getEconomy().getBalance(p) < price) {
 									this.messagingUtil.sendMessageAtPath(p, "messages.cant-afford-market-horse", rpgHorse);
 								} else {
 									OfflinePlayer ownerP = rpgHorse.getHorseOwner().getPlayer();
@@ -333,8 +331,8 @@ public class InventoryClickListener implements Listener {
 										ownerP = Bukkit.getOfflinePlayer(rpgHorse.getHorseOwner().getUUID());
 									}
 
-									this.economy.withdrawPlayer(p, price);
-									this.economy.depositPlayer(ownerP, price);
+									plugin.getEconomy().withdrawPlayer(p, price);
+									plugin.getEconomy().depositPlayer(ownerP, price);
 									rpgHorse.setInMarket(false);
 									this.marketGUIManager.removeHorse(marketHorse, true);
 

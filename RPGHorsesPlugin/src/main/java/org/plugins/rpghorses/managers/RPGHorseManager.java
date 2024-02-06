@@ -22,17 +22,15 @@ public class RPGHorseManager {
 
 	private final RPGHorsesMain plugin;
 	private final HorseOwnerManager horseOwnerManager;
-	private final Economy economy;
 
 	private final List<EntityType> validEntityTypes = new ArrayList<>();
 	private HashMap<UUID, RemoveHorseConfirmation> removeConfirmations = new HashMap<>();
 	private HashMap<UUID, HorseRenamer> horseRenamers = new HashMap<>();
 	private List<Tier> tiers = new ArrayList<>();
 
-	public RPGHorseManager(RPGHorsesMain plugin, HorseOwnerManager horseOwnerManager, Economy economy) {
+	public RPGHorseManager(RPGHorsesMain plugin, HorseOwnerManager horseOwnerManager) {
 		this.plugin = plugin;
 		this.horseOwnerManager = horseOwnerManager;
-		this.economy = economy;
 
 		this.setupValidEntityTypes();
 		reload();
@@ -131,7 +129,7 @@ public class RPGHorseManager {
 		Tier tier = getTier(rpgHorse.getTier());
 		if (tier != null) {
 
-			if (economy != null && tier.getCost() > 0) this.economy.withdrawPlayer(p, tier.getCost());
+			if (plugin.getEconomy() != null && tier.getCost() > 0) plugin.getEconomy().withdrawPlayer(p, tier.getCost());
 
 			Inventory inv = p.getInventory();
 			Set<ItemStack> itemsNeeded = tier.getItemsNeeded();
