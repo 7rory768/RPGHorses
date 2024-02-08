@@ -23,6 +23,7 @@
         <module>1_19</module>
         <module>1_20</module>
         <module>1_20_2</module>
+        <module>1_20_4</module>
         <module>RPGHorsesPlugin</module>
     </modules>
     <packaging>pom</packaging>
