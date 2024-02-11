@@ -2,6 +2,7 @@ package org.plugins.rpghorses.horses;
 
 import lombok.Getter;
 import lombok.Setter;
+import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.Particle;
@@ -11,6 +12,8 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.inventory.ItemStack;
 import org.plugins.rpghorses.RPGHorsesMain;
+import org.plugins.rpghorses.events.RPGHorseDespawnEvent;
+import org.plugins.rpghorses.events.RPGHorseSpawnEvent;
 import org.plugins.rpghorses.horseinfo.AbstractHorseInfo;
 import org.plugins.rpghorses.horseinfo.LegacyHorseInfo;
 import org.plugins.rpghorses.players.HorseOwner;
@@ -287,11 +290,17 @@ public class RPGHorse {
 			if (this.horse != null) {
 				horseLoc = this.horse.getLocation();
 				this.despawnEntity();
+				//call despawn event
+				RPGHorseDespawnEvent despawnEvent = new RPGHorseDespawnEvent(p, horse);
+				Bukkit.getPluginManager().callEvent(despawnEvent);
 			}
 
 			this.horseOwner.setSpawningHorse(true);
 
 			this.horse = (LivingEntity) horseLoc.getWorld().spawnEntity(horseLoc, horseInfo.getEntityType());
+			//call spawn event
+			RPGHorseSpawnEvent spawnEvent = new RPGHorseSpawnEvent(p, horse);
+			Bukkit.getPluginManager().callEvent(spawnEvent);
 			if (RPGHorsesMain.getVersion().getWeight() < 11) {
 				this.horse.setMaxHealth(maxHealth);
 				Horse horse = (Horse) this.horse;

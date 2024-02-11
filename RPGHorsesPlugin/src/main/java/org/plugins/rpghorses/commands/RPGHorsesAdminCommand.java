@@ -13,6 +13,7 @@ import org.bukkit.entity.Horse;
 import org.bukkit.entity.Player;
 import org.plugins.rpghorses.RPGHorsesMain;
 import org.plugins.rpghorses.crates.HorseCrate;
+import org.plugins.rpghorses.events.RPGHorseDespawnEvent;
 import org.plugins.rpghorses.horseinfo.HorseInfo;
 import org.plugins.rpghorses.horseinfo.LegacyHorseInfo;
 import org.plugins.rpghorses.horses.MarketHorse;
@@ -526,6 +527,9 @@ public class RPGHorsesAdminCommand implements CommandExecutor {
 						RPGHorse rpgHorse = rpgHorseManager.getRPGHorse(entity);
 						if (rpgHorse != null) {
 							rpgHorse.despawnEntity();
+							//call despawn event
+							RPGHorseDespawnEvent despawnEvent = new RPGHorseDespawnEvent(p, rpgHorse.getHorse());
+							Bukkit.getPluginManager().callEvent(despawnEvent);
 						} else {
 							horseCount++;
 							entity.remove();
