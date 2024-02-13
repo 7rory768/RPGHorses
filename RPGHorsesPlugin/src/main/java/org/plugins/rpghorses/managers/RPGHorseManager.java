@@ -1,6 +1,7 @@
 package org.plugins.rpghorses.managers;
 
 import net.milkbowl.vault.economy.Economy;
+import org.bukkit.Bukkit;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
@@ -9,6 +10,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.plugins.rpghorses.RPGHorsesMain;
+import org.plugins.rpghorses.events.RPGHorseSpawnEvent;
 import org.plugins.rpghorses.horses.RPGHorse;
 import org.plugins.rpghorses.players.HorseOwner;
 import org.plugins.rpghorses.players.HorseRenamer;
@@ -174,6 +176,9 @@ public class RPGHorseManager {
 				boolean wasMax = rpgHorse.getHorse().getHealth() == rpgHorse.getHorse().getMaxHealth();
 				Entity passenger = rpgHorse.getHorse().getPassenger();
 				rpgHorse.spawnEntity();
+				//call spawn event
+				RPGHorseSpawnEvent spawnEvent = new RPGHorseSpawnEvent(p , rpgHorse.getHorse());
+				Bukkit.getPluginManager().callEvent(spawnEvent);
 
 				if (passenger != null) rpgHorse.getHorse().setPassenger(passenger);
 				if (wasMax) rpgHorse.getHorse().setHealth(rpgHorse.getMaxHealth());
@@ -273,6 +278,9 @@ public class RPGHorseManager {
 		HorseOwner horseOwner = rpgHorse.getHorseOwner();
 		if (horseOwner.getCurrentHorse() == rpgHorse) {
 			rpgHorse.spawnEntity();
+			// call spawn event
+			RPGHorseSpawnEvent spawnEvent = new RPGHorseSpawnEvent(horseOwner.getPlayer(), rpgHorse.getHorse());
+			Bukkit.getPluginManager().callEvent(spawnEvent);
 		}
 
 	}

@@ -6,6 +6,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.world.ChunkUnloadEvent;
 import org.plugins.rpghorses.RPGHorsesMain;
+import org.plugins.rpghorses.events.RPGHorseDespawnEvent;
 import org.plugins.rpghorses.horses.RPGHorse;
 import org.plugins.rpghorses.managers.RPGHorseManager;
 import org.plugins.rpghorses.players.HorseOwner;
@@ -34,6 +35,9 @@ public class ChunkUnloadListener implements Listener {
 				horse.despawnEntity();
 				
 				HorseOwner horseOwner = horse.getHorseOwner();
+
+				//call despawn event
+				RPGHorseDespawnEvent despawnEvent = new RPGHorseDespawnEvent(horseOwner.getPlayer(), horse.getHorse());
 				
 				if (horseOwner != null && horseOwner.getPlayer() != null) {
 					horseOwner.setCurrentHorse(null);
