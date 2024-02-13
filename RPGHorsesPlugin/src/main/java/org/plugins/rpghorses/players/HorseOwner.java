@@ -8,8 +8,6 @@ import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.plugins.rpghorses.RPGHorsesMain;
-import org.plugins.rpghorses.events.RPGHorseDespawnEvent;
-import org.plugins.rpghorses.events.RPGHorseSpawnEvent;
 import org.plugins.rpghorses.guis.GUILocation;
 import org.plugins.rpghorses.guis.instances.*;
 import org.plugins.rpghorses.horses.RPGHorse;
@@ -123,7 +121,7 @@ public class HorseOwner {
 		return currentHorse;
 	}
 	
-	public void setCurrentHorse(RPGHorse rpgHorse) {
+	public boolean setCurrentHorse(RPGHorse rpgHorse) {
 		if (this.currentHorse != rpgHorse) {
 			if (this.currentHorse != null) {
 				if (rpgHorse != null) {
@@ -143,30 +141,27 @@ public class HorseOwner {
 						}
 					}
 				}
+
 				this.currentHorse.despawnEntity();
-				//call despawn evnet
-				if (this.currentHorse.getHorseOwner() != null) {
-					RPGHorseDespawnEvent despawnEvent = new RPGHorseDespawnEvent(this.currentHorse.getHorseOwner().getPlayer(), this.currentHorse.getHorse());
-					Bukkit.getPluginManager().callEvent(despawnEvent);
-				}
 			}
 			
 			if (rpgHorse != null) {
 				this.stableGUI.addGlow(rpgHorse);
-			}
-			
-			this.currentHorse = rpgHorse;
-			
-			if (rpgHorse != null) {
-				this.currentHorse.spawnEntity();
-				//call spawn event
-				if (this.currentHorse.getHorseOwner() != null) {
-					RPGHorseSpawnEvent spawnEvent = new RPGHorseSpawnEvent(this.currentHorse.getHorseOwner().getPlayer(), this.currentHorse.getHorse());
-					Bukkit.getPluginManager().callEvent(spawnEvent);
+
+				if (this.currentHorse.spawnEntity()) {
+					this.currentHorse = rpgHorse;
+					return true;
+				} else {
+					this.currentHorse = null;
 				}
+
+				return false;
 			}
+
+			this.currentHorse = null;
 		}
-		
+
+		return true;
 	}
 	
 	public int getHorseNumber(RPGHorse rpgHorse) {

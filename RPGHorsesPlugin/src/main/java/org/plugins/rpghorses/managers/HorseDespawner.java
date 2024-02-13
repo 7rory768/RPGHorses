@@ -7,7 +7,6 @@ import org.bukkit.entity.Entity;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.scheduler.BukkitTask;
 import org.plugins.rpghorses.RPGHorsesMain;
-import org.plugins.rpghorses.events.RPGHorseDespawnEvent;
 import org.plugins.rpghorses.horses.RPGHorse;
 import org.plugins.rpghorses.players.HorseOwner;
 
@@ -86,8 +85,6 @@ public class HorseDespawner {
 						} else if (System.currentTimeMillis() - currentHorse.getLastMoveTime() >= (idleTime * 1000L)) {
 							Bukkit.getScheduler().runTask(plugin, () -> {
 								currentHorse.despawnEntity();
-								//call despawn event
-								RPGHorseDespawnEvent despawnEvent = new RPGHorseDespawnEvent(horseOwner.getPlayer(), currentHorse.getHorse());
 								horseOwner.setCurrentHorse(null);
 							});
 						}

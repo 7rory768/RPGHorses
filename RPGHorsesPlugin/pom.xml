@@ -14,7 +14,7 @@
     </properties>
 
     <artifactId>RPGHorsesPlugin</artifactId>
-    <version>1.2.25</version>
+    <version>1.2.26</version>
 
     <repositories>
         <repository>
