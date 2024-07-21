@@ -40,7 +40,7 @@ public class EntityDamageByEntityListener implements Listener {
 			
 			if (damager.getType() == EntityType.PLAYER) {
 				damagerPlayer = (Player) damager;
-			} else if (damagerType == EntityType.ARROW || damagerType == EntityType.EGG || damagerType == EntityType.ENDER_PEARL || damagerType == EntityType.FISHING_HOOK || damagerType == EntityType.SPLASH_POTION || damagerType == EntityType.SNOWBALL) {
+			} else if (damager instanceof Projectile) {
 				Projectile projectile = (Projectile) e.getDamager();
 				ProjectileSource projectileSource = projectile.getShooter();
 				if (projectileSource instanceof Player) damagerPlayer = (Player) projectileSource;
