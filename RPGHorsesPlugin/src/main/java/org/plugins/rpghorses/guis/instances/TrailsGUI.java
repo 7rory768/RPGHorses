@@ -1,60 +1,42 @@
 package org.plugins.rpghorses.guis.instances;
 
 import lombok.Getter;
+import lombok.Setter;
 import org.bukkit.Effect;
 import org.bukkit.Particle;
-import org.bukkit.enchantments.Enchantment;
-import org.bukkit.inventory.Inventory;
 import org.plugins.rpghorses.RPGHorsesMain;
-import org.plugins.rpghorses.guis.ItemPurpose;
 import org.plugins.rpghorses.guis.TrailGUIItem;
 import org.plugins.rpghorses.horseinfo.LegacyHorseInfo;
 import org.plugins.rpghorses.horses.RPGHorse;
-import org.plugins.rpghorses.utils.ItemUtil;
 
-import java.util.HashMap;
-import java.util.HashSet;
+import java.util.List;
 
+@Getter
+@Setter
 public class TrailsGUI {
 
 	private final RPGHorse rpgHorse;
-	private final Inventory inventory;
-	private final HashSet<TrailGUIItem> trails, unknownTrails;
-	@Getter
-	private TrailGUIItem currentTrail;
+	private final List<TrailsGUIPage> pages;
 
-	public TrailsGUI(RPGHorse rpgHorse, Inventory inventory, HashSet<TrailGUIItem> trails, HashSet<TrailGUIItem> unknownTrails, TrailGUIItem currentTrail) {
+	public TrailsGUI(RPGHorse rpgHorse, List<TrailsGUIPage> pages, TrailGUIItem currentTrail) {
 		this.rpgHorse = rpgHorse;
-		this.inventory = inventory;
-		this.trails = trails;
-		this.unknownTrails = unknownTrails;
-		this.currentTrail = currentTrail;
+		this.pages = pages;
+	}
 
-		if (currentTrail != null) {
-			ItemUtil.addDurabilityGlow(inventory.getItem(currentTrail.getSlot()));
+	public TrailsGUIPage getPage(int page) {
+		page = Math.min(pages.size(), Math.max(1, page));
+		if (page >= 1 && this.pages.size() >= page) {
+			return this.pages.get(page - 1);
 		}
+		return null;
 	}
 
-	public RPGHorse getRpgHorse() {
-		return rpgHorse;
-	}
+	public boolean applyTrail(TrailsGUIPage page, int slot) {
+		TrailGUIItem trailGUIItem = page.getTrailGUIItem(slot);
 
-	public Inventory getInventory() {
-		return inventory;
-	}
+		if (trailGUIItem == null || page.getUnknownTrails().contains(trailGUIItem)) return false;
 
-	public boolean applyTrail(int slot) {
-		TrailGUIItem trailGUIItem = getTrailGUIItem(slot);
-
-		if (trailGUIItem == null || unknownTrails.contains(trailGUIItem)) return false;
-
-		if (currentTrail != null) {
-			inventory.getItem(currentTrail.getSlot()).removeEnchantment(Enchantment.DURABILITY);
-		}
-
-		currentTrail = trailGUIItem;
-		ItemUtil.addDurabilityGlow(inventory.getItem(currentTrail.getSlot()));
-		String trailName = currentTrail.getTrailName();
+		String trailName = trailGUIItem.getTrailName();
 
 		if (RPGHorsesMain.getVersion().getWeight() < 9) {
 			((LegacyHorseInfo) rpgHorse.getHorseInfo()).setEffect(Effect.valueOf(trailName.toUpperCase()));
@@ -62,17 +44,19 @@ public class TrailsGUI {
 			rpgHorse.setParticle(Particle.valueOf(trailName.toUpperCase()));
 		}
 
+		for (TrailsGUIPage page1 : pages) {
+			page1.setCurrentTrail(trailGUIItem);
+		}
+
 		return true;
 	}
 
 	public boolean removeTrail() {
-		boolean hadTrail = false;
+		boolean hadTrail;
 
-		if (currentTrail != null) {
-			currentTrail.getItem().removeEnchantment(Enchantment.DURABILITY);
+		for (TrailsGUIPage page : pages) {
+			page.setCurrentTrail(null);
 		}
-
-		currentTrail = null;
 
 		if (RPGHorsesMain.getVersion().getWeight() < 9) {
 			hadTrail = ((LegacyHorseInfo) rpgHorse.getHorseInfo()).getEffect() != null;
@@ -83,31 +67,5 @@ public class TrailsGUI {
 		}
 
 		return hadTrail;
-	}
-
-	public TrailGUIItem getTrailGUIItem(int slot) {
-		for (TrailGUIItem trailGUIItem : trails) {
-			if (trailGUIItem.getSlot() == slot) {
-				return trailGUIItem;
-			}
-		}
-
-		for (TrailGUIItem trailGUIItem : unknownTrails) {
-			if (trailGUIItem.getSlot() == slot) {
-				return trailGUIItem;
-			}
-		}
-
-		return null;
-	}
-
-	public ItemPurpose getItemPurpose(int slot) {
-		TrailGUIItem trailGUIItem = getTrailGUIItem(slot);
-		return trailGUIItem == null ? ItemPurpose.NOTHING : trailGUIItem.getItemPurpose();
-	}
-
-	public String getTrailName(int slot) {
-		TrailGUIItem trailGUIItem = getTrailGUIItem(slot);
-		return trailGUIItem == null ? "" : trailGUIItem.getTrailName();
 	}
 }

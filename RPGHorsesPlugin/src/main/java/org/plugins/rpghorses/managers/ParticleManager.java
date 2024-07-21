@@ -1,5 +1,7 @@
 package org.plugins.rpghorses.managers;
 
+import lombok.Getter;
+import org.bukkit.Color;
 import org.bukkit.Effect;
 import org.bukkit.Location;
 import org.bukkit.Particle;
@@ -10,28 +12,29 @@ import org.plugins.rpghorses.horseinfo.LegacyHorseInfo;
 import org.plugins.rpghorses.horses.RPGHorse;
 import org.plugins.rpghorses.players.HorseOwner;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashSet;
 
 public class ParticleManager {
-	
+
 	private final RPGHorsesMain plugin;
 	private final HorseOwnerManager horseOwnerManager;
-	
+
 	private BukkitTask task;
 	private int interval = 1, volume = 1;
 	private double yOffset;
-	private List<String> validParticles = new ArrayList<>();
+	@Getter
+	private final HashSet<String> validParticles = new HashSet<>();
+	@Getter
 	private String particleList = "";
-	
+
 	public ParticleManager(RPGHorsesMain plugin, HorseOwnerManager horseOwnerManager) {
 		this.plugin = plugin;
 		this.horseOwnerManager = horseOwnerManager;
-		
+
 		this.reload();
 		this.startTask();
 	}
-	
+
 	public void startTask() {
 		this.task = new BukkitRunnable() {
 			@Override
@@ -57,32 +60,35 @@ public class ParticleManager {
 			}
 		}.runTaskTimerAsynchronously(this.plugin, this.interval, this.interval);
 	}
-	
+
 	public void reload() {
 		this.reloadInterval();
 		this.reloadVolume();
 		this.reloadYOffset();
 		this.setupValidParticles();
 	}
-	
+
 	public void reloadInterval() {
 		this.interval = this.plugin.getConfig().getInt("horse-options.particles.interval");
 	}
-	
+
 	public void reloadVolume() {
 		this.volume = this.plugin.getConfig().getInt("horse-options.particles.volume");
 	}
-	
+
 	public void reloadYOffset() {
 		this.yOffset = this.plugin.getConfig().getDouble("horse-options.particles.y-offset");
 	}
-	
+
 	public void setupValidParticles() {
 		validParticles.clear();
 		particleList = "";
-		
+
 		if (RPGHorsesMain.getVersion().getWeight() >= 9) {
 			for (Particle particle : Particle.values()) {
+				if (particle.getDataType() != Color.class && particle.getDataType() != Void.class)
+					continue;
+
 				validParticles.add(particle.name());
 				particleList += particle.name() + ", ";
 			}
@@ -94,16 +100,12 @@ public class ParticleManager {
 				}
 			}
 		}
-		
+
 		particleList = particleList.substring(0, particleList.length() - 2);
 	}
-	
+
 	public boolean isValidParticle(String arg) {
 		return validParticles.contains(arg.toUpperCase());
 	}
-	
-	public String getParticleList() {
-		return particleList;
-	}
-	
+
 }
