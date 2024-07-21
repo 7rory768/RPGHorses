@@ -1,6 +1,5 @@
 package org.plugins.rpghorses.managers;
 
-import net.milkbowl.vault.economy.Economy;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
@@ -71,13 +70,17 @@ public class RPGHorseManager {
 		return tiers.size() + 1;
 	}
 
+	public boolean isRPGHorse(Entity entity) {
+		return entity != null && entity.hasMetadata("RPGHorse-HorseOwner");
+	}
+
 	public RPGHorse getRPGHorse(Entity entity) {
-		if (entity != null) {
-			for (HorseOwner horseOwner : this.horseOwnerManager.getHorseOwners().values()) {
-				RPGHorse currentHorse = horseOwner.getCurrentHorse();
-				if (currentHorse != null && currentHorse.getHorse().getEntityId() == entity.getEntityId()) {
-					return currentHorse;
-				}
+		if (!isRPGHorse(entity)) return null;
+
+		for (HorseOwner horseOwner : this.horseOwnerManager.getHorseOwners().values()) {
+			RPGHorse currentHorse = horseOwner.getCurrentHorse();
+			if (currentHorse != null && currentHorse.getHorse().getEntityId() == entity.getEntityId()) {
+				return currentHorse;
 			}
 		}
 		return null;
@@ -129,7 +132,8 @@ public class RPGHorseManager {
 		Tier tier = getTier(rpgHorse.getTier());
 		if (tier != null) {
 
-			if (plugin.getEconomy() != null && tier.getCost() > 0) plugin.getEconomy().withdrawPlayer(p, tier.getCost());
+			if (plugin.getEconomy() != null && tier.getCost() > 0)
+				plugin.getEconomy().withdrawPlayer(p, tier.getCost());
 
 			Inventory inv = p.getInventory();
 			Set<ItemStack> itemsNeeded = tier.getItemsNeeded();
