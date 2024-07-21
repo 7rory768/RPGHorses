@@ -10,6 +10,7 @@ import org.bukkit.entity.*;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.metadata.FixedMetadataValue;
 import org.plugins.rpghorses.RPGHorsesMain;
 import org.plugins.rpghorses.horseinfo.AbstractHorseInfo;
 import org.plugins.rpghorses.horseinfo.LegacyHorseInfo;
@@ -37,7 +38,7 @@ public class RPGHorse {
 	@Getter @Setter
 	private long lastMoveTime;
 
-	public RPGHorse(HorseOwner horseOwner, int tier, double xp, String name, double health, double movementSpeed, double jumpStrength, AbstractHorseInfo horseInfo, boolean inMarket, Particle particle) {
+	public RPGHorse(HorseOwner horseOwner, int tier, double xp, String name, double health, double maxHealth, double movementSpeed, double jumpStrength, AbstractHorseInfo horseInfo, boolean inMarket, Particle particle) {
 		this.horseOwner = horseOwner;
 		this.horseInfo = horseInfo;
 		this.setName(name);
@@ -46,14 +47,15 @@ public class RPGHorse {
 		this.setMovementSpeed(movementSpeed);
 		this.setJumpStrength(jumpStrength);
 		this.setHealth(health);
+		this.setMaxHealth(Math.max(health, maxHealth));
 		this.setInMarket(inMarket);
 		this.setParticle(particle);
 		this.items.put(0, new ItemStack(Material.SADDLE));
 		setItems(this.items);
 	}
 
-	public RPGHorse(HorseOwner horseOwner, int tier, double xp, String name, double health, double movementSpeed, double jumpStrength, AbstractHorseInfo horseInfo, boolean inMarket, Particle particle, HashMap<Integer, ItemStack> items) {
-		this(horseOwner, tier, xp, name, health, movementSpeed, jumpStrength, horseInfo, inMarket, particle);
+	public RPGHorse(HorseOwner horseOwner, int tier, double xp, String name, double health, double maxHealth, double movementSpeed, double jumpStrength, AbstractHorseInfo horseInfo, boolean inMarket, Particle particle, HashMap<Integer, ItemStack> items) {
+		this(horseOwner, tier, xp, name, health, maxHealth, movementSpeed, jumpStrength, horseInfo, inMarket, particle);
 		if (items != null) {
 			this.setItems(items);
 		}
@@ -157,7 +159,6 @@ public class RPGHorse {
 			}
 		} else {
 			this.setDead(true);
-			this.refreshDeathTime();
 		}
 	}
 
@@ -234,12 +235,15 @@ public class RPGHorse {
 	}
 
 	public void setDead(boolean dead) {
-		if (this.dead == true && dead == false) {
+		if (this.dead && !dead) {
 			this.setHealth(this.maxHealth);
-			if (this.horse != null) {
+			this.setDeathTime(null);
+
+			if (this.horse != null)
 				this.horse.setHealth(this.health);
-			}
 		}
+
+		if (dead && !this.dead) this.refreshDeathTime();
 		this.dead = dead;
 	}
 
@@ -292,9 +296,11 @@ public class RPGHorse {
 			this.horseOwner.setSpawningHorse(true);
 
 			this.horse = (LivingEntity) horseLoc.getWorld().spawnEntity(horseLoc, horseInfo.getEntityType());
+			horse.setMetadata("RPGHorse-HorseOwner", new FixedMetadataValue(RPGHorsesMain.getInstance(), horseOwner.getUUID().toString()));
+
 			if (RPGHorsesMain.getVersion().getWeight() < 11) {
-				this.horse.setMaxHealth(maxHealth);
 				Horse horse = (Horse) this.horse;
+				horse.setMaxHealth(maxHealth);
 				horse.setAdult();
 				horse.setAgeLock(true);
 				horse.setOwner(p);

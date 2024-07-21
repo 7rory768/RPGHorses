@@ -71,7 +71,7 @@ public class HorseCrate {
 			}
 			abstractHorseInfo = new HorseInfo(type, style, color);
 		}
-		return new RPGHorse(horseOwner, this.tier, 0, null, health, movementSpeed, jumpStrength, abstractHorseInfo, false, null);
+		return new RPGHorse(horseOwner, this.tier, 0, null, health, health, movementSpeed, jumpStrength, abstractHorseInfo, false, null);
 	}
 	
 	public String getName() {

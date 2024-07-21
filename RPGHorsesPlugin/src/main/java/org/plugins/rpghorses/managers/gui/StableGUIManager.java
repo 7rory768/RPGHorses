@@ -273,7 +273,8 @@ public class StableGUIManager {
 		}
 	}
 	
-	public Long getDeathDifferent(RPGHorse rpgHorse) {
+	public long getDeathDifferent(RPGHorse rpgHorse) {
+		if (rpgHorse.getDeathTime() == null) return 0;
 		return rpgHorse.getDeathTime() + this.deathCooldown - System.currentTimeMillis();
 	}
 	
