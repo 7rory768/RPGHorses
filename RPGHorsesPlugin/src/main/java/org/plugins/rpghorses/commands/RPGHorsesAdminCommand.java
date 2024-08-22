@@ -215,9 +215,9 @@ public class RPGHorsesAdminCommand implements CommandExecutor {
 					HorseOwner horseOwner = this.horseOwnerManager.getHorseOwner(p);
 					
 					if (plugin.getVersion().getWeight() < 11) {
-						rpgHorse = new RPGHorse(horseOwner, 1, 0, this.plugin.getConfig().getString("horse-options.default-name").replace("{PLAYER}", p.getName()), health, movementSpeed, jumpStrength, new LegacyHorseInfo(style, color, variant), false, null);
+						rpgHorse = new RPGHorse(horseOwner, 1, 0, this.plugin.getConfig().getString("horse-options.default-name").replace("{PLAYER}", p.getName()), health, health, movementSpeed, jumpStrength, new LegacyHorseInfo(style, color, variant), false, null);
 					} else {
-						rpgHorse = new RPGHorse(horseOwner, 1, 0, this.plugin.getConfig().getString("horse-options.default-name").replace("{PLAYER}", p.getName()), health, movementSpeed, jumpStrength, new HorseInfo(type, style, color), false, null);
+						rpgHorse = new RPGHorse(horseOwner, 1, 0, this.plugin.getConfig().getString("horse-options.default-name").replace("{PLAYER}", p.getName()), health, health, movementSpeed, jumpStrength, new HorseInfo(type, style, color), false, null);
 					}
 				}
 				

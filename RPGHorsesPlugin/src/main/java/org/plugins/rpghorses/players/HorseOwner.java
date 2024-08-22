@@ -1,5 +1,7 @@
 package org.plugins.rpghorses.players;
 
+import lombok.Getter;
+import lombok.Setter;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.OfflinePlayer;
@@ -17,6 +19,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
+@Getter
+@Setter
 public class HorseOwner {
 	
 	GUILocation guiLocation = GUILocation.NONE;
@@ -32,6 +36,7 @@ public class HorseOwner {
 	private YourHorsesGUIPage yourHorsesGUIPage;
 	private HorseGUI horseGUI;
 	private TrailsGUI trailsGUI;
+	private TrailsGUIPage trailsGUIPage;
 	private SellGUI sellGUI;
 	
 	public HorseOwner(Player p) {
@@ -238,10 +243,6 @@ public class HorseOwner {
 		}
 	}
 	
-	public YourHorsesGUI getYourHorsesGUI() {
-		return yourHorsesGUI;
-	}
-	
 	public void setYourHorsesGUI(YourHorsesGUI yourHorsesGUI) {
 		this.yourHorsesGUI = yourHorsesGUI;
 		if (guiLocation == GUILocation.YOUR_HORSES_GUI) {
@@ -282,77 +283,33 @@ public class HorseOwner {
 		getPlayer().openInventory(horseGUI.getInventory());
 		setGUILocation(GUILocation.HORSE_GUI);
 	}
-	
-	public HorseGUI getHorseGUI() {
-		return horseGUI;
+
+	public void openTrailsGUIPage(TrailsGUIPage trailsGUIPage) {
+		if (trailsGUIPage != null) {
+			getPlayer().openInventory(trailsGUIPage.getInventory());
+			guiLocation = GUILocation.TRAILS_GUI;
+			this.trailsGUIPage = trailsGUIPage;
+		}
 	}
-	
-	public void openTrailsGUI(TrailsGUI trailsGUI) {
+
+	public void setTrailsGUI(TrailsGUI trailsGUI) {
 		this.trailsGUI = trailsGUI;
-		getPlayer().openInventory(trailsGUI.getInventory());
-		setGUILocation(GUILocation.TRAILS_GUI);
+		if (guiLocation == GUILocation.TRAILS_GUI) {
+			int pageNum = this.trailsGUIPage.getPageNum();
+			while (pageNum > 0) {
+				TrailsGUIPage trailsGUIPage = trailsGUI.getPage(pageNum--);
+				if (trailsGUIPage != null) {
+					this.openTrailsGUIPage(trailsGUIPage);
+					break;
+				}
+			}
+		}
 	}
-	
-	public TrailsGUI getTrailsGUI() {
-		return trailsGUI;
-	}
-	
+
 	public void openSellGUI(SellGUI sellGUI) {
 		this.sellGUI = sellGUI;
 		getPlayer().openInventory(sellGUI.getInventory());
 		setGUILocation(GUILocation.SELL_GUI);
-	}
-	
-	public SellGUI getSellGUI() {
-		return sellGUI;
-	}
-	
-	public boolean isSpawningHorse() {
-		return this.spawningHorse;
-	}
-	
-	public void setSpawningHorse(boolean spawningHorse) {
-		this.spawningHorse = spawningHorse;
-	}
-	
-	public boolean isMountingHorse() {
-		return mountingHorse;
-	}
-	
-	public void setMountingHorse(boolean mountingHorse) {
-		this.mountingHorse = mountingHorse;
-	}
-	
-	public boolean isDeMountingHorse() {
-		return deMountingHorse;
-	}
-	
-	public void setDeMountingHorse(boolean deMountingHorse) {
-		this.deMountingHorse = deMountingHorse;
-	}
-	
-	public boolean isChangingHorse() {
-		return changingHorse;
-	}
-	
-	public void setChangingHorse(boolean changingHorse) {
-		this.changingHorse = changingHorse;
-	}
-	
-	public boolean hasReceivedDefaultHorse() {
-		return receivedDefaultHorse;
-	}
-	
-	public void setReceivedDefaultHorse(boolean receivedDefaultHorse) {
-		this.receivedDefaultHorse = receivedDefaultHorse;
-	}
-	
-	public Location getLastHorseLocation() {
-		return lastHorseLocation;
-	}
-	
-	public void setLastHorseLocation(Location lastHorseLocation) {
-		this.lastHorseLocation = lastHorseLocation;
 	}
 	
 	public GUILocation getGUILocation() {
@@ -369,9 +326,5 @@ public class HorseOwner {
 	
 	public boolean autoMountOn() {
 		return autoMount;
-	}
-	
-	public void setAutoMount(boolean autoMount) {
-		this.autoMount = autoMount;
 	}
 }

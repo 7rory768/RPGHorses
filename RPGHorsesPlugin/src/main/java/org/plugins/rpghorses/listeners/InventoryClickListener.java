@@ -206,7 +206,8 @@ public class InventoryClickListener implements Listener {
 				} else if (itemPurpose == ItemPurpose.TOGGLE_AUTOMOUNT_OFF || itemPurpose == ItemPurpose.TOGGLE_AUTOMOUNT_ON) {
 					horseGUIManager.toggleAutoMount(horseGUI);
 				} else if (itemPurpose == ItemPurpose.TRAILS) {
-					horseOwner.openTrailsGUI(trailGUIManager.setupTrailsGUI(horseGUI));
+					horseOwner.setTrailsGUI(trailGUIManager.setupTrailsGUI(horseGUI));
+					horseOwner.openTrailsGUIPage(horseOwner.getTrailsGUI().getPage(1));
 				} else if (itemPurpose == ItemPurpose.SELL) {
 					if (rpgHorse.isInMarket()) {
 						this.messagingUtil.sendMessage(p, this.plugin.getConfig().getString("messages.horse-already-in-market").replace("{HORSE-NUMBER}", "" + horseNumber), rpgHorse);
@@ -226,20 +227,28 @@ public class InventoryClickListener implements Listener {
 			}
 		} else if (horseOwner.isInGUI(GUILocation.TRAILS_GUI)) {
 			if (e.getClickedInventory() == p.getOpenInventory().getTopInventory()) {
-				TrailsGUI   trailsGUI   = horseOwner.getTrailsGUI();
-				ItemPurpose itemPurpose = trailGUIManager.getItemPurpose(slot, trailsGUI);
+				TrailsGUI trailsGUI = horseOwner.getTrailsGUI();
+				TrailsGUIPage page = horseOwner.getTrailsGUIPage();
+				ItemPurpose itemPurpose = trailGUIManager.getItemPurpose(slot, page);
 				if (itemPurpose == ItemPurpose.TRAIL) {
-					if (trailsGUI.applyTrail(slot)) {
-						RPGHorse rpgHorse  = trailsGUI.getRpgHorse();
-						String   trailName = trailsGUI.getTrailName(slot);
+					if (trailsGUI.applyTrail(page, slot)) {
+						RPGHorse rpgHorse = trailsGUI.getRpgHorse();
+						String trailName = page.getTrailName(slot);
 						this.messagingUtil.sendMessage(p, this.plugin.getConfig().getString("messages.particle-set").replace("{HORSE-NUMBER}", "" + horseOwner.getHorseNumber(rpgHorse)).replace("{PARTICLE}", trailName.toUpperCase()), rpgHorse);
 						horseOwner.openHorseGUI(horseOwner.getHorseGUI());
 					}
+				} else if (itemPurpose == ItemPurpose.PREVIOUS_PAGE) {
+					horseOwner.openTrailsGUIPage(trailsGUI.getPage(page.getPageNum() - 1));
+				} else if (itemPurpose == ItemPurpose.NEXT_PAGE) {
+					horseOwner.openTrailsGUIPage(trailsGUI.getPage(page.getPageNum() + 1));
 				} else if (itemPurpose == ItemPurpose.BACK) {
 					horseOwner.openHorseGUI(horseOwner.getHorseGUI());
-				} else if (itemPurpose == ItemPurpose.CLEAR_TRAIL) {
-					TrailGUIItem currentTrail = trailsGUI.getCurrentTrail();
-					if (trailsGUI.removeTrail()) {
+				} else if (itemPurpose == ItemPurpose.CLEAR_TRAIL)
+				{
+					TrailGUIItem currentTrail = page.getCurrentTrail();
+
+					if (trailsGUI.removeTrail())
+					{
 						horseOwner.openHorseGUI(horseOwner.getHorseGUI());
 
 						RPGHorse rpgHorse = trailsGUI.getRpgHorse();

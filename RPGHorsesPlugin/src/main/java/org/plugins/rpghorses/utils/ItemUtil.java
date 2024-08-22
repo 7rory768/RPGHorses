@@ -16,7 +16,7 @@ import org.bukkit.inventory.meta.LeatherArmorMeta;
 import org.bukkit.inventory.meta.SkullMeta;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.profile.PlayerProfile;
-import org.bukkit.profile.PlayerTextures;
+import org.plugins.rpghorses.RPGHorsesMain;
 import roryslibrary.guis.GUIItem;
 import roryslibrary.util.MessagingUtil;
 import roryslibrary.util.Version;
@@ -88,6 +88,8 @@ public class ItemUtil extends roryslibrary.util.ItemUtil {
 	}
 
 	public static ItemStack getItemStack(ConfigurationSection section) {
+		if (section == null) return new ItemStack(Material.AIR);
+
 		String matString = section.getString("material", "NULL").toUpperCase();
 
 		Material mat;
@@ -202,7 +204,7 @@ public class ItemUtil extends roryslibrary.util.ItemUtil {
 		}
 
 		SkullMeta skullMeta = (SkullMeta) itemMeta;
-		if (isURL && texturesURL.contains("textures.minecraft.net")) {
+		if (Version.isRunningMinimum(Version.v1_19) && isURL && texturesURL.contains("textures.minecraft.net")) {
 			PlayerProfile playerProfile = Bukkit.createPlayerProfile(UUID.randomUUID());
 			playerProfile.getTextures().setSkin(url);
 			skullMeta.setOwnerProfile(playerProfile);
@@ -221,7 +223,7 @@ public class ItemUtil extends roryslibrary.util.ItemUtil {
 			}
 
 			try {
-				GameProfile gameProfile = new GameProfile(UUID.randomUUID(), value);
+				GameProfile gameProfile = new GameProfile(UUID.randomUUID(), "name");
 				gameProfile.getProperties().put("textures", new Property("textures", value));
 
 				Field profileField = skullMeta.getClass().getDeclaredField("profile");
@@ -233,6 +235,27 @@ public class ItemUtil extends roryslibrary.util.ItemUtil {
 		}
 
 		return skullMeta;
+	}
+
+	public static int getSlot(ConfigurationSection section) {
+		if (section == null) return -1;
+
+		int xCord = section.getInt("x-cord", -1);
+		int yCord = section.getInt("y-cord", -1);
+		return xCord != -1 && yCord != -1 ? getSlot(xCord, yCord) : section.getInt("slot", 0);
+	}
+
+	public static void addDurabilityGlow(ItemStack item) {
+		if (Version.isRunningMinimum(Version.v1_21)) {
+			ItemMeta itemMeta = item.getItemMeta();
+			itemMeta.setEnchantmentGlintOverride(true);
+		} else {
+			roryslibrary.util.ItemUtil.addDurabilityGlow(item);
+		}
+	}
+
+	public static void removeDurabilityGlow(ItemStack item) {
+		RPGHorsesMain.getNMS().removeDurabilityEnchant(item);
 	}
 
 

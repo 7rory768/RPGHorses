@@ -42,7 +42,6 @@ public class EntityDeathListener implements Listener {
 				rpgHorse.loadItems();
 				horseOwner.setCurrentHorse(null);
 				rpgHorse.setDead(true);
-				rpgHorse.refreshDeathTime();
 				e.getDrops().clear();
 				e.setDroppedExp(0);
 				

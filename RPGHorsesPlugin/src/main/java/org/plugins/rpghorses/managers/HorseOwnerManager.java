@@ -1,6 +1,5 @@
 package org.plugins.rpghorses.managers;
 
-import net.milkbowl.vault.permission.Permission;
 import org.bukkit.Bukkit;
 import org.bukkit.Effect;
 import org.bukkit.OfflinePlayer;
@@ -75,6 +74,7 @@ public class HorseOwnerManager {
 					int tier = config.getInt(path + "tier");
 					double xp = config.getDouble(path + "xp");
 					double health = config.getDouble(path + "health");
+					double maxHealth = config.getDouble(path + "max-health");
 					double movementSpeed = config.getDouble(path + "movement-speed");
 					double jumpStrength = config.getDouble(path + "jump-strength");
 					EntityType entityType = EntityType.HORSE;
@@ -92,7 +92,7 @@ public class HorseOwnerManager {
 						Bukkit.getLogger().log(Level.SEVERE, "[RPGHorses] Failed to load " + uuid.toString() + "'s horse ( " + config.getString(path + "style") + " is not a valid style )");
 					}
 
-					Long deathTime = Long.valueOf(config.getString(path + "death-time", "0"));
+					long deathTime = config.getLong(path + "death-time", 0);
 					boolean isDead = deathTime + (this.plugin.getConfig().getInt("horse-options.death-cooldown") * 1000) - System.currentTimeMillis() > 0;
 
 					boolean inMarket = config.getBoolean(path + "in-market", false);
@@ -108,7 +108,6 @@ public class HorseOwnerManager {
 							items.put(Integer.valueOf(slotStr), config.getItemStack(path + "items." + slotStr));
 						}
 					}
-
 
 					AbstractHorseInfo horseInfo;
 					if (plugin.getVersion().getWeight() < 11) {
@@ -132,11 +131,13 @@ public class HorseOwnerManager {
 						((LegacyHorseInfo) horseInfo).setEffect(effect);
 					}
 
-					RPGHorse rpgHorse = new RPGHorse(horseOwner, tier, xp, name, health, movementSpeed, jumpStrength, horseInfo, inMarket, particle, items);
+					RPGHorse rpgHorse = new RPGHorse(horseOwner, tier, xp, name, health, maxHealth, movementSpeed, jumpStrength, horseInfo, inMarket, particle, items);
 
 					if (isDead) {
 						rpgHorse.setDead(true);
 						rpgHorse.setDeathTime(deathTime);
+					} else {
+						rpgHorse.setDead(false);
 					}
 
 					horseOwner.addRPGHorse(rpgHorse);
@@ -144,7 +145,7 @@ public class HorseOwnerManager {
 			}
 		}
 
-		if (!horseOwner.hasReceivedDefaultHorse() && horseCrateManager.getDefaultHorseCrate() != null && horseOwner.getPlayer() != null) {
+		if (!horseOwner.isReceivedDefaultHorse() && horseCrateManager.getDefaultHorseCrate() != null && horseOwner.getPlayer() != null) {
 			RPGHorse rpgHorse = horseCrateManager.getDefaultHorseCrate().getRPGHorse(horseOwner);
 			rpgHorse.setName(plugin.getConfig().getString("horse-options.default-name", "Horse").replace("{PLAYER}", Bukkit.getPlayer(uuid).getName()));
 			horseOwner.addRPGHorse(rpgHorse);
@@ -189,6 +190,7 @@ public class HorseOwnerManager {
 				config.set(path + "tier", rpgHorse.getTier());
 				config.set(path + "xp", rpgHorse.getXp());
 				config.set(path + "health", rpgHorse.getHealth());
+				config.set(path + "max-health", rpgHorse.getMaxHealth());
 				config.set(path + "movement-speed", rpgHorse.getMovementSpeed());
 				config.set(path + "jump-strength", rpgHorse.getJumpStrength());
 				config.set(path + "type", rpgHorse.getEntityType().name());
@@ -214,7 +216,7 @@ public class HorseOwnerManager {
 				}
 			}
 
-			config.set("received-default-horse", horseOwner.hasReceivedDefaultHorse());
+			config.set("received-default-horse", horseOwner.isReceivedDefaultHorse());
 			config.set("auto-mount", horseOwner.autoMountOn());
 
 			if (count == 0) {

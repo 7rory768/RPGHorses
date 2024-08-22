@@ -81,13 +81,17 @@ public class RPGHorseManager {
 		return tiers.size() + 1;
 	}
 
+	public boolean isRPGHorse(Entity entity) {
+		return entity != null && entity.hasMetadata("RPGHorse-HorseOwner");
+	}
+
 	public RPGHorse getRPGHorse(Entity entity) {
-		if (entity != null) {
-			for (HorseOwner horseOwner : this.horseOwnerManager.getHorseOwners().values()) {
-				RPGHorse currentHorse = horseOwner.getCurrentHorse();
-				if (currentHorse != null && currentHorse.getHorse().getEntityId() == entity.getEntityId()) {
-					return currentHorse;
-				}
+		if (!isRPGHorse(entity)) return null;
+
+		for (HorseOwner horseOwner : this.horseOwnerManager.getHorseOwners().values()) {
+			RPGHorse currentHorse = horseOwner.getCurrentHorse();
+			if (currentHorse != null && currentHorse.getHorse().getEntityId() == entity.getEntityId()) {
+				return currentHorse;
 			}
 		}
 		return null;

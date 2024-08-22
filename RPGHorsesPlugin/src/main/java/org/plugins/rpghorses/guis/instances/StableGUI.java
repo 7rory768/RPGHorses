@@ -7,6 +7,7 @@ import org.bukkit.inventory.meta.ItemMeta;
 import org.plugins.rpghorses.guis.GUILocation;
 import org.plugins.rpghorses.horses.RPGHorse;
 import org.plugins.rpghorses.players.HorseOwner;
+import org.plugins.rpghorses.utils.ItemUtil;
 
 import java.util.HashMap;
 import java.util.List;
@@ -52,20 +53,14 @@ public class StableGUI {
 					RPGHorse loopHorse = rpgHorses.get(slot);
 					if (loopHorse == oldHorse) {
 						ItemStack item = stableGUIPage.getGUI().getItem(slot);
-						ItemMeta itemMeta = item.getItemMeta();
-						itemMeta.removeEnchant(Enchantment.DURABILITY);
-						itemMeta.removeItemFlags(ItemFlag.HIDE_ENCHANTS);
-						item.setItemMeta(itemMeta);
+						ItemUtil.removeDurabilityGlow(item);
 						foundOldHorse = true;
 						if (foundNewHorse) {
 							return;
 						}
 					} else if (loopHorse == rpgHorse) {
 						ItemStack item = stableGUIPage.getGUI().getItem(slot);
-						ItemMeta itemMeta = item.getItemMeta();
-						itemMeta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
-						itemMeta.addEnchant(Enchantment.DURABILITY, 10, true);
-						item.setItemMeta(itemMeta);
+						ItemUtil.addDurabilityGlow(item);
 						if (this.horseOwner.isInGUI(GUILocation.STABLE_GUI) && this.horseOwner.getCurrentStableGUIPage() == stableGUIPage) {
 							this.horseOwner.openStableGUIPage(stableGUIPage.getPageNum());
 						}

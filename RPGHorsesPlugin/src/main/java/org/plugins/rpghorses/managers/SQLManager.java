@@ -68,7 +68,7 @@ public class SQLManager extends roryslibrary.managers.SQLManager implements Plug
 
 		LOAD_HORSES = "SELECT * FROM " + HORSE_TABLE + " WHERE owner=? ORDER BY id;";
 		GET_HORSE = "SELECT * FROM " + HORSE_TABLE + " WHERE owner=? AND id=? LIMIT 1;";
-		SAVE_HORSE = "INSERT INTO " + HORSE_TABLE + " (id, owner, name, tier, xp, health, movement_speed, jump_strength, color, style, type, variant, death_time, in_market, particle, items) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);";
+		SAVE_HORSE = "INSERT INTO " + HORSE_TABLE + " (id, owner, name, tier, xp, health, max_health, movement_speed, jump_strength, color, style, type, variant, death_time, in_market, particle, items) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);";
 		DELETE_HORSES = "DELETE FROM " + HORSE_TABLE + " WHERE owner=?;";
 		DELETE_HORSE = "DELETE FROM " + HORSE_TABLE + " WHERE owner=? AND id=?;";
 		LOWER_HORSE_IDS = "UPDATE " + HORSE_TABLE + " SET id=id-1 WHERE owner=? AND id>?";
@@ -116,7 +116,9 @@ public class SQLManager extends roryslibrary.managers.SQLManager implements Plug
 
 	public void createHorseTable() {
 		try (Connection con = getConnection()) {
-			execute(con, "CREATE TABLE IF NOT EXISTS " + HORSE_TABLE + " (id INTEGER NOT NULL, owner VARCHAR(36) NOT NULL, name VARCHAR(64) NOT NULL, tier INTEGER DEFAULT 1, xp DOUBLE DEFAULT 0, health DOUBLE NOT NULL, movement_speed DOUBLE NOT NULL, jump_strength DOUBLE NOT NULL, color VARCHAR(16), style VARCHAR(16), type VARCHAR(32), variant VARCHAR(32), death_time BIGINT DEFAULT 0, in_market BOOLEAN DEFAULT 0, particle VARCHAR(32), items TEXT);");
+			execute(con, "CREATE TABLE IF NOT EXISTS " + HORSE_TABLE + " (id INTEGER NOT NULL, owner VARCHAR(36) NOT NULL, name VARCHAR(64) NOT NULL, tier INTEGER DEFAULT 1, xp DOUBLE DEFAULT 0, health DOUBLE NOT NULL, max_health DOUBLE DEFAULT 20, movement_speed DOUBLE NOT NULL, jump_strength DOUBLE NOT NULL, color VARCHAR(16), style VARCHAR(16), type VARCHAR(32), variant VARCHAR(32), death_time BIGINT DEFAULT 0, in_market BOOLEAN DEFAULT 0, particle VARCHAR(32), items TEXT);");
+
+			execute(con, "ALTER TABLE `" + HORSE_TABLE + "` ADD COLUMN IF NOT EXISTS `max_health` DOUBLE DEFAULT 20 AFTER health;");
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
@@ -527,6 +529,7 @@ public class SQLManager extends roryslibrary.managers.SQLManager implements Plug
 		int tier = set.getInt("tier");
 		double xp = set.getDouble("xp");
 		double health = set.getDouble("health");
+		double maxHealth = set.getDouble("max_health");
 		double movementSpeed = set.getDouble("movement_speed");
 		double jumpStrength = set.getDouble("jump_strength");
 		EntityType entityType = EntityType.HORSE;
@@ -599,7 +602,7 @@ public class SQLManager extends roryslibrary.managers.SQLManager implements Plug
 			}
 		}
 
-		RPGHorse rpgHorse = new RPGHorse(horseOwner, tier, xp, name, health, movementSpeed, jumpStrength, horseInfo, inMarket, particle, items);
+		RPGHorse rpgHorse = new RPGHorse(horseOwner, tier, xp, name, health, maxHealth, movementSpeed, jumpStrength, horseInfo, inMarket, particle, items);
 
 		if (isDead) {
 			rpgHorse.setDead(true);
@@ -621,7 +624,7 @@ public class SQLManager extends roryslibrary.managers.SQLManager implements Plug
 
 			PreparedStatement statement = con.prepareStatement(SAVE_PLAYER);
 			statement.setString(1, uuidStr);
-			statement.setBoolean(2, owner.hasReceivedDefaultHorse());
+			statement.setBoolean(2, owner.isReceivedDefaultHorse());
 			statement.setBoolean(3, owner.autoMountOn());
 			statement.executeUpdate();
 
@@ -682,6 +685,7 @@ public class SQLManager extends roryslibrary.managers.SQLManager implements Plug
 			statement.setInt(4, horse.getTier());
 			statement.setDouble(5, horse.getXp());
 			statement.setDouble(6, horse.getHealth());
+			statement.setDouble(6, horse.getMaxHealth());
 			statement.setDouble(7, horse.getMovementSpeed());
 			statement.setDouble(8, horse.getJumpStrength());
 			statement.setString(9, horse.getColor().name());

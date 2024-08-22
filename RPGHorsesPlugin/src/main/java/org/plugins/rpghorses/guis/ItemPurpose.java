@@ -16,6 +16,8 @@ public enum ItemPurpose {
 	CONFIRM(),
 	DELETE(),
 	BACK(),
+	PREVIOUS_PAGE,
+	NEXT_PAGE,
 	FILL(),
 	NOTHING();
 }
