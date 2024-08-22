@@ -696,6 +696,7 @@ command-options:
   on-upgrade-fail: []
 
 messages:
+  cant-spawn-horse-here: '{PREFIX}You cannot spawn your horse here'
   not-on-ground: '{PREFIX}You may only call for your horse when on the ground'
   short-name: '{PREFIX}&6{HORSE-NAME} &7is too short, the min length is &6{MIN-LENGTH}'
   long-name: '{PREFIX}&6{HORSE-NAME} &7is too long, the max length is &6{MAX-LENGTH}'
