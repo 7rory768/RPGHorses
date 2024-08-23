@@ -76,7 +76,7 @@ public class RPGHorse {
 			this.maxHealth = this.horse.getAttribute(Attribute.GENERIC_MAX_HEALTH).getBaseValue();
 			this.movementSpeed = this.horse.getAttribute(Attribute.GENERIC_MOVEMENT_SPEED).getBaseValue();
 		} else {
-			this.movementSpeed = this.horse.getMaxHealth();
+			this.maxHealth = this.horse.getMaxHealth();
 		}
 		this.setName(name);
 		this.setTier(1);
