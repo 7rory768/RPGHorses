@@ -2,6 +2,7 @@ package org.plugins.rpghorses.horses;
 
 import lombok.Getter;
 import lombok.Setter;
+import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.Particle;
@@ -12,6 +13,9 @@ import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.metadata.FixedMetadataValue;
 import org.plugins.rpghorses.RPGHorsesMain;
+import org.plugins.rpghorses.events.RPGHorseDespawnEvent;
+import org.plugins.rpghorses.events.RPGHorsePostSpawnEvent;
+import org.plugins.rpghorses.events.RPGHorsePreSpawnEvent;
 import org.plugins.rpghorses.horseinfo.AbstractHorseInfo;
 import org.plugins.rpghorses.horseinfo.LegacyHorseInfo;
 import org.plugins.rpghorses.players.HorseOwner;
@@ -21,22 +25,25 @@ import java.util.HashMap;
 
 public class RPGHorse {
 
-	private HorseOwner horseOwner;
-	private String name;
+	private HorseOwner   horseOwner;
+	private String       name;
 	private LivingEntity horse;
-	private int tier = 1;
-	private double xp = 0, health = 0, maxHealth = 20, movementSpeed = 1.0, jumpStrength = 1.0;
-	private AbstractHorseInfo horseInfo;
+	private int          tier = 1;
+	private double       xp   = 0, health = 0, maxHealth = 20, movementSpeed = 1.0, jumpStrength = 1.0;
+	private AbstractHorseInfo           horseInfo;
 	private HashMap<Integer, ItemStack> items = new HashMap<>();
-	private boolean dead, inMarket, gainedXP;
-	private Long deathTime;
+	private boolean                     dead, inMarket, gainedXP;
+	private Long     deathTime;
 	private Particle particle;
-	@Getter @Setter
-	private int index = -1;
-	@Getter @Setter
+	@Getter
+	@Setter
+	private int      index = -1;
+	@Getter
+	@Setter
 	private Location lastLocation;
-	@Getter @Setter
-	private long lastMoveTime;
+	@Getter
+	@Setter
+	private long     lastMoveTime;
 
 	public RPGHorse(HorseOwner horseOwner, int tier, double xp, String name, double health, double maxHealth, double movementSpeed, double jumpStrength, AbstractHorseInfo horseInfo, boolean inMarket, Particle particle) {
 		this.horseOwner = horseOwner;
@@ -162,6 +169,12 @@ public class RPGHorse {
 		}
 	}
 
+	public void loadHealth() {
+		if (this.horse != null) {
+			this.health = this.horse.getHealth();
+		}
+	}
+
 	public double getMaxHealth() {
 		return maxHealth;
 	}
@@ -283,7 +296,7 @@ public class RPGHorse {
 		this.particle = particle;
 	}
 
-	public void spawnEntity() {
+	public boolean spawnEntity() {
 		Player p = horseOwner.getPlayer();
 		if (p != null && p.isOnline()) {
 			Location horseLoc = p.getLocation();
@@ -292,6 +305,10 @@ public class RPGHorse {
 				horseLoc = this.horse.getLocation();
 				this.despawnEntity();
 			}
+
+			RPGHorsePreSpawnEvent preSpawnEvent = new RPGHorsePreSpawnEvent(p, this, horseLoc);
+			Bukkit.getPluginManager().callEvent(preSpawnEvent);
+			if (preSpawnEvent.isCancelled()) return false;
 
 			this.horseOwner.setSpawningHorse(true);
 
@@ -341,7 +358,7 @@ public class RPGHorse {
 				ChestedHorse chestedHorse = (ChestedHorse) this.horse;
 				chestedHorse.setCarryingChest(true);
 			} else if (this.getEntityType() == EntityType.LLAMA) {
-				Llama llama = (Llama) horse;
+				Llama       llama = (Llama) horse;
 				Llama.Color color = Llama.Color.WHITE;
 				try {
 					color = Llama.Color.valueOf(getColor().name());
@@ -352,7 +369,7 @@ public class RPGHorse {
 
 			setItems(items);
 
-			Inventory inventory = ((InventoryHolder) horse).getInventory();
+			Inventory inventory      = ((InventoryHolder) horse).getInventory();
 			ItemStack saddleSlotItem = inventory.getItem(0);
 			if (saddleSlotItem == null) {
 				inventory.setItem(0, new ItemStack(Material.SADDLE));
@@ -368,7 +385,12 @@ public class RPGHorse {
 					horse.addPassenger(p);
 				}
 			}
+
+			Bukkit.getPluginManager().callEvent(new RPGHorsePostSpawnEvent(p, this));
+			return true;
 		}
+
+		return false;
 	}
 
 	public EntityType getEntityType() {
@@ -388,6 +410,9 @@ public class RPGHorse {
 	}
 
 	public void despawnEntity() {
+		RPGHorseDespawnEvent despawnEvent = new RPGHorseDespawnEvent(horseOwner.getPlayer(), horse);
+		Bukkit.getPluginManager().callEvent(despawnEvent);
+
 		if (this.horse != null) {
 			this.loadItems();
 			this.loadHealth();
@@ -403,12 +428,6 @@ public class RPGHorse {
 			for (int slot = 0; slot < inventory.getSize(); slot++) {
 				this.items.put(slot, inventory.getItem(slot));
 			}
-		}
-	}
-
-	public void loadHealth() {
-		if (this.horse != null) {
-			this.health = this.horse.getHealth();
 		}
 	}
 

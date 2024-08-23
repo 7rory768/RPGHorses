@@ -126,7 +126,7 @@ public class HorseOwner {
 		return currentHorse;
 	}
 	
-	public void setCurrentHorse(RPGHorse rpgHorse) {
+	public boolean setCurrentHorse(RPGHorse rpgHorse) {
 		if (this.currentHorse != rpgHorse) {
 			if (this.currentHorse != null) {
 				if (rpgHorse != null) {
@@ -146,20 +146,27 @@ public class HorseOwner {
 						}
 					}
 				}
+
 				this.currentHorse.despawnEntity();
 			}
 			
 			if (rpgHorse != null) {
 				this.stableGUI.addGlow(rpgHorse);
+
+				if (this.currentHorse.spawnEntity()) {
+					this.currentHorse = rpgHorse;
+					return true;
+				} else {
+					this.currentHorse = null;
+				}
+
+				return false;
 			}
-			
-			this.currentHorse = rpgHorse;
-			
-			if (rpgHorse != null) {
-				this.currentHorse.spawnEntity();
-			}
+
+			this.currentHorse = null;
 		}
-		
+
+		return true;
 	}
 	
 	public int getHorseNumber(RPGHorse rpgHorse) {
