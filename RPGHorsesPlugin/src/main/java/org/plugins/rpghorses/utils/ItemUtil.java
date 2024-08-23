@@ -246,16 +246,11 @@ public class ItemUtil extends roryslibrary.util.ItemUtil {
 	}
 
 	public static void addDurabilityGlow(ItemStack item) {
-		if (Version.isRunningMinimum(Version.v1_21)) {
-			ItemMeta itemMeta = item.getItemMeta();
-			itemMeta.setEnchantmentGlintOverride(true);
-		} else {
-			roryslibrary.util.ItemUtil.addDurabilityGlow(item);
-		}
+		RPGHorsesMain.getNMS().addGlow(item);
 	}
 
 	public static void removeDurabilityGlow(ItemStack item) {
-		RPGHorsesMain.getNMS().removeDurabilityEnchant(item);
+		RPGHorsesMain.getNMS().removeGlow(item);
 	}
 
 
