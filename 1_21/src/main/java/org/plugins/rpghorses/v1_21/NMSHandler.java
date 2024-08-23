@@ -1,67 +1,70 @@
 package org.plugins.rpghorses.v1_21;
 
-import com.google.common.collect.Sets;
-import net.minecraft.world.entity.EntityCreature;
-import net.minecraft.world.entity.EntityInsentient;
-import net.minecraft.world.entity.ai.goal.PathfinderGoal;
-import net.minecraft.world.entity.ai.goal.PathfinderGoalSelector;
+
+import net.minecraft.world.entity.Mob;
+import net.minecraft.world.entity.ai.goal.GoalSelector;
+import net.minecraft.world.entity.ai.goal.WrappedGoal;
 import org.bukkit.craftbukkit.v1_21_R1.entity.CraftEntity;
 import org.bukkit.entity.LivingEntity;
-import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.plugins.rpghorses.NMS;
 
-import java.lang.reflect.Field;
-import java.util.EnumMap;
+import java.lang.reflect.Method;
+import java.util.Iterator;
+import java.util.Set;
 
 /*
  * @author Rory Skipper (Roree) on 2023-10-27
  */
 public class NMSHandler extends NMS {
 
+	protected Method mobGoalsMethod;
+
+	public NMSHandler() {
+		try {
+			mobGoalsMethod = GoalSelector.class.getDeclaredMethod("b");
+			mobGoalsMethod.setAccessible(true);
+		} catch (Exception ex) {
+			ex.printStackTrace();
+		}
+	}
+
 	@Override
 	public void removeBehaviour(LivingEntity entity) {
 		try {
-			CraftEntity craftEntity = (CraftEntity) entity;
-			EntityCreature creature = (EntityCreature) (((CraftEntity) entity).getHandle());
-
-			Field goalsField;
-			Field goalsMapField;
-
-			try {
-				goalsField = PathfinderGoalSelector.class.getDeclaredField("c");
-				goalsMapField = PathfinderGoalSelector.class.getDeclaredField("b");
-			} catch (NoSuchFieldException ignored) {
-				return;
-			}
-
-			Field selectorField1 = EntityInsentient.class.getField("bW");
-			Field selectorField2 = EntityInsentient.class.getField("bX");
-
-			selectorField1.setAccessible(true);
-			selectorField2.setAccessible(true);
-
-			Object selector1 = selectorField1.get(creature);
-			Object selector2 = selectorField2.get(creature);
-
-			goalsField.setAccessible(true);
-			goalsField.set(selector1, Sets.newLinkedHashSet());
-			goalsField.set(selector2, Sets.newLinkedHashSet());
-
-			goalsMapField.setAccessible(true);
-			goalsMapField.set(selector1, new EnumMap<>(PathfinderGoal.Type.class));
-			goalsMapField.set(selector2, new EnumMap<>(PathfinderGoal.Type.class));
+			Mob entityInsentient = (Mob) ((CraftEntity) entity).getHandle();
+			removeAllGoals(entityInsentient.goalSelector);
+			removeAllGoals(entityInsentient.targetSelector);
 		} catch (Exception | Error e) {
 			logError(e);
 		}
 	}
 
+	public void removeAllGoals(GoalSelector selector) {
+		try {
+			Set<WrappedGoal> goals = (Set<WrappedGoal>) mobGoalsMethod.invoke(selector);
+			Iterator<WrappedGoal> goalIterator = goals.iterator();
+
+			while (goalIterator.hasNext()) {
+				WrappedGoal pathGoal = goalIterator.next();
+				if (pathGoal.isRunning()) pathGoal.stop();
+
+				goalIterator.remove();
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+
 	@Override
-	public void removeDurabilityEnchant(ItemStack item) {
-		ItemMeta meta = item.getItemMeta();
-		if (meta != null) {
+	public void addGlow(ItemMeta meta) {
+		meta.setEnchantmentGlintOverride(true);
+	}
+
+	@Override
+	public void removeGlow(ItemMeta meta) {
+		if (meta.hasEnchantmentGlintOverride()) {
 			meta.setEnchantmentGlintOverride(null);
-			item.setItemMeta(meta);
 		}
 	}
 }
