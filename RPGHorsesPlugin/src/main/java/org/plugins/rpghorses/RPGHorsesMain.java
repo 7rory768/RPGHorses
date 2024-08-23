@@ -25,6 +25,7 @@ import roryslibrary.configs.CustomConfig;
 import roryslibrary.configs.PlayerConfigs;
 import roryslibrary.util.CustomConfigUtil;
 import roryslibrary.util.DebugUtil;
+import roryslibrary.util.TimeUtil;
 import roryslibrary.util.UpdateNotifier;
 
 import java.util.Collections;
@@ -135,6 +136,7 @@ public class RPGHorsesMain extends JavaPlugin {
 
 	public void loadConfigs() {
 		CustomConfigUtil.loadDefaultConfig(this);
+		TimeUtil.refreshUnitStrings(getConfig(), "time-options.");
 
 		this.playerConfigs = new PlayerConfigs(this);
 
