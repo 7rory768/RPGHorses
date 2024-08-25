@@ -21,6 +21,7 @@ import org.plugins.rpghorses.utils.ItemUtil;
 import roryslibrary.util.MessagingUtil;
 import roryslibrary.util.NumberUtil;
 
+import java.math.BigDecimal;
 import java.util.HashSet;
 
 public class HorseGUIManager {
@@ -92,9 +93,17 @@ public class HorseGUIManager {
 		inventory.setItem(ItemUtil.getSlot(plugin.getConfig(), "horse-gui-options.horse-item"), stableGUIManager.fillPlaceholders(stableGUIManager.getHorseItem(rpgHorse), rpgHorse));
 		
 		Tier tier = rpgHorseManager.getNextTier(rpgHorse);
-		GUIItem guiItem = getGUIItem(ItemPurpose.UPGRADE);
+		GUIItem guiItem = tier != null ? getGUIItem(ItemPurpose.UPGRADE) : getGUIItem(ItemPurpose.MAXED_LEVEL);
 		if (guiItem != null && guiItem.isEnabled()) {
-			inventory.setItem(guiItem.getSlot(), ItemUtil.fillPlaceholders(guiItem.getItem(), "COST", NumberUtil.getCommaString(tier == null ? 0 : (int) tier.getCost()), "HORSE-EXP-NEEDED", NumberUtil.getCommaString(tier == null ? 0 : (int) tier.getExpCost())));
+			String oldHealth = new BigDecimal(rpgHorse.getMaxHealth()).setScale(2, BigDecimal.ROUND_HALF_UP).toPlainString();;
+			String oldSpeed = new BigDecimal(rpgHorse.getMovementSpeed()).setScale(2, BigDecimal.ROUND_HALF_UP).toPlainString();
+			String oldJumpStrength = new BigDecimal(rpgHorse.getJumpStrength()).setScale(2, BigDecimal.ROUND_HALF_UP).toPlainString();
+
+			String newHealth = tier == null ? "N/A" : new BigDecimal(tier.getNewHealth(rpgHorse.getMaxHealth())).setScale(2, BigDecimal.ROUND_HALF_UP).toPlainString();
+			String newSpeed = tier == null ? "N/A" : new BigDecimal(tier.getNewMovementSpeed(rpgHorse.getMovementSpeed())).setScale(2, BigDecimal.ROUND_HALF_UP).toPlainString();
+			String newJumpStrength = tier == null ? "N/A" : new BigDecimal(tier.getNewJumpStrength(rpgHorse.getJumpStrength())).setScale(2, BigDecimal.ROUND_HALF_UP).toPlainString();
+
+			inventory.setItem(guiItem.getSlot(), ItemUtil.fillPlaceholders(guiItem.getItem(), "COST", NumberUtil.getCommaString(tier == null ? 0 : (int) tier.getCost()), "HORSE-EXP-NEEDED", NumberUtil.getCommaString(tier == null ? 0 : (int) tier.getExpCost()), "OLD-HEALTH", oldHealth, "OLD-SPEED", oldSpeed, "OLD-JUMP-STRENGTH", oldJumpStrength, "NEW-HEALTH", newHealth, "NEW-SPEED", newSpeed, "NEW-JUMP-STRENGTH", newJumpStrength));
 		}
 		
 		GUIItem autoMountItem = rpgHorse.getHorseOwner().autoMountOn() ? getGUIItem(ItemPurpose.TOGGLE_AUTOMOUNT_ON) : getGUIItem(ItemPurpose.TOGGLE_AUTOMOUNT_OFF);

@@ -29,6 +29,7 @@ import roryslibrary.util.DebugUtil;
 import roryslibrary.util.TimeUtil;
 import roryslibrary.util.UpdateNotifier;
 
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -568,6 +569,16 @@ public class RPGHorsesMain extends JavaPlugin {
 			config.set("messages.all-horses-removed", "{PREFIX}&7All of &6{PLAYER}''s {TOTAL-HORSES} &7horses removed successfully");
 			config.set("messages.all-your-horses-were-removed", "{PREFIX}&7All your &6{TOTAL-HORSES} &7have been removed by {PLAYER}");
 			config.set("messages.no-horse-pvp", "{PREFIX}You can''t attack other player''s horses here");
+
+			config.set("horse-gui-options.items.max-upgrade-item.enabled", true);
+			config.set("horse-gui-options.items.max-upgrade-item.PURPOSE", "MAXED_LEVEL");
+			config.set("horse-gui-options.items.max-upgrade-item.material", "PLAYER_HEAD");
+			config.set("horse-gui-options.items.max-upgrade-item.textures-url", "https://textures.minecraft.net/texture/a99aaf2456a6122de8f6b62683f2bc2eed9abb81fd5bea1b4c23a58156b669");
+			config.set("horse-gui-options.items.max-upgrade-item.name", "&6&lMaxed Horse");
+			config.set("horse-gui-options.items.max-upgrade-item.lore", Collections.singletonList("&7Your horse is already max level"));
+			config.set("horse-gui-options.items.max-upgrade-item.x-cord", 7);
+			config.set("horse-gui-options.items.max-upgrade-item.y-cord", 2);
+					
 		}
 
 		config.set("version", latestVersion);

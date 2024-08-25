@@ -117,6 +117,7 @@ public class InventoryClickListener implements Listener {
 								String tierStr = "" + (rpgHorse.getTier() + 1);
 								if (this.rpgHorseManager.upgradeHorse(p, rpgHorse)) {
 									this.stableGUIManager.updateRPGHorse(rpgHorse);
+									p.closeInventory();
 									this.messagingUtil.sendMessage(p, this.plugin.getConfig().getString("messages.upgrade-horse-success").replace("{HORSE-NUMBER}", "" + horseNumber).replace("{TIER}", tierStr), rpgHorse);
 									SoundUtil.playSound(p, plugin.getConfig(), "upgrade-options.success-sound");
 									for (String cmd : this.plugin.getConfig().getStringList("command-options.on-upgrade-success")) {
