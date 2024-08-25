@@ -59,7 +59,7 @@ public class TrailGUIManager {
 		trailItem = ItemUtil.getItemStack(config, path + "trail-item");
 		clearTrailItem = new GUIItem(ItemUtil.getItemStack(config, path + "clear-trail-item"), ItemPurpose.CLEAR_TRAIL, true, ItemUtil.getSlot(config, path + "clear-trail-item"));
 		fillItem = ItemUtil.getItemStack(config, path + "fill-item");
-		backItem = new GUIItem(ItemUtil.getItemStack(config, path + "back-item"), ItemPurpose.BACK, true, ItemUtil.getSlot(config, path + "back-item"));
+		backItem = new GUIItem(ItemUtil.getItemStack(config, path + "back-item"), ItemPurpose.BACK, config.getBoolean(path + "back-item.enabled", true), ItemUtil.getSlot(config, path + "back-item"));
 		previousPageItem = new GUIItem(ItemUtil.getItemStack(config, path + "previous-page-item"), ItemPurpose.PREVIOUS_PAGE, true, ItemUtil.getSlot(config, path + "previous-page-item"));
 		nextPageItem = new GUIItem(ItemUtil.getItemStack(config, path + "next-page-item"), ItemPurpose.NEXT_PAGE, true, ItemUtil.getSlot(config, path + "next-page-item"));
 
@@ -125,7 +125,7 @@ public class TrailGUIManager {
 
 		rows = totalTrails >= 21 ? 6 : row + 3;
 		backItem.setSlot(((rows - 1) * 9) + 3);
-		clearTrailItem.setSlot(((rows - 1) * 9) + 5);
+		clearTrailItem.setSlot(((rows - 1) * 9) + (backItem.isEnabled() ? 5 : 4));
 
 		if (previousPageItem.getSlot() <= 0) previousPageItem.setSlot((rows - 1) * 9 + 1);
 		if (nextPageItem.getSlot() <= 0) nextPageItem.setSlot((rows - 1) * 9 + 7);
@@ -190,7 +190,9 @@ public class TrailGUIManager {
 					page.setCurrentTrail(currentTrail);
 				}
 
-				inv.setItem(backItem.getSlot(), backItem.getItem());
+				if (backItem != null && backItem.isEnabled())
+					inv.setItem(backItem.getSlot(), backItem.getItem());
+
 				inv.setItem(clearTrailItem.getSlot(), clearTrailItem.getItem());
 
 				if (trailsDone < validTrails.size())

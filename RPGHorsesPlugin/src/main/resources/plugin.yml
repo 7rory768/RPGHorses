@@ -4,6 +4,7 @@ author: Roree
 version: ${project.version}
 api-version: 1.13
 depend: [Vault]
+softdepend: [ WorldGuard ]
 load: POSTWORLD
 
 commands:
@@ -21,6 +22,8 @@ permissions:
     default: true
   rpghorses.sell:
     default: true
+  rpghorses.togglehorse:
+    default: op
   rpghorses.buy:
     default: op
   rpghorses.stable:

@@ -47,6 +47,9 @@ public class XPManager {
 					Tier tier = rpgHorseManager.getNextTier(rpgHorse);
 					if (tier == null) return;
 
+					// Prevent message spam
+					if (rpgHorse.getXp() >= tier.getExpCost()) continue;
+
 					Player p = horseOwner.getPlayer();
 					Location newLoc = p.getLocation();
 					Location oldLoc = horseOwner.getLastHorseLocation();

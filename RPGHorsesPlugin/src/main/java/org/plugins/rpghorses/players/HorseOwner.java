@@ -15,6 +15,7 @@ import org.plugins.rpghorses.guis.instances.*;
 import org.plugins.rpghorses.horses.RPGHorse;
 import org.plugins.rpghorses.managers.SQLManager;
 import org.plugins.rpghorses.utils.RPGMessagingUtil;
+import org.plugins.rpghorses.utils.WorldGuardUtil;
 import roryslibrary.util.MessagingUtil;
 
 import java.util.ArrayList;
@@ -137,20 +138,24 @@ public class HorseOwner {
 				this.currentHorse.despawnEntity();
 			}
 
+			this.currentHorse = null;
+
 			if (rpgHorse != null) {
+				Player player = getPlayer();
+				if (player == null) return false;
+
+				if (!WorldGuardUtil.areRPGHorsesAllowed(player, player.getLocation()))
+					return false;
+
 				this.stableGUI.addGlow(rpgHorse);
 
 				if (rpgHorse.spawnEntity()) {
 					this.currentHorse = rpgHorse;
 					return true;
-				} else {
-					this.currentHorse = null;
 				}
 
 				return false;
 			}
-
-			this.currentHorse = null;
 		}
 
 		return true;

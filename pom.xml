@@ -26,6 +26,8 @@
         <module>1_20_4</module>
         <module>1_21</module>
         <module>RPGHorsesPlugin</module>
+        <module>WorldGuard-v6</module>
+        <module>WorldGuard-v7</module>
     </modules>
     <packaging>pom</packaging>
 

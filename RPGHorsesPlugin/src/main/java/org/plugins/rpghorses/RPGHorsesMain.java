@@ -20,6 +20,7 @@ import org.plugins.rpghorses.managers.gui.*;
 import org.plugins.rpghorses.players.HorseOwner;
 import org.plugins.rpghorses.utils.ItemUtil;
 import org.plugins.rpghorses.utils.RPGMessagingUtil;
+import org.plugins.rpghorses.utils.WorldGuardUtil;
 import org.plugins.rpghorses.version.Version;
 import roryslibrary.configs.CustomConfig;
 import roryslibrary.configs.PlayerConfigs;
@@ -82,6 +83,16 @@ public class RPGHorsesMain extends JavaPlugin {
 	}
 
 	@Override
+	public void onLoad() {
+		if (WorldGuardUtil.isEnabled()) {
+			WorldGuardUtil.createFlags();
+			getLogger().info(" Successfully hooked into WorldGuard");
+		} else {
+			getLogger().info(" Failed to hook into WorldGuard");
+		}
+	}
+
+	@Override
 	public void onEnable() {
 		plugin = this;
 		new DebugUtil().setPlugin(this);
@@ -112,7 +123,7 @@ public class RPGHorsesMain extends JavaPlugin {
 		metrics.addCustomChart(new SimplePie("sql", () -> getConfig().getBoolean("sql.enabled") ? "Enabled" : "Disabled"));
 
 		Bukkit.getScheduler().runTaskLater(this, () -> {
-			if (this.loadHooks()) {
+			if (this.loadVault()) {
 				messagingUtil.sendMessage(Bukkit.getConsoleSender(), "[RPGHorses] Successfully hooked into &aVault");
 			} else {
 				messagingUtil.sendMessage(Bukkit.getConsoleSender(), "[RPGHorses] Failed to hook into &cVault&7, some features may be broken");
@@ -565,7 +576,7 @@ public class RPGHorsesMain extends JavaPlugin {
 		reloadConfig();
 	}
 
-	public boolean loadHooks() {
+	public boolean loadVault() {
 		RegisteredServiceProvider<Permission> permissionProvider = getServer().getServicesManager().getRegistration(Permission.class);
 		if (permissionProvider != null) {
 			this.permissions = permissionProvider.getProvider();

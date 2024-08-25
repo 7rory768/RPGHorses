@@ -14,6 +14,7 @@ import org.plugins.rpghorses.RPGHorsesMain;
 import org.plugins.rpghorses.horses.RPGHorse;
 import org.plugins.rpghorses.managers.RPGHorseManager;
 import org.plugins.rpghorses.managers.gui.StableGUIManager;
+import org.plugins.rpghorses.utils.WorldGuardUtil;
 
 public class EntityDamageByEntityListener implements Listener {
 	
@@ -45,10 +46,18 @@ public class EntityDamageByEntityListener implements Listener {
 				ProjectileSource projectileSource = projectile.getShooter();
 				if (projectileSource instanceof Player) damagerPlayer = (Player) projectileSource;
 			}
+
+			// Not PVP
+			if (damagerPlayer == null) return;
+			if (damagerPlayer.getUniqueId().equals(rpgHorse.getHorseOwner().getUUID())) {
+				e.setCancelled(true);
+				return;
+			}
 			
-			boolean horsePvp = plugin.getConfig().getBoolean("horse-options.horse-pvp", false);
+			boolean horsePVP = plugin.getConfig().getBoolean("horse-options.horse-pvp", false) && WorldGuardUtil.isHorsePVPAllowed(null, victim.getLocation()) && WorldGuardUtil.isHorsePVPAllowed(null, damagerPlayer.getLocation());
 			
-			if (damagerPlayer != null && (!horsePvp || damagerPlayer.getUniqueId().equals(rpgHorse.getHorseOwner().getUUID()))) {
+			if (!horsePVP) {
+				plugin.getMessagingUtil().sendMessageAtPath(damagerPlayer, "messages.no-horse-pvp");
 				e.setCancelled(true);
 			}
 		}
