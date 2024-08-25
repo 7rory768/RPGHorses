@@ -4,6 +4,7 @@ import net.wesjd.anvilgui.AnvilGUI;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.OfflinePlayer;
+import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -105,7 +106,7 @@ public class InventoryClickListener implements Listener {
 				if (itemPurpose == ItemPurpose.BACK) {
 					horseOwner.openStableGUIPage(horseOwner.getCurrentStableGUIPage());
 				} else if (itemPurpose == ItemPurpose.UPGRADE) {
-					Tier tier = rpgHorseManager.getTier(rpgHorse.getTier());
+					Tier tier = rpgHorseManager.getNextTier(rpgHorse);
 					if (tier == null) {
 						SoundUtil.playSound(p, plugin.getConfig(), "upgrade-options.success-sound");
 						this.messagingUtil.sendMessage(p, this.plugin.getConfig().getString("messages.max-tier-horse").replace("{HORSE-NUMBER}", "" + horseNumber), rpgHorse);
@@ -425,7 +426,21 @@ public class InventoryClickListener implements Listener {
 				}
 			}
 
-			if (!p.isOnGround()) {
+			RPGHorse currentHorse = horseOwner.getCurrentHorse();
+			LivingEntity horse = currentHorse != null ? currentHorse.getHorse() : null;
+			boolean isRidingHorse = false;
+
+			if (horse != null) {
+				if (RPGHorsesMain.getVersion().getWeight() < 11) {
+					if (horse.getPassenger().equals(p)) isRidingHorse = true;
+				} else {
+					if (horse.getPassengers().contains(p)) isRidingHorse = true;
+				}
+			}
+
+			boolean onGround = p.isOnGround() || (isRidingHorse && horse.isOnGround());
+
+			if (!onGround) {
 				messagingUtil.sendMessageAtPath(p, "messages.not-on-ground");
 				return;
 			}
