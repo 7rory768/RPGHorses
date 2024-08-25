@@ -176,34 +176,7 @@ public class InventoryClickListener implements Listener {
 						p.closeInventory();
 					}
 				} else if (itemPurpose == ItemPurpose.RENAME) {
-					AnvilGUI.Builder builder = new AnvilGUI.Builder().plugin(plugin);
-					builder.onClose(player -> new BukkitRunnable() {
-						@Override
-						public void run() {
-							horseOwner.openHorseGUI(horseOwner.getHorseGUI());
-						}
-					}.runTaskLater(plugin, 1L)).onClick((clickSlot, state) -> {
-						String oldName = rpgHorse.getName(), name = state.getText();
-						if (!plugin.getConfig().getBoolean("horse-options.names.allow-spaces")) {
-							name = name.replace(" ", "");
-						}
-
-						int length = ChatColor.stripColor(MessagingUtil.format(name)).length(), minLength = plugin.getConfig().getInt("horse-options.names.min-length"), maxLength = plugin.getConfig().getInt("horse-options.names.max-length");
-						if (length < minLength) {
-							messagingUtil.sendMessageAtPath(p, "messages.short-name", "HORSE-NAME", name, "MIN-LENGTH", "" + minLength, "MAX-LENGTH", "" + maxLength);
-							p.closeInventory();
-						} else if (length > maxLength) {
-							messagingUtil.sendMessageAtPath(p, "messages.long-name", "HORSE-NAME", name, "MIN-LENGTH", "" + minLength, "MAX-LENGTH", "" + maxLength);
-							p.closeInventory();
-						} else {
-							rpgHorse.setName(RPGMessagingUtil.format(name));
-							this.stableGUIManager.updateRPGHorse(rpgHorse);
-							this.messagingUtil.sendMessage(p, this.plugin.getConfig().getString("messages.horse-renamed").replace("{OLD-HORSE-NAME}", oldName), rpgHorse);
-							horseOwner.openHorseGUI(horseGUIManager.getHorseGUI(rpgHorse));
-						}
-						return Collections.singletonList(AnvilGUI.ResponseAction.close());
-					});
-					builder.title(RPGMessagingUtil.format("&6Type the new name")).itemOutput(horseGUI.getInventory().getItem(ItemUtil.getSlot(plugin.getConfig(), "horse-gui-options.horse-item")).clone()).text(rpgHorse.getName()).open(p);
+					rpgHorseManager.openRenameGUI(p, horseOwner, rpgHorse);
 				} else if (itemPurpose == ItemPurpose.TOGGLE_AUTOMOUNT_OFF || itemPurpose == ItemPurpose.TOGGLE_AUTOMOUNT_ON) {
 					horseGUIManager.toggleAutoMount(horseGUI);
 				} else if (itemPurpose == ItemPurpose.TRAILS) {

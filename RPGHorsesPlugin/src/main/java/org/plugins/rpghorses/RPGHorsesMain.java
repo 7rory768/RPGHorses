@@ -139,7 +139,7 @@ public class RPGHorsesMain extends JavaPlugin {
 		FileConfiguration config = getConfig();
 
 		int version = config.getInt("version", 1);
-		int latestVersion = 3;
+		int latestVersion = 4;
 
 		if (version < 2) {
 			config.set("stable-options.market-horse-item.skin-value", null);
@@ -553,6 +553,12 @@ public class RPGHorsesMain extends JavaPlugin {
 			}
 		}
 
+		if (version < 4) {
+			config.set("messages.all-horses-removed", "{PREFIX}&7All of &6{PLAYER}''s {TOTAL-HORSES} &7horses removed successfully");
+			config.set("messages.all-your-horses-were-removed", "{PREFIX}&7All your &6{TOTAL-HORSES} &7have been removed by {PLAYER}");
+			config.set("messages.no-horse-pvp", "{PREFIX}You can''t attack other player''s horses here");
+		}
+
 		config.set("version", latestVersion);
 		config.setInlineComments("version", Collections.singletonList("Don't change this, used for automatic config updates"));
 		saveConfig();
@@ -634,6 +640,9 @@ public class RPGHorsesMain extends JavaPlugin {
 		helpMessages.put("&6/rpghorsesadmin listall &8- &7Lists all active RPGHorses", "rpghorses.listall");
 		helpMessages.put("&6/rpghorsesadmin check <radius> &8- &7Lists all active RPGHorses within a certain radius", "rpghorses.check");
 		helpMessages.put("&6/rpghorsesadmin removenear <radius> &8- &7Removes all RPGHorses within a certain radius", "rpghorses.removenear");
+		helpMessages.put("&6/rpghorsesadmin togglehorse <horse-number> <player> &8- &7Toggles a players horse on/off", "rpghorses.togglehorse");
+		helpMessages.put("&6/rpghorsesadmin removeall <player> &8- &7Removes all of players horses", "rpghorses.removeall");
+		helpMessages.put("&6/rpghorsesadmin forcemenu <horse-number> <player> <menu> &8- &7Forces the player to open a specific menu", "rpghorses.forcemenu");
 		helpMessages.put("&6/rpghorsesadmin reload &8- &7Reloads the configuration file", "rpghorses.reload");
 	}
 

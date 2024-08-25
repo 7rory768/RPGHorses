@@ -1,7 +1,9 @@
 package org.plugins.rpghorses.managers;
 
 import lombok.Getter;
+import net.wesjd.anvilgui.AnvilGUI;
 import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Entity;
@@ -10,6 +12,7 @@ import org.bukkit.entity.Horse;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.scheduler.BukkitRunnable;
 import org.plugins.rpghorses.RPGHorsesMain;
 import org.plugins.rpghorses.crates.HorseCrate;
 import org.plugins.rpghorses.horses.RPGHorse;
@@ -18,6 +21,8 @@ import org.plugins.rpghorses.players.HorseRenamer;
 import org.plugins.rpghorses.players.RemoveHorseConfirmation;
 import org.plugins.rpghorses.tiers.Tier;
 import org.plugins.rpghorses.utils.ItemUtil;
+import org.plugins.rpghorses.utils.RPGMessagingUtil;
+import roryslibrary.util.MessagingUtil;
 
 import java.util.*;
 
@@ -327,6 +332,51 @@ public class RPGHorseManager {
 
 	public boolean isRenamingHorse(Player p) {
 		return this.horseRenamers.containsKey(p.getUniqueId());
+	}
+
+	public void openRenameGUI(Player p, HorseOwner horseOwner, RPGHorse rpgHorse) {
+		openRenameGUI(p, horseOwner, rpgHorse, true);
+	}
+
+	public void openRenameGUI(Player p, HorseOwner horseOwner, RPGHorse rpgHorse, boolean returnToHorseGUI) {
+		RPGMessagingUtil messagingUtil = plugin.getMessagingUtil();
+
+		AnvilGUI.Builder builder = new AnvilGUI.Builder().plugin(plugin);
+		builder.onClose(player -> {
+			if (returnToHorseGUI) {
+				new BukkitRunnable() {
+					@Override
+					public void run() {
+						horseOwner.openHorseGUI(horseOwner.getHorseGUI());
+					}
+				}.runTaskLater(plugin, 1L);
+			}
+		}
+		).onClick((clickSlot, state) -> {
+			String oldName = rpgHorse.getName(), name = state.getText();
+			if (!plugin.getConfig().getBoolean("horse-options.names.allow-spaces")) {
+				name = name.replace(" ", "");
+			}
+
+			int length = ChatColor.stripColor(MessagingUtil.format(name)).length(), minLength = plugin.getConfig().getInt("horse-options.names.min-length"), maxLength = plugin.getConfig().getInt("horse-options.names.max-length");
+			if (length < minLength) {
+				messagingUtil.sendMessageAtPath(p, "messages.short-name", "HORSE-NAME", name, "MIN-LENGTH", "" + minLength, "MAX-LENGTH", "" + maxLength);
+				p.closeInventory();
+			} else if (length > maxLength) {
+				messagingUtil.sendMessageAtPath(p, "messages.long-name", "HORSE-NAME", name, "MIN-LENGTH", "" + minLength, "MAX-LENGTH", "" + maxLength);
+				p.closeInventory();
+			} else {
+				rpgHorse.setName(RPGMessagingUtil.format(name));
+				plugin.getStableGuiManager().updateRPGHorse(rpgHorse);
+				messagingUtil.sendMessage(p, this.plugin.getConfig().getString("messages.horse-renamed").replace("{OLD-HORSE-NAME}", oldName), rpgHorse);
+				if (returnToHorseGUI) {
+					horseOwner.openHorseGUI(plugin.getHorseGUIManager().getHorseGUI(rpgHorse));
+				}
+			}
+			return Collections.singletonList(AnvilGUI.ResponseAction.close());
+		});
+
+		builder.title(RPGMessagingUtil.format("&6Type the new name")).itemOutput(horseOwner.getHorseGUI().getInventory().getItem(ItemUtil.getSlot(plugin.getConfig(), "horse-gui-options.horse-item")).clone()).text(rpgHorse.getName()).open(p);
 	}
 
 }

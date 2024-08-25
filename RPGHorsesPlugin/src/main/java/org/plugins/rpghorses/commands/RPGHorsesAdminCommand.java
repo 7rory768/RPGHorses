@@ -13,6 +13,8 @@ import org.bukkit.entity.Horse;
 import org.bukkit.entity.Player;
 import org.plugins.rpghorses.RPGHorsesMain;
 import org.plugins.rpghorses.crates.HorseCrate;
+import org.plugins.rpghorses.guis.GUILocation;
+import org.plugins.rpghorses.guis.instances.HorseGUI;
 import org.plugins.rpghorses.horseinfo.HorseInfo;
 import org.plugins.rpghorses.horseinfo.LegacyHorseInfo;
 import org.plugins.rpghorses.horses.MarketHorse;
@@ -24,6 +26,7 @@ import org.plugins.rpghorses.tiers.Tier;
 import org.plugins.rpghorses.utils.RPGMessagingUtil;
 import roryslibrary.util.*;
 
+import java.util.ArrayList;
 import java.util.UUID;
 
 public class RPGHorsesAdminCommand implements CommandExecutor {
@@ -93,6 +96,12 @@ public class RPGHorsesAdminCommand implements CommandExecutor {
 				this.rpgHorseManager.reload();
 				this.horseCrateManager.loadHorseCrates();
 				this.particleManager.reload();
+
+				for (Player player : Bukkit.getOnlinePlayers()) {
+					HorseOwner horseOwner = this.horseOwnerManager.getHorseOwner(player);
+					if (horseOwner != null) horseOwner.setCurrentHorse(null);
+				}
+
 				this.messagingUtil.sendMessageAtPath(sender, "messages.config-reloaded");
 				return true;
 			}
@@ -308,7 +317,7 @@ public class RPGHorsesAdminCommand implements CommandExecutor {
 				String horseNumberArg = args[1];
 				String playerArg = args[2];
 				OfflinePlayer p = this.runPlayerCheck(sender, playerArg);
-				if (p == null || !p.hasPlayedBefore()) {
+				if (p == null) {
 					return false;
 				}
 				
@@ -344,6 +353,60 @@ public class RPGHorsesAdminCommand implements CommandExecutor {
 				}
 				
 				this.messagingUtil.sendMessage(sender, this.plugin.getConfig().getString("messages.horse-removed").replace("{PLAYER}", sender.getName()).replace("{HORSE-NUMBER}", horseNumberArg), rpgHorse);
+				return true;
+			}
+
+			if (arg1.equalsIgnoreCase("removeall")) {
+				if (!sender.hasPermission("rpghorses.removeall")) {
+					this.messagingUtil.sendMessageAtPath(sender, "messages.no-permission");
+					return false;
+				}
+
+				if (args.length < 2) {
+					this.messagingUtil.sendMessage(sender, "{PREFIX}Not enough arguments, try &6/" + label.toLowerCase() + " removeall <player>");
+					return false;
+				}
+
+				String playerArg = args[1];
+				OfflinePlayer p = this.runPlayerCheck(sender, playerArg);
+				if (p == null) {
+					return false;
+				}
+
+				HorseOwner horseOwner = this.horseOwnerManager.getHorseOwner(p);
+				int totalHorses = horseOwner.getRPGHorses().size();
+
+				for (RPGHorse rpgHorse : new ArrayList<>(horseOwner.getRPGHorses())) {
+
+					if (horseOwner.getCurrentHorse() != null && horseOwner.getCurrentHorse().equals(rpgHorse)) {
+						for (String cmd : this.plugin.getConfig().getStringList("command-options.on-despawn")) {
+							Bukkit.getServer().dispatchCommand(Bukkit.getConsoleSender(), MessagingUtil.format(cmd.replace("{PLAYER}", p.getName())));
+						}
+					}
+					horseOwner.removeRPGHorse(rpgHorse);
+
+					if (rpgHorse.isInMarket()) {
+						MarketHorse marketHorse = marketGUIManager.getMarketHorse(rpgHorse);
+						this.marketGUIManager.removeHorse(marketHorse, true);
+
+						if (sqlManager != null) {
+							sqlManager.removeMarketHorse(marketHorse, true);
+						}
+					}
+				}
+
+				String message = this.messagingUtil.placeholders(this.plugin.getConfig().getString("messages.all-your-horses-were-removed").replace("{PLAYER}", sender.getName()).replace("{TOTAL-HORSES}", "" + totalHorses));
+
+				if (p.isOnline()) {
+					this.messagingUtil.sendMessage(p.getPlayer(), message);
+					this.stableGuiManager.setupStableGUI(horseOwner);
+				} else {
+					this.horseOwnerManager.flushHorseOwner(horseOwner);
+					this.messageQueuer.queueMessage(p, message);
+				}
+
+				this.messagingUtil.sendMessage(sender, this.plugin.getConfig().getString("messages.all-horses-removed").replace("{PLAYER}", sender.getName()).replace("{TOTAL-HORSES}", "" + totalHorses));
+
 				return true;
 			}
 			
@@ -536,6 +599,98 @@ public class RPGHorsesAdminCommand implements CommandExecutor {
 					}
 				}
 				this.messagingUtil.sendMessage(sender, this.plugin.getConfig().getString("messages.horse-purgeall").replace("{HORSE-COUNT}", "" + horseCount));
+				return true;
+			}
+
+			if (arg1.equalsIgnoreCase("togglehorse")) {
+				if (!sender.hasPermission("rpghorses.togglehorse")) {
+					this.messagingUtil.sendMessageAtPath(sender, "messages.no-permission");
+					return false;
+				}
+
+				if (args.length < 3) {
+					this.messagingUtil.sendMessage(sender, "{PREFIX}Not enough arguments, try &6/" + label + " togglehorse <player> <horse-number>");
+					return false;
+				}
+
+				String horseNumberArg = args[1];
+				String playerArg = args[2];
+				OfflinePlayer p = this.runPlayerCheck(sender, playerArg);
+				if (p == null || !p.isOnline()) return false;
+
+				if (!runHorseNumberCheck(sender, horseNumberArg, p)) return false;
+
+				int horseNumber = Integer.parseInt(horseNumberArg), index = horseNumber - 1;
+
+				HorseOwner horseOwner = this.horseOwnerManager.getHorseOwner(p);
+				RPGHorse rpgHorse = horseOwner.getRPGHorse(index);
+				horseOwner.toggleRPGHorse(rpgHorse);
+				return true;
+			}
+
+			if (arg1.equalsIgnoreCase("forcemenu")) {
+				if (!sender.hasPermission("rpghorses.forcemenu")) {
+					this.messagingUtil.sendMessageAtPath(sender, "messages.no-permission");
+					return false;
+				}
+
+				if (args.length < 4) {
+					this.messagingUtil.sendMessage(sender, "{PREFIX}Not enough arguments, try &6/" + label + " forcemenu <horse-number> <player> <menu>");
+					return false;
+				}
+
+				String horseNumberArg = args[1];
+				String playerArg = args[2];
+				OfflinePlayer p = this.runPlayerCheck(sender, playerArg);
+				if (p == null || !p.isOnline()) return false;
+
+				if (!runHorseNumberCheck(sender, horseNumberArg, p)) return false;
+
+				int horseNumber = Integer.parseInt(horseNumberArg), index = horseNumber - 1;
+				HorseOwner horseOwner = this.horseOwnerManager.getHorseOwner(p);
+				RPGHorse rpgHorse = horseOwner.getRPGHorse(index);
+
+				p.getPlayer().closeInventory();
+
+				String menu = args[3].toUpperCase();
+				if (!menu.endsWith("_GUI")) menu = menu + "_GUI";
+
+				HorseGUI horseGUI = horseOwner.getHorseGUI();
+				if (horseGUI == null || horseGUI.getRpgHorse() != rpgHorse){
+					horseOwner.setHorseGUI(horseGUI = horseGUIManager.getHorseGUI(rpgHorse));
+				}
+
+				if (menu.equals("RENAME_GUI")) {
+					rpgHorseManager.openRenameGUI(p.getPlayer(), horseOwner, rpgHorse, false);
+					return true;
+				}
+
+				try {
+					GUILocation guiLocation = GUILocation.valueOf(menu);
+
+					if (guiLocation == GUILocation.STABLE_GUI) {
+						horseOwner.openStableGUIPage(1);
+					} else if (guiLocation == GUILocation.HORSE_GUI) {
+						horseOwner.openHorseGUI(horseGUI);
+					} else if (guiLocation == GUILocation.SELL_GUI) {
+						horseOwner.openSellGUI(sellGUIManager.createSellGUI(horseGUI));
+					} else if (guiLocation == GUILocation.TRAILS_GUI) {
+						horseOwner.setTrailsGUI(trailGUIManager.setupTrailsGUI(horseGUI));
+						horseOwner.openTrailsGUIPage(horseOwner.getTrailsGUI().getPage(1));
+					} else if (guiLocation == GUILocation.MARKET_GUI) {
+						horseOwner.openMarketGUIPage(marketGUIManager.getPage(1));
+					} else if (guiLocation == GUILocation.YOUR_HORSES_GUI) {
+						if (horseOwner.getYourHorsesGUI() == null || horseOwner.getYourHorsesGUI().getPage(1) == null) {
+							this.marketGUIManager.setupYourHorsesGUI(horseOwner);
+						}
+						horseOwner.openYourHorsesGUIPage(1);
+					}
+
+				} catch (IllegalArgumentException e) {
+					this.messagingUtil.sendMessage(sender, "{PREFIX}&6" + menu + " &7is not a valid menu");
+					return false;
+				}
+
 				return true;
 			}
 		}
