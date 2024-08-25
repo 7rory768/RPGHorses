@@ -384,6 +384,20 @@ public class RPGHorse {
 				} else {
 					horse.addPassenger(p);
 				}
+
+				// Wait to register in XPManager after HorseOwner#currentHorse is updated
+				Bukkit.getScheduler().runTaskLater(RPGHorsesMain.getInstance(), () -> {
+					if (horse == null) return;
+
+					if (RPGHorsesMain.getVersion().getWeight() < 11) {
+						if (horse.getPassenger() != p) return;
+					} else {
+						if (!horse.getPassengers().contains(p)) return;
+					}
+
+					horseOwner.setLastHorseLocation(p.getLocation());
+					RPGHorsesMain.getInstance().getXpManager().addHorseOwner(horseOwner);
+				}, 1L);
 			}
 
 			Bukkit.getPluginManager().callEvent(new RPGHorsePostSpawnEvent(p, this));
