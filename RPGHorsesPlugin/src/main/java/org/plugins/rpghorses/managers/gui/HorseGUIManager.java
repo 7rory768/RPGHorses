@@ -93,10 +93,14 @@ public class HorseGUIManager {
 		
 		Tier tier = rpgHorseManager.getNextTier(rpgHorse);
 		GUIItem guiItem = getGUIItem(ItemPurpose.UPGRADE);
-		inventory.setItem(guiItem.getSlot(), ItemUtil.fillPlaceholders(guiItem.getItem(), "COST", NumberUtil.getCommaString(tier == null ? 0 : (int) tier.getCost()), "HORSE-EXP-NEEDED", NumberUtil.getCommaString(tier == null ? 0 : (int) tier.getExpCost())));
+		if (guiItem != null && guiItem.isEnabled()) {
+			inventory.setItem(guiItem.getSlot(), ItemUtil.fillPlaceholders(guiItem.getItem(), "COST", NumberUtil.getCommaString(tier == null ? 0 : (int) tier.getCost()), "HORSE-EXP-NEEDED", NumberUtil.getCommaString(tier == null ? 0 : (int) tier.getExpCost())));
+		}
 		
 		GUIItem autoMountItem = rpgHorse.getHorseOwner().autoMountOn() ? getGUIItem(ItemPurpose.TOGGLE_AUTOMOUNT_ON) : getGUIItem(ItemPurpose.TOGGLE_AUTOMOUNT_OFF);
-		if (autoMountItem.isEnabled()) inventory.setItem(autoMountItem.getSlot(), autoMountItem.getItem());
+		if (autoMountItem != null && autoMountItem.isEnabled()) {
+			if (autoMountItem.isEnabled()) inventory.setItem(autoMountItem.getSlot(), autoMountItem.getItem());
+		}
 		
 		ItemStack fillItem = getGUIItem(ItemPurpose.FILL).getItem();
 		for (int slot = 0; slot < inventory.getSize(); slot++) {
