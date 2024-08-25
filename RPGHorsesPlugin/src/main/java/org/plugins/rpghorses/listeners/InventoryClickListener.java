@@ -428,15 +428,7 @@ public class InventoryClickListener implements Listener {
 
 			RPGHorse currentHorse = horseOwner.getCurrentHorse();
 			LivingEntity horse = currentHorse != null ? currentHorse.getHorse() : null;
-			boolean isRidingHorse = false;
-
-			if (horse != null) {
-				if (RPGHorsesMain.getVersion().getWeight() < 11) {
-					if (horse.getPassenger().equals(p)) isRidingHorse = true;
-				} else {
-					if (horse.getPassengers().contains(p)) isRidingHorse = true;
-				}
-			}
+			boolean isRidingHorse = horseOwner.isRidingHorse();
 
 			boolean onGround = p.isOnGround() || (isRidingHorse && horse.isOnGround());
 

@@ -88,7 +88,7 @@ public class RPGHorsesAdminCommand implements CommandExecutor {
 				this.horseGUIManager.reload();
 				this.sellGUIManager.reload();
 				this.trailGUIManager.reload();
-				this.horseDespawner.reloadIdleTime();
+				this.horseDespawner.reload();
 				TimeUtil.refreshUnitStrings(this.plugin.getConfig(), "time-options.");
 				this.rpgHorseManager.reload();
 				this.horseCrateManager.loadHorseCrates();

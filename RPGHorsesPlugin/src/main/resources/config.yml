@@ -94,6 +94,8 @@ horse-options:
   horse-jacking: false
   # Should rpg-horses wander around like they normally do?
   allow-wandering: false
+  # Should un-mounted horses de-spawn after their owner moves too far away? (-1 to disable)
+  despawn-when-owner-past-distance: -1
   names:
     # Min name length (does not include color codes)
     min-length: 3

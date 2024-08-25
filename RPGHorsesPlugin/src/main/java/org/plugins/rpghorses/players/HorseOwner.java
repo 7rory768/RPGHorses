@@ -22,7 +22,7 @@ import java.util.UUID;
 @Getter
 @Setter
 public class HorseOwner {
-	
+
 	GUILocation guiLocation = GUILocation.NONE;
 	private UUID uuid;
 	private List<RPGHorse> rpgHorses;
@@ -38,48 +38,48 @@ public class HorseOwner {
 	private TrailsGUI trailsGUI;
 	private TrailsGUIPage trailsGUIPage;
 	private SellGUI sellGUI;
-	
+
 	public HorseOwner(Player p) {
 		this(p.getUniqueId());
 	}
-	
+
 	public HorseOwner(UUID uuid) {
 		this(uuid, new ArrayList<>());
 	}
-	
+
 	public HorseOwner(UUID uuid, List<RPGHorse> rpgHorses) {
 		this.uuid = uuid;
 		this.rpgHorses = rpgHorses;
 	}
-	
+
 	public UUID getUUID() {
 		return uuid;
 	}
-	
+
 	public List<RPGHorse> getRPGHorses() {
 		return this.rpgHorses;
 	}
-	
+
 	public RPGHorse getRPGHorse(int index) {
 		if (index >= 0 && index < this.rpgHorses.size()) {
 			return this.rpgHorses.get(index);
 		}
 		return null;
 	}
-	
+
 	public void addRPGHorse(RPGHorse rpgHorse) {
 		addRPGHorse(rpgHorse, true);
 	}
-	
+
 	public void addRPGHorse(RPGHorse rpgHorse, boolean sql) {
 		this.rpgHorses.add(rpgHorse);
 		rpgHorse.setIndex(rpgHorses.size() - 1);
 		rpgHorse.setHorseOwner(this);
-		
+
 		SQLManager sqlManager = RPGHorsesMain.getInstance().getSQLManager();
 		if (sqlManager != null && sql) sqlManager.addHorse(rpgHorse);
 	}
-	
+
 	public RPGHorse removeRPGHorse(int index) {
 		if (index >= 0 && index < this.rpgHorses.size()) {
 			RPGHorse rpgHorse = this.rpgHorses.get(index);
@@ -88,7 +88,7 @@ public class HorseOwner {
 		}
 		return null;
 	}
-	
+
 	public RPGHorse removeRPGHorse(int index, boolean sqlRemove) {
 		if (index >= 0 && index < this.rpgHorses.size()) {
 			RPGHorse rpgHorse = this.rpgHorses.get(index);
@@ -97,31 +97,31 @@ public class HorseOwner {
 		}
 		return null;
 	}
-	
+
 	public void removeRPGHorse(RPGHorse rpgHorse) {
 		removeRPGHorse(rpgHorse, true);
 	}
-	
-	
+
+
 	public void removeRPGHorse(RPGHorse rpgHorse, boolean sqlRemove) {
 		if (rpgHorse == this.currentHorse) {
 			this.setCurrentHorse(null);
 		}
 		this.rpgHorses.remove(rpgHorse);
-		
+
 		int index = rpgHorse.getIndex();
 		for (RPGHorse otherHorse : rpgHorses) {
 			if (otherHorse.getIndex() > index) {
 				otherHorse.setIndex(otherHorse.getIndex() - 1);
 			}
 		}
-		
+
 		if (sqlRemove) {
 			SQLManager sqlManager = RPGHorsesMain.getInstance().getSQLManager();
 			if (sqlManager != null) sqlManager.removeHorse(rpgHorse);
 		}
 	}
-	
+
 	public boolean setCurrentHorse(RPGHorse rpgHorse) {
 		if (this.currentHorse != rpgHorse) {
 			if (this.currentHorse != null) {
@@ -145,7 +145,7 @@ public class HorseOwner {
 
 				this.currentHorse.despawnEntity();
 			}
-			
+
 			if (rpgHorse != null) {
 				this.stableGUI.addGlow(rpgHorse);
 
@@ -164,7 +164,7 @@ public class HorseOwner {
 
 		return true;
 	}
-	
+
 	public int getHorseNumber(RPGHorse rpgHorse) {
 		for (int i = 0; i < this.rpgHorses.size(); i++) {
 			if (this.rpgHorses.get(i) == rpgHorse) {
@@ -173,12 +173,12 @@ public class HorseOwner {
 		}
 		return -1;
 	}
-	
+
 	public void openStableGUIPage(int pageNum) {
 		StableGUIPage stableGUIPage = this.stableGUI.getPage(pageNum);
 		this.openStableGUIPage(stableGUIPage);
 	}
-	
+
 	public void openStableGUIPage(StableGUIPage stableGUIPage) {
 		if (stableGUIPage != null) {
 			getPlayer().openInventory(stableGUIPage.getGUI());
@@ -186,11 +186,11 @@ public class HorseOwner {
 			this.stableGUIPage = stableGUIPage;
 		}
 	}
-	
+
 	public Player getPlayer() {
 		return Bukkit.getPlayer(uuid);
 	}
-	
+
 	public String getPlayerName() {
 		OfflinePlayer player = getPlayer();
 		if (player != null) {
@@ -203,11 +203,11 @@ public class HorseOwner {
 		}
 		return "";
 	}
-	
+
 	public StableGUI getStableGUI() {
 		return stableGUI;
 	}
-	
+
 	public void setStableGUI(StableGUI stableGUI) {
 		this.stableGUI = stableGUI;
 		if (guiLocation == GUILocation.STABLE_GUI && this.stableGUIPage != null) {
@@ -221,16 +221,16 @@ public class HorseOwner {
 			}
 		}
 	}
-	
+
 	public StableGUIPage getCurrentStableGUIPage() {
 		return this.stableGUIPage;
 	}
-	
+
 	public void openYourHorsesGUIPage(int pageNum) {
 		YourHorsesGUIPage yourHorsesGUIPage = this.yourHorsesGUI.getPage(pageNum);
 		this.openYourHorsesGUIPage(yourHorsesGUIPage);
 	}
-	
+
 	public void openYourHorsesGUIPage(YourHorsesGUIPage yourHorsesGUIPage) {
 		if (yourHorsesGUIPage != null) {
 			getPlayer().openInventory(yourHorsesGUIPage.getGUI());
@@ -238,7 +238,7 @@ public class HorseOwner {
 			this.yourHorsesGUIPage = yourHorsesGUIPage;
 		}
 	}
-	
+
 	public void setYourHorsesGUI(YourHorsesGUI yourHorsesGUI) {
 		this.yourHorsesGUI = yourHorsesGUI;
 		if (guiLocation == GUILocation.YOUR_HORSES_GUI) {
@@ -252,11 +252,11 @@ public class HorseOwner {
 			}
 		}
 	}
-	
+
 	public YourHorsesGUIPage getCurrentYourHorsesGUIPage() {
 		return this.yourHorsesGUIPage;
 	}
-	
+
 	public void openMarketGUIPage(MarketGUIPage marketGUIPage) {
 		if (marketGUIPage != null) {
 			new BukkitRunnable() {
@@ -269,11 +269,11 @@ public class HorseOwner {
 			this.marketGUIPage = marketGUIPage;
 		}
 	}
-	
+
 	public MarketGUIPage getCurrentMarketGUIPage() {
 		return marketGUIPage;
 	}
-	
+
 	public void openHorseGUI(HorseGUI horseGUI) {
 		this.horseGUI = horseGUI;
 		getPlayer().openInventory(horseGUI.getInventory());
@@ -307,20 +307,35 @@ public class HorseOwner {
 		getPlayer().openInventory(sellGUI.getInventory());
 		setGUILocation(GUILocation.SELL_GUI);
 	}
-	
+
 	public GUILocation getGUILocation() {
 		return guiLocation;
 	}
-	
+
 	public void setGUILocation(GUILocation guiLocation) {
 		this.guiLocation = guiLocation;
 	}
-	
+
 	public boolean isInGUI(GUILocation guiLocation) {
 		return guiLocation == this.guiLocation;
 	}
-	
+
 	public boolean autoMountOn() {
 		return autoMount;
+	}
+
+	public boolean isRidingHorse() {
+		if (currentHorse == null) return false;
+		if (currentHorse.getHorse() == null) return false;
+
+		Player p = getPlayer();
+		if (p == null) return false;
+
+		LivingEntity horse = currentHorse.getHorse();
+		if (RPGHorsesMain.getVersion().getWeight() < 11) {
+			return horse.getPassenger().equals(p);
+		} else {
+			return horse.getPassengers().contains(p);
+		}
 	}
 }

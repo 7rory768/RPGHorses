@@ -11,36 +11,38 @@ import org.plugins.rpghorses.horses.RPGHorse;
 import org.plugins.rpghorses.players.HorseOwner;
 
 public class HorseDespawner {
-	
+
 	private final RPGHorsesMain plugin;
 	private final HorseOwnerManager horseOwnerManager;
 	private final RPGHorseManager rpgHorseManager;
-	
+
 	private int idleTime = 5;
-	private BukkitTask idleHorseTask;
-	
+	private int despawnWhenOwnerPastDistance = -1;
+	private BukkitTask despawnTask;
+
 	public HorseDespawner(RPGHorsesMain plugin, HorseOwnerManager horseOwnerManager, RPGHorseManager rpgHorseManager) {
 		this.plugin = plugin;
 		this.horseOwnerManager = horseOwnerManager;
 		this.rpgHorseManager = rpgHorseManager;
-		
+
 		if (plugin.getConfig().getBoolean("horse-options.prevent-regular-horses")) {
 			this.despawnAllHorses();
 		} else {
 			this.despawnAllRPGHorses();
 		}
-		this.reloadIdleTime();
+		this.reload();
 	}
-	
-	public void reloadIdleTime() {
+
+	public void reload() {
 		int oldIdleTime = this.idleTime;
 		this.idleTime = this.plugin.getConfig().getInt("horse-options.idle-time");
-		
+		this.despawnWhenOwnerPastDistance = this.plugin.getConfig().getInt("horse-options.despawn-when-owner-past-distance");
+
 		if (this.idleTime != oldIdleTime) {
-			this.startIdleHorseTask();
+			this.startDespawnTask();
 		}
 	}
-	
+
 	public void despawnAllRPGHorses() {
 		int horsesDespawned = 0;
 		for (HorseOwner horseOwner : this.horseOwnerManager.getHorseOwners().values()) {
@@ -52,7 +54,7 @@ public class HorseDespawner {
 		}
 		Bukkit.getLogger().info("[RPGHorses] Despawned " + horsesDespawned + " horses");
 	}
-	
+
 	public void despawnAllHorses() {
 		int horsesDespawned = 0;
 		for (World world : Bukkit.getWorlds()) {
@@ -65,40 +67,59 @@ public class HorseDespawner {
 		}
 		Bukkit.getLogger().info("[RPGHorses] Despawned " + horsesDespawned + " horses");
 	}
-	
-	public void startIdleHorseTask() {
-		this.cancelIdleHorseTask();
-		
+
+	public void startDespawnTask() {
+		this.cancelDespawnTask();
+
 		final HorseDespawner horseDespawner = this;
-		this.idleHorseTask = new BukkitRunnable() {
+		this.despawnTask = new BukkitRunnable() {
 			@Override
 			public void run() {
-				for (HorseOwner horseOwner : horseDespawner.horseOwnerManager.getHorseOwners().values()) {
+				for (HorseOwner horseOwner : horseOwnerManager.getHorseOwners().values()) {
 					RPGHorse currentHorse = horseOwner.getCurrentHorse();
-					if (currentHorse != null) {
-						Location currentLocation = currentHorse.getHorse().getLocation();
-						Location lastLocation = currentHorse.getLastLocation();
-						
-						if (lastLocation == null || !lastLocation.getWorld().getName().equalsIgnoreCase(currentLocation.getWorld().getName()) || lastLocation.distanceSquared(currentLocation) > 1) {
-							currentHorse.setLastMoveTime(System.currentTimeMillis());
-							currentHorse.setLastLocation(currentLocation);
-						} else if (System.currentTimeMillis() - currentHorse.getLastMoveTime() >= (idleTime * 1000L)) {
+					if (currentHorse == null) return;
+
+					if (currentHorse.getHorse() == null || !currentHorse.getHorse().isValid()) {
+						horseOwner.setCurrentHorse(null);
+						continue;
+					}
+
+					Location currentLocation = currentHorse.getHorse().getLocation();
+					Location lastLocation = currentHorse.getLastLocation();
+
+					boolean isRidingHorse = horseOwner.isRidingHorse();
+
+					if (!isRidingHorse && despawnWhenOwnerPastDistance >= 0) {
+						Location ownerLocation = horseOwner.getPlayer().getLocation();
+						if (!ownerLocation.getWorld().getUID().equals(currentLocation.getWorld().getUID()) || ownerLocation.distance(currentLocation) > despawnWhenOwnerPastDistance) {
 							Bukkit.getScheduler().runTask(plugin, () -> {
 								currentHorse.despawnEntity();
 								horseOwner.setCurrentHorse(null);
 							});
+							continue;
 						}
+					}
+
+					if (lastLocation == null || !lastLocation.getWorld().getName().equalsIgnoreCase(currentLocation.getWorld().getName()) || lastLocation.distanceSquared(currentLocation) > 1) {
+						currentHorse.setLastMoveTime(System.currentTimeMillis());
+						currentHorse.setLastLocation(currentLocation);
+					} else if (System.currentTimeMillis() - currentHorse.getLastMoveTime() >= (idleTime * 1000L)) {
+						Bukkit.getScheduler().runTask(plugin, () -> {
+							currentHorse.despawnEntity();
+							horseOwner.setCurrentHorse(null);
+						});
+						continue;
 					}
 				}
 			}
 		}.runTaskTimerAsynchronously(this.plugin, 0, 20L);
 	}
-	
-	public void cancelIdleHorseTask() {
-		if (this.idleHorseTask != null) {
-			this.idleHorseTask.cancel();
-			this.idleHorseTask = null;
+
+	public void cancelDespawnTask() {
+		if (this.despawnTask != null) {
+			this.despawnTask.cancel();
+			this.despawnTask = null;
 		}
 	}
-	
+
 }

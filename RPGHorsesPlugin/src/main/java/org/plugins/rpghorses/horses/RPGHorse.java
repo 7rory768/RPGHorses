@@ -356,10 +356,10 @@ public class RPGHorse {
 	}
 
 	public void despawnEntity() {
-		RPGHorseDespawnEvent despawnEvent = new RPGHorseDespawnEvent(horseOwner.getPlayer(), horse);
-		Bukkit.getPluginManager().callEvent(despawnEvent);
-
 		if (this.horse != null) {
+			RPGHorseDespawnEvent despawnEvent = new RPGHorseDespawnEvent(horseOwner.getPlayer(), horse);
+			Bukkit.getPluginManager().callEvent(despawnEvent);
+
 			this.loadItems();
 			this.loadHealth();
 			this.horse.remove();
