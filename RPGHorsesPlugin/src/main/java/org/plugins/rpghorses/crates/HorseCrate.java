@@ -1,96 +1,96 @@
 package org.plugins.rpghorses.crates;
 
-import org.bukkit.entity.EntityType;
-import org.bukkit.entity.Horse;
+import lombok.Getter;
+import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
-import org.plugins.rpghorses.RPGHorsesMain;
 import org.plugins.rpghorses.horseinfo.AbstractHorseInfo;
-import org.plugins.rpghorses.horseinfo.HorseInfo;
-import org.plugins.rpghorses.horseinfo.LegacyHorseInfo;
 import org.plugins.rpghorses.horses.RPGHorse;
-import org.plugins.rpghorses.managers.RPGHorseManager;
 import org.plugins.rpghorses.players.HorseOwner;
+import org.plugins.rpghorses.tiers.Tier;
 import org.plugins.rpghorses.utils.ItemUtil;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Random;
-import java.util.Set;
+import java.math.BigDecimal;
+import java.util.*;
 
+@Getter
 public class HorseCrate {
-	
-	private String name;
-	private double price;
-	private Set<ItemStack> itemsNeeded;
-	private double minHealth, maxHealth, minMovementSpeed, maxMovementSpeed, minJumpStrength, maxJumpStrength;
-	private AbstractHorseInfo horseInfo;
-	private int tier;
-	
-	public HorseCrate(String name, double price, Set<ItemStack> itemsNeeded, double minHealth, double maxHealth, double minMovementSpeed, double maxMovementSpeed, double minJumpStrength, double maxJumpStrength, AbstractHorseInfo horseInfo, int tier) {
+
+	private final String name;
+	private final double price;
+	private final Set<ItemStack> itemsNeeded;
+	private final double minHealth, maxHealth, minMovementSpeed, maxMovementSpeed, minJumpStrength, maxJumpStrength;
+	private final AbstractHorseInfo horseInfo;
+	private final int tier;
+	private final List<Tier> upgradeTiers = new ArrayList<>();
+
+	public HorseCrate(String name, ConfigurationSection config) {
 		this.name = name;
-		this.price = price;
-		this.itemsNeeded = itemsNeeded;
-		this.minHealth = minHealth;
-		this.maxHealth = maxHealth;
-		this.minMovementSpeed = minMovementSpeed;
-		this.maxMovementSpeed = maxMovementSpeed;
-		this.minJumpStrength = minJumpStrength;
-		this.maxJumpStrength = maxJumpStrength;
-		this.horseInfo = horseInfo;
-		this.tier = tier;
+
+		this.price = config.getDouble("price");
+
+		this.itemsNeeded = new HashSet<>();
+
+		if (config.isSet("items-needed") && config.getConfigurationSection("items-needed") != null) {
+			for (String itemName : config.getConfigurationSection("items-needed").getKeys(false)) {
+				itemsNeeded.add(ItemUtil.getItemStack(config, "items-needed." + itemName));
+			}
+		}
+
+		upgradeTiers.clear();
+
+		for (String tierStr : config.getConfigurationSection("upgrade-tiers").getKeys(false)) {
+			Tier tier = new Tier(config.getConfigurationSection("upgrade-tiers." + tierStr), Integer.parseInt(tierStr));
+			upgradeTiers.add(tier);
+		}
+
+		config = config.getConfigurationSection("horse-info");
+
+		double[] healthValues = this.getMinAndMaxValues(config.getString("health"));
+		this.minHealth = healthValues[0];
+		this.maxHealth = healthValues[1];
+		double[] movementSpeedValues = this.getMinAndMaxValues(config.getString("movement-speed"));
+		this.minMovementSpeed = movementSpeedValues[0];
+		this.maxMovementSpeed = movementSpeedValues[1];
+		double[] jumpStrengthValues = this.getMinAndMaxValues(config.getString("jump-strength"));
+		this.minJumpStrength = jumpStrengthValues[0];
+		this.maxJumpStrength = jumpStrengthValues[1];
+		this.tier = config.getInt("tier");
+		this.horseInfo = AbstractHorseInfo.loadFromConfig(config);
 	}
-	
+
+	private double[] getMinAndMaxValues(String info) {
+		double[] values = new double[2];
+		values[0] = 0;
+		values[1] = 0;
+		if (info == null) return values;
+		int index = info.indexOf("-");
+		if (index > -1) {
+			double min = Double.parseDouble(info.substring(0, index).trim());
+			values[0] = min;
+			double max = Double.parseDouble(info.substring(index + 1).trim());
+			values[1] = max;
+		}
+		return values;
+	}
+
 	public RPGHorse getRPGHorse(HorseOwner horseOwner) {
 		Random random = new Random();
 		double health = random.nextDouble() * (this.maxHealth - this.minHealth) + this.minHealth;
 		double movementSpeed = random.nextDouble() * (this.maxMovementSpeed - this.minMovementSpeed) + this.minMovementSpeed;
 		double jumpStrength = random.nextDouble() * (this.maxJumpStrength - this.minJumpStrength) + this.minJumpStrength;
-		AbstractHorseInfo abstractHorseInfo;
-		Horse.Color color = horseInfo.getColor() == null ? Horse.Color.values()[random.nextInt(Horse.Color.values().length)] : horseInfo.getColor();
-		Horse.Style style = horseInfo.getStyle() == null ? Horse.Style.values()[random.nextInt(Horse.Style.values().length)] : horseInfo.getStyle();
-		
-		if (RPGHorsesMain.getVersion().getWeight() < 11) {
-			Horse.Variant variant = ((LegacyHorseInfo) horseInfo).getVariant();
-			if (variant == null) {
-				String[] variants = RPGHorsesMain.getInstance().getRpgHorseManager().getVariantTypesList().split(", ");
-				variant = Horse.Variant.valueOf(variants[random.nextInt(variants.length)]);
-			}
-			abstractHorseInfo = new LegacyHorseInfo(style, color, variant);
-		} else {
-			EntityType type = horseInfo.getEntityType();
-			if (type == null) {
-				RPGHorseManager rpgHorseManager = RPGHorsesMain.getInstance().getRpgHorseManager();
-				if (rpgHorseManager != null) {
-					String[] entityTypes = rpgHorseManager.getEntityTypesList().replace("LLAMA", "HORSE").split(", ");
-					type = EntityType.valueOf(entityTypes[random.nextInt(entityTypes.length)]);
-				} else {
-					type = EntityType.HORSE;
-				}
-			}
-			abstractHorseInfo = new HorseInfo(type, style, color);
-		}
-		return new RPGHorse(horseOwner, this.tier, 0, null, health, health, movementSpeed, jumpStrength, abstractHorseInfo, false, null);
+
+		AbstractHorseInfo abstractHorseInfo = horseInfo.populateNewRandomInfo();
+
+		return new RPGHorse(horseOwner, this.name, this.tier, 0, null, health, health, movementSpeed, jumpStrength, abstractHorseInfo, false, null);
 	}
-	
-	public String getName() {
-		return name;
-	}
-	
-	public double getPrice() {
-		return price;
-	}
-	
-	public Set<ItemStack> getItemsNeeded() {
-		return itemsNeeded;
-	}
-	
+
 	public Map<ItemStack, Integer> getMissingItems(Player p) {
 		Inventory inv = p.getInventory();
 		Set<ItemStack> itemsNeeded = this.getItemsNeeded();
 		Map<ItemStack, Integer> amountMissing = new HashMap<>();
-		
+
 		for (ItemStack itemNeeded : itemsNeeded) {
 			int amount = 0, amountNeeded = itemNeeded.getAmount();
 			for (ItemStack item : inv.getContents()) {
@@ -98,10 +98,10 @@ public class HorseCrate {
 					amount += item.getAmount();
 				}
 			}
-			
+
 			if (amount < amountNeeded) amountMissing.put(itemNeeded, amountNeeded - amount);
 		}
-		
+
 		return amountMissing;
 	}
 }

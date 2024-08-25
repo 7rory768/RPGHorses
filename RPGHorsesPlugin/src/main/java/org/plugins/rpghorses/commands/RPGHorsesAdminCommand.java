@@ -20,6 +20,7 @@ import org.plugins.rpghorses.horses.RPGHorse;
 import org.plugins.rpghorses.managers.*;
 import org.plugins.rpghorses.managers.gui.*;
 import org.plugins.rpghorses.players.HorseOwner;
+import org.plugins.rpghorses.tiers.Tier;
 import org.plugins.rpghorses.utils.RPGMessagingUtil;
 import roryslibrary.util.*;
 
@@ -215,9 +216,9 @@ public class RPGHorsesAdminCommand implements CommandExecutor {
 					HorseOwner horseOwner = this.horseOwnerManager.getHorseOwner(p);
 					
 					if (plugin.getVersion().getWeight() < 11) {
-						rpgHorse = new RPGHorse(horseOwner, 1, 0, this.plugin.getConfig().getString("horse-options.default-name").replace("{PLAYER}", p.getName()), health, health, movementSpeed, jumpStrength, new LegacyHorseInfo(style, color, variant), false, null);
+						rpgHorse = new RPGHorse(horseOwner, null, 1, 0, this.plugin.getConfig().getString("horse-options.default-name").replace("{PLAYER}", p.getName()), health, health, movementSpeed, jumpStrength, new LegacyHorseInfo(style, color, variant), false, null);
 					} else {
-						rpgHorse = new RPGHorse(horseOwner, 1, 0, this.plugin.getConfig().getString("horse-options.default-name").replace("{PLAYER}", p.getName()), health, health, movementSpeed, jumpStrength, new HorseInfo(type, style, color), false, null);
+						rpgHorse = new RPGHorse(horseOwner, null, 1, 0, this.plugin.getConfig().getString("horse-options.default-name").replace("{PLAYER}", p.getName()), health, health, movementSpeed, jumpStrength, new HorseInfo(type, style, color), false, null);
 					}
 				}
 				
@@ -370,18 +371,20 @@ public class RPGHorsesAdminCommand implements CommandExecutor {
 				
 				HorseOwner horseOwner = this.horseOwnerManager.getHorseOwner(p);
 				RPGHorse rpgHorse = horseOwner.getRPGHorse(Integer.valueOf(horseNumberArg) - 1);
-				int tier = rpgHorse.getTier();
-				if (tier >= this.rpgHorseManager.getMaxTier()) {
+
+				Tier tier = rpgHorseManager.getNextTier(rpgHorse);
+
+				if (tier == null) {
 					this.messagingUtil.sendMessage(sender, this.plugin.getConfig().getString("messages.max-horse-tier").replace("{PLAYER}", p.getName()).replace("{HORSE-NUMBER}", horseNumberArg), rpgHorse);
 					return false;
 				}
-				
-				rpgHorse.setMovementSpeed(rpgHorse.getMovementSpeed() * this.plugin.getConfig().getDouble("horse-tiers." + tier + ".movement-speed-multiplier"));
-				rpgHorse.setJumpStrength(rpgHorse.getJumpStrength() * this.plugin.getConfig().getDouble("horse-tiers." + tier + ".jump-strength-multiplier"));
-				rpgHorse.setTier(++tier);
+
+				tier.applyUpgrade(rpgHorse);
 				
 				String message = this.messagingUtil.placeholders(this.plugin.getConfig().getString("messages.your-horse-was-upgraded").replace("{PLAYER}", sender.getName()).replace("{HORSE-NUMBER}", horseNumberArg).replace("{TIER}", "" + tier), rpgHorse);
+
 				if (p.isOnline()) {
+					tier.runCommands(p.getPlayer());
 					this.messagingUtil.sendMessage(p.getPlayer(), message);
 					this.stableGuiManager.updateRPGHorse(rpgHorse);
 				} else {

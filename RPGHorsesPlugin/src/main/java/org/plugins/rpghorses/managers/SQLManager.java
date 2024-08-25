@@ -21,10 +21,10 @@ import org.plugins.rpghorses.horses.MarketHorse;
 import org.plugins.rpghorses.horses.RPGHorse;
 import org.plugins.rpghorses.players.HorseOwner;
 import org.plugins.rpghorses.utils.BukkitSerialization;
+import org.plugins.rpghorses.utils.ItemUtil;
 import org.plugins.rpghorses.utils.MessageType;
 import roryslibrary.configs.PlayerConfigs;
 import roryslibrary.util.DebugUtil;
-import org.plugins.rpghorses.utils.ItemUtil;
 
 import java.io.*;
 import java.sql.Connection;
@@ -116,9 +116,11 @@ public class SQLManager extends roryslibrary.managers.SQLManager implements Plug
 
 	public void createHorseTable() {
 		try (Connection con = getConnection()) {
-			execute(con, "CREATE TABLE IF NOT EXISTS " + HORSE_TABLE + " (id INTEGER NOT NULL, owner VARCHAR(36) NOT NULL, name VARCHAR(64) NOT NULL, tier INTEGER DEFAULT 1, xp DOUBLE DEFAULT 0, health DOUBLE NOT NULL, max_health DOUBLE DEFAULT 20, movement_speed DOUBLE NOT NULL, jump_strength DOUBLE NOT NULL, color VARCHAR(16), style VARCHAR(16), type VARCHAR(32), variant VARCHAR(32), death_time BIGINT DEFAULT 0, in_market BOOLEAN DEFAULT 0, particle VARCHAR(32), items TEXT);");
+			execute(con, "CREATE TABLE IF NOT EXISTS " + HORSE_TABLE + " (id INTEGER NOT NULL, owner VARCHAR(36) NOT NULL, source_crate VARCHAR(64) NOT NULL, name VARCHAR(64) NOT NULL, tier INTEGER DEFAULT 1, xp DOUBLE DEFAULT 0, health DOUBLE NOT NULL, max_health DOUBLE DEFAULT 20, movement_speed DOUBLE NOT NULL, jump_strength DOUBLE NOT NULL, color VARCHAR(16), style VARCHAR(16), type VARCHAR(32), variant VARCHAR(32), death_time BIGINT DEFAULT 0, in_market BOOLEAN DEFAULT 0, particle VARCHAR(32), items TEXT);");
 
 			execute(con, "ALTER TABLE `" + HORSE_TABLE + "` ADD COLUMN IF NOT EXISTS `max_health` DOUBLE DEFAULT 20 AFTER health;");
+
+			execute(con, "ALTER TABLE `" + HORSE_TABLE + "` ADD COLUMN IF NOT EXISTS `source_crate` VARCHAR(64) DEFAULT NULL AFTER owner;");
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
@@ -526,6 +528,7 @@ public class SQLManager extends roryslibrary.managers.SQLManager implements Plug
 
 	private RPGHorse loadHorseFromSQL(UUID uuid, HorseOwner horseOwner, ResultSet set, int index) throws SQLException {
 		String name = set.getString("name");
+		String sourceCrate = set.getString("source_crate");
 		int tier = set.getInt("tier");
 		double xp = set.getDouble("xp");
 		double health = set.getDouble("health");
@@ -602,7 +605,7 @@ public class SQLManager extends roryslibrary.managers.SQLManager implements Plug
 			}
 		}
 
-		RPGHorse rpgHorse = new RPGHorse(horseOwner, tier, xp, name, health, maxHealth, movementSpeed, jumpStrength, horseInfo, inMarket, particle, items);
+		RPGHorse rpgHorse = new RPGHorse(horseOwner, sourceCrate, tier, xp, name, health, maxHealth, movementSpeed, jumpStrength, horseInfo, inMarket, particle, items);
 
 		if (isDead) {
 			rpgHorse.setDead(true);

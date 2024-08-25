@@ -70,6 +70,7 @@ public class HorseOwnerManager {
 			if (config.getConfigurationSection("rpghorses") != null) {
 				for (String horseIndex : config.getConfigurationSection("rpghorses").getKeys(false)) {
 					String path = "rpghorses." + horseIndex + ".";
+					String sourceCrate = config.getString(path + "source-crate", null);
 					String name = config.getString(path + "name");
 					int tier = config.getInt(path + "tier");
 					double xp = config.getDouble(path + "xp");
@@ -131,7 +132,7 @@ public class HorseOwnerManager {
 						((LegacyHorseInfo) horseInfo).setEffect(effect);
 					}
 
-					RPGHorse rpgHorse = new RPGHorse(horseOwner, tier, xp, name, health, maxHealth, movementSpeed, jumpStrength, horseInfo, inMarket, particle, items);
+					RPGHorse rpgHorse = new RPGHorse(horseOwner, sourceCrate, tier, xp, name, health, maxHealth, movementSpeed, jumpStrength, horseInfo, inMarket, particle, items);
 
 					if (isDead) {
 						rpgHorse.setDead(true);
@@ -187,6 +188,7 @@ public class HorseOwnerManager {
 			for (RPGHorse rpgHorse : horseOwner.getRPGHorses()) {
 				String path = "rpghorses." + ++count + ".";
 				config.set(path + "name", rpgHorse.getName());
+				config.set(path + "source-crate", rpgHorse.getSourceCrate());
 				config.set(path + "tier", rpgHorse.getTier());
 				config.set(path + "xp", rpgHorse.getXp());
 				config.set(path + "health", rpgHorse.getHealth());

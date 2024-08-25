@@ -287,7 +287,7 @@ public class StableGUIManager {
 				cooldownTime = TimeUtil.formatTime(this.getDeathDifferent(rpgHorse) / 1000L);
 			}
 			
-			NumberFormat formatter = new DecimalFormat("#0.0##");
+			NumberFormat formatter = new DecimalFormat("#0.###");
 			String xpBar = messagingUtil.getProgressBar(rpgHorse.getXp(), rpgHorseManager.getXPNeededToUpgrade(rpgHorse), progressBarCount, completedColor, missingColor, progressBarChar);
 			String name = rpgHorse.getName(), tier = "" + rpgHorse.getTier(), movementSpeed = formatter.format(rpgHorse.getMovementSpeed()), jumpStrength = formatter.format(rpgHorse.getJumpStrength()), health = formatter.format(rpgHorse.getHealth()), maxHealth = formatter.format(rpgHorse.getMaxHealth());
 			

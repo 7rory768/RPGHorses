@@ -122,10 +122,6 @@ public class HorseOwner {
 		}
 	}
 	
-	public RPGHorse getCurrentHorse() {
-		return currentHorse;
-	}
-	
 	public boolean setCurrentHorse(RPGHorse rpgHorse) {
 		if (this.currentHorse != rpgHorse) {
 			if (this.currentHorse != null) {
@@ -153,7 +149,7 @@ public class HorseOwner {
 			if (rpgHorse != null) {
 				this.stableGUI.addGlow(rpgHorse);
 
-				if (this.currentHorse.spawnEntity()) {
+				if (rpgHorse.spawnEntity()) {
 					this.currentHorse = rpgHorse;
 					return true;
 				} else {

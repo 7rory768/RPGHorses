@@ -40,28 +40,24 @@ TODO:
  - Change it so admins can go into other players stables/horse guis
  */
 
+@Getter
 public class RPGHorsesMain extends JavaPlugin {
 
 	private static RPGHorsesMain plugin;
 	@Getter
 	private static Version version;
+	@Getter
 	private static NMS NMS;
 
-	@Getter
 	private ExecutorService executorService;
 	private RPGHorseManager rpgHorseManager;
 	private CustomConfig marketConfig;
-	@Getter
 	private PlayerConfigs playerConfigs;
 	private ItemUtil itemUtil;
-	@Getter
 	private RPGMessagingUtil messagingUtil;
 	private HorseDespawner horseDespawner;
-	@Getter
 	private HorseOwnerManager horseOwnerManager;
-	@Getter
 	private StableGUIManager stableGuiManager;
-	@Getter
 	private MarketGUIManager marketGUIManager;
 	private HorseGUIManager horseGUIManager;
 	private TrailGUIManager trailGUIManager;
@@ -72,23 +68,13 @@ public class RPGHorsesMain extends JavaPlugin {
 	private SQLManager sqlManager;
 	private UpdateNotifier updateNotifier;
 	private MessageQueuer messageQueuer;
-	@Getter
 	private Permission permissions;
-	@Getter
 	private Economy economy;
 
 	private Map<String, String> helpMessages = new LinkedHashMap<>();
 
-	public static NMS getNMS() {
-		return NMS;
-	}
-
 	public static RPGHorsesMain getInstance() {
 		return plugin;
-	}
-
-	public RPGHorseManager getRpgHorseManager() {
-		return rpgHorseManager;
 	}
 
 	public SQLManager getSQLManager() {
@@ -681,9 +667,5 @@ public class RPGHorsesMain extends JavaPlugin {
 				this.messagingUtil.sendMessage(sender, line.replace("horses", horsesReplace).replace("rpg", rpgReplace).replace("{LABEL}", label));
 			}
 		}
-	}
-
-	public Map<String, String> getHelpMessages() {
-		return helpMessages;
 	}
 }

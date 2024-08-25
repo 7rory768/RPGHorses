@@ -23,30 +23,29 @@ import roryslibrary.util.MessagingUtil;
 
 import java.util.HashMap;
 
+@Getter
+@Setter
 public class RPGHorse {
 
-	private HorseOwner   horseOwner;
-	private String       name;
+	private HorseOwner horseOwner;
+	private String sourceCrate;
+	private String name;
 	private LivingEntity horse;
-	private int          tier = 1;
-	private double       xp   = 0, health = 0, maxHealth = 20, movementSpeed = 1.0, jumpStrength = 1.0;
-	private AbstractHorseInfo           horseInfo;
+	private int tier = 1;
+	private double xp = 0, health = 0, maxHealth = 20, movementSpeed = 1.0, jumpStrength = 1.0;
+	private AbstractHorseInfo horseInfo;
 	private HashMap<Integer, ItemStack> items = new HashMap<>();
-	private boolean                     dead, inMarket, gainedXP;
-	private Long     deathTime;
+	private boolean dead, inMarket, gainedXP;
+	private Long deathTime;
 	private Particle particle;
-	@Getter
-	@Setter
-	private int      index = -1;
-	@Getter
-	@Setter
-	private Location lastLocation;
-	@Getter
-	@Setter
-	private long     lastMoveTime;
 
-	public RPGHorse(HorseOwner horseOwner, int tier, double xp, String name, double health, double maxHealth, double movementSpeed, double jumpStrength, AbstractHorseInfo horseInfo, boolean inMarket, Particle particle) {
+	private int index = -1;
+	private Location lastLocation;
+	private long lastMoveTime;
+
+	public RPGHorse(HorseOwner horseOwner, String sourceCrate, int tier, double xp, String name, double health, double maxHealth, double movementSpeed, double jumpStrength, AbstractHorseInfo horseInfo, boolean inMarket, Particle particle) {
 		this.horseOwner = horseOwner;
+		this.sourceCrate = sourceCrate;
 		this.horseInfo = horseInfo;
 		this.setName(name);
 		this.setTier(tier);
@@ -61,8 +60,8 @@ public class RPGHorse {
 		setItems(this.items);
 	}
 
-	public RPGHorse(HorseOwner horseOwner, int tier, double xp, String name, double health, double maxHealth, double movementSpeed, double jumpStrength, AbstractHorseInfo horseInfo, boolean inMarket, Particle particle, HashMap<Integer, ItemStack> items) {
-		this(horseOwner, tier, xp, name, health, maxHealth, movementSpeed, jumpStrength, horseInfo, inMarket, particle);
+	public RPGHorse(HorseOwner horseOwner, String sourceCrate, int tier, double xp, String name, double health, double maxHealth, double movementSpeed, double jumpStrength, AbstractHorseInfo horseInfo, boolean inMarket, Particle particle, HashMap<Integer, ItemStack> items) {
+		this(horseOwner, sourceCrate, tier, xp, name, health, maxHealth, movementSpeed, jumpStrength, horseInfo, inMarket, particle);
 		if (items != null) {
 			this.setItems(items);
 		}
@@ -70,6 +69,7 @@ public class RPGHorse {
 
 	public RPGHorse(HorseOwner horseOwner, LivingEntity entity, String name) {
 		this.horseOwner = horseOwner;
+		this.sourceCrate = null;
 		this.horseInfo = AbstractHorseInfo.getFromEntity(entity);
 		this.horse = entity;
 		if (RPGHorsesMain.getVersion().getWeight() >= 9) {
@@ -106,28 +106,12 @@ public class RPGHorse {
 		}
 	}
 
-	public LivingEntity getHorse() {
-		return horse;
-	}
-
-	public int getTier() {
-		return tier;
-	}
-
 	public void setTier(int tier) {
 		if (tier > 0 && this.tier != tier) {
 			this.tier = tier;
 			setXp(0);
 			gainedXP = false;
 		}
-	}
-
-	public double getXp() {
-		return xp;
-	}
-
-	public void setXp(double xp) {
-		this.xp = xp;
 	}
 
 	public void increaseXp(double xp) {
@@ -175,18 +159,10 @@ public class RPGHorse {
 		}
 	}
 
-	public double getMaxHealth() {
-		return maxHealth;
-	}
-
 	public void setMaxHealth(double maxHealth) {
 		if (maxHealth > 0) {
 			this.maxHealth = maxHealth;
 		}
-	}
-
-	public double getMovementSpeed() {
-		return this.movementSpeed;
 	}
 
 	public void setMovementSpeed(double newSpeed) {
@@ -198,10 +174,6 @@ public class RPGHorse {
 				}
 			}
 		}
-	}
-
-	public double getJumpStrength() {
-		return this.jumpStrength;
 	}
 
 	public void setJumpStrength(double jumpStrength) {
@@ -217,20 +189,12 @@ public class RPGHorse {
 		}
 	}
 
-	public AbstractHorseInfo getHorseInfo() {
-		return horseInfo;
-	}
-
 	public Horse.Style getStyle() {
 		return this.horseInfo.getStyle();
 	}
 
 	public void setStyle(Horse.Style style) {
 		this.horseInfo.setStyle(style);
-	}
-
-	public HashMap<Integer, ItemStack> getItems() {
-		return items;
 	}
 
 	public void setItems(HashMap<Integer, ItemStack> items) {
@@ -241,10 +205,6 @@ public class RPGHorse {
 				inventory.setItem(slot, items.get(slot));
 			}
 		}
-	}
-
-	public boolean isDead() {
-		return dead;
 	}
 
 	public void setDead(boolean dead) {
@@ -264,36 +224,8 @@ public class RPGHorse {
 		return gainedXP;
 	}
 
-	public void setGainedXP(boolean gainedXP) {
-		this.gainedXP = gainedXP;
-	}
-
-	public Long getDeathTime() {
-		return deathTime;
-	}
-
-	public void setDeathTime(Long deathTime) {
-		this.deathTime = deathTime;
-	}
-
 	public void refreshDeathTime() {
 		this.deathTime = System.currentTimeMillis();
-	}
-
-	public boolean isInMarket() {
-		return inMarket;
-	}
-
-	public void setInMarket(boolean inMarket) {
-		this.inMarket = inMarket;
-	}
-
-	public Particle getParticle() {
-		return this.particle;
-	}
-
-	public void setParticle(Particle particle) {
-		this.particle = particle;
 	}
 
 	public boolean spawnEntity() {
@@ -358,7 +290,7 @@ public class RPGHorse {
 				ChestedHorse chestedHorse = (ChestedHorse) this.horse;
 				chestedHorse.setCarryingChest(true);
 			} else if (this.getEntityType() == EntityType.LLAMA) {
-				Llama       llama = (Llama) horse;
+				Llama llama = (Llama) horse;
 				Llama.Color color = Llama.Color.WHITE;
 				try {
 					color = Llama.Color.valueOf(getColor().name());
@@ -369,7 +301,7 @@ public class RPGHorse {
 
 			setItems(items);
 
-			Inventory inventory      = ((InventoryHolder) horse).getInventory();
+			Inventory inventory = ((InventoryHolder) horse).getInventory();
 			ItemStack saddleSlotItem = inventory.getItem(0);
 			if (saddleSlotItem == null) {
 				inventory.setItem(0, new ItemStack(Material.SADDLE));
@@ -464,14 +396,6 @@ public class RPGHorse {
         Bukkit.getLogger().info("color equals? " + (this.color == rpgHorse.color));
         Bukkit.getLogger().info("horseOwner uuid equals? " + (this.horseOwner.getUUID().equals(rpgHorse.getHorseOwner().getUUID())));*/
 		return this.tier == rpgHorse.tier && this.health == rpgHorse.health && this.maxHealth == rpgHorse.maxHealth && this.movementSpeed == rpgHorse.movementSpeed && this.jumpStrength == rpgHorse.jumpStrength && this.horseInfo.equals(rpgHorse.horseInfo) && this.horseOwner.getUUID().equals(rpgHorse.getHorseOwner().getUUID());
-	}
-
-	public HorseOwner getHorseOwner() {
-		return horseOwner;
-	}
-
-	public void setHorseOwner(HorseOwner horseOwner) {
-		this.horseOwner = horseOwner;
 	}
 
 }

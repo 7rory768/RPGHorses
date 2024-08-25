@@ -112,11 +112,17 @@ horse-tiers:
   #
   # Possible keys:
   # health-multiplier, movement-speed-multiplier, jump-strength-multiplier,
+  # health, movement-speed, jump-strength
   # success-chance, cost,exp-cost, items-needed
+  # horse-info
   '1':
     health-multiplier: 1.3
     movement-speed-multiplier: 1.3
     jump-strength-multiplier: 1.3
+    # If multipliers are not set or set to -1, tier will use static upgrade values instead, if set
+    health: -1
+    movement-speed: -1
+    jump-strength: -1
     # Chance that the upgrade will be successful from 0 - 100
     success-chance: 100
     cost: 10000
@@ -126,6 +132,10 @@ horse-tiers:
     commands:
       - CONSOLE:say {PLAYER} upgraded their horse to tier 2
       - PLAYER:me I have just upgraded my horse to tier 2
+    horse-info:
+      type: RANDOM
+      color: RANDOM
+      style: RANDOM
   '2':
     health-multiplier: 1.2
     movement-speed-multiplier: 1.2
@@ -133,6 +143,10 @@ horse-tiers:
     success-chance: 100
     cost: 100000
     exp-cost: 40000
+    horse-info:
+      type: RANDOM
+      color: RANDOM
+      style: RANDOM
   '3':
     health-multiplier: 1.1
     movement-speed-multiplier: 1.1
@@ -145,6 +159,10 @@ horse-tiers:
       diamond:
         material: DIAMOND
         amount: 1
+    horse-info:
+      type: RANDOM
+      color: RANDOM
+      style: RANDOM
 # Since 3 is the last entry here, tier 4 is actually our last tier for horse
 
 # Defines crates that players can buy with /horses buy <crate>
@@ -166,6 +184,20 @@ horse-crates:
       color: RANDOM
       style: RANDOM
       tier: 1
+    # You can now override global tiers with specific upgrade-tiers for crates
+    # (acting like horse presets basically)
+    upgrade-tiers:
+      1: # 1 -> 2
+        health: 40
+        jump-strength: 1.0
+        movement-speed: 0.5
+        cost: 0
+        exp-cost: 10
+        commands: []
+        horse-info:
+          type: RANDOM
+          color: RANDOM
+          style: RANDOM
 
 # Options for the gui opened upon /horses
 stable-options:

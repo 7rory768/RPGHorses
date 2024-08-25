@@ -91,7 +91,7 @@ public class HorseGUIManager {
 		
 		inventory.setItem(ItemUtil.getSlot(plugin.getConfig(), "horse-gui-options.horse-item"), stableGUIManager.fillPlaceholders(stableGUIManager.getHorseItem(rpgHorse), rpgHorse));
 		
-		Tier tier = rpgHorseManager.getTier(rpgHorse.getTier());
+		Tier tier = rpgHorseManager.getNextTier(rpgHorse);
 		GUIItem guiItem = getGUIItem(ItemPurpose.UPGRADE);
 		inventory.setItem(guiItem.getSlot(), ItemUtil.fillPlaceholders(guiItem.getItem(), "COST", NumberUtil.getCommaString(tier == null ? 0 : (int) tier.getCost()), "HORSE-EXP-NEEDED", NumberUtil.getCommaString(tier == null ? 0 : (int) tier.getExpCost())));
 		

@@ -1,5 +1,8 @@
 package org.plugins.rpghorses.managers;
 
+import lombok.Getter;
+import org.bukkit.Bukkit;
+import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
@@ -8,6 +11,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.plugins.rpghorses.RPGHorsesMain;
+import org.plugins.rpghorses.crates.HorseCrate;
 import org.plugins.rpghorses.horses.RPGHorse;
 import org.plugins.rpghorses.players.HorseOwner;
 import org.plugins.rpghorses.players.HorseRenamer;
@@ -17,15 +21,16 @@ import org.plugins.rpghorses.utils.ItemUtil;
 
 import java.util.*;
 
+@Getter
 public class RPGHorseManager {
 
-	private final RPGHorsesMain     plugin;
+	private final RPGHorsesMain plugin;
 	private final HorseOwnerManager horseOwnerManager;
 
-	private final List<EntityType>                       validEntityTypes    = new ArrayList<>();
-	private       HashMap<UUID, RemoveHorseConfirmation> removeConfirmations = new HashMap<>();
-	private       HashMap<UUID, HorseRenamer>            horseRenamers       = new HashMap<>();
-	private       List<Tier>                             tiers               = new ArrayList<>();
+	private final List<EntityType> validEntityTypes = new ArrayList<>();
+	private final HashMap<UUID, RemoveHorseConfirmation> removeConfirmations = new HashMap<>();
+	private final HashMap<UUID, HorseRenamer> horseRenamers = new HashMap<>();
+	private final List<Tier> tiers = new ArrayList<>();
 
 	public RPGHorseManager(RPGHorsesMain plugin, HorseOwnerManager horseOwnerManager) {
 		this.plugin = plugin;
@@ -39,27 +44,12 @@ public class RPGHorseManager {
 		tiers.clear();
 
 		FileConfiguration config = plugin.getConfig();
+		ConfigurationSection tiersConfig = config.getConfigurationSection("horse-tiers");
 
-		for (String tierNum : config.getConfigurationSection("horse-tiers").getKeys(false)) {
-			String path = "horse-tiers." + tierNum + ".";
+		for (String tierNum : tiersConfig.getKeys(false)) {
 			try {
-				int          tier               = Integer.valueOf(tierNum);
-				int          successChance      = config.getInt(path + "success-chance", 100);
-				double       healthMultiplier   = config.getDouble(path + "health-multiplier", 1);
-				double       speedMultiplier    = config.getDouble(path + "movement-speed-multiplier", 1);
-				double       strengthMultiplier = config.getDouble(path + "jump-strength-multiplier", 1);
-				double       cost               = config.getDouble(path + "cost", 0);
-				double       expCost            = config.getDouble(path + "exp-cost", 0);
-				List<String> commands           = config.getStringList(path + "commands");
-
-				Set<ItemStack> itemsNeeded = new HashSet<>();
-				if (config.isSet(path + "items-needed")) {
-					for (String itemName : config.getConfigurationSection(path + "items-needed").getKeys(false)) {
-						itemsNeeded.add(ItemUtil.getItemStack(config, path + "items-needed." + itemName));
-					}
-				}
-
-				tiers.add(new Tier(tier, successChance, healthMultiplier, speedMultiplier, strengthMultiplier, cost, expCost, itemsNeeded, commands));
+				int tier = Integer.valueOf(tierNum);
+				tiers.add(new Tier(tiersConfig.getConfigurationSection(tierNum), tier));
 			} catch (IllegalArgumentException e) {
 				plugin.getLogger().severe("Invalid tier \"" + tierNum + "\", tiers must be positive integers");
 			}
@@ -75,10 +65,6 @@ public class RPGHorseManager {
 			this.validEntityTypes.add(EntityType.LLAMA);
 		}
 		this.validEntityTypes.add(EntityType.HORSE);
-	}
-
-	public int getMaxTier() {
-		return tiers.size() + 1;
 	}
 
 	public boolean isRPGHorse(Entity entity) {
@@ -98,11 +84,40 @@ public class RPGHorseManager {
 	}
 
 	public double getUpgradeCost(RPGHorse rpgHorse) {
-		Tier tier = getTier(rpgHorse.getTier());
+		Tier tier = getNextTier(rpgHorse);
 		return tier == null ? 0 : tier.getCost();
 	}
 
-	public Tier getTier(int tier) {
+	public Tier getMaxTier(RPGHorse rpgHorse) {
+		HorseCrate crate = plugin.getHorseCrateManager().getHorseCrate(rpgHorse.getSourceCrate());
+		if (crate != null && !crate.getUpgradeTiers().isEmpty()) {
+			return crate.getUpgradeTiers().stream().max(Comparator.comparingInt(Tier::getTier)).orElse(null);
+		}
+
+		return tiers.stream().max(Comparator.comparingInt(Tier::getTier)).orElse(null);
+	}
+
+	public Tier getNextTier(RPGHorse rpgHorse) {
+		HorseCrate crate = plugin.getHorseCrateManager().getHorseCrate(rpgHorse.getSourceCrate());
+		if (crate != null && !crate.getUpgradeTiers().isEmpty()) {
+			for (Tier crateTier : crate.getUpgradeTiers()) {
+				if (crateTier.getTier() == rpgHorse.getTier()) {
+					return crateTier;
+				}
+			}
+
+			return null;
+		}
+
+		for (Tier tierO : tiers) {
+			if (tierO.getTier() == rpgHorse.getTier()) return tierO;
+		}
+
+		return null;
+	}
+
+	@Deprecated
+	public Tier getNextTier(int tier) {
 		for (Tier tierO : tiers) {
 			if (tierO.getTier() == tier) return tierO;
 		}
@@ -111,18 +126,18 @@ public class RPGHorseManager {
 	}
 
 	public double getXPNeededToUpgrade(RPGHorse rpgHorse) {
-		Tier tier = getTier(rpgHorse.getTier());
+		Tier tier = getNextTier(rpgHorse);
 		return tier == null ? 0 : tier.getExpCost();
 	}
 
 	public boolean upgradeHorse(Player p, RPGHorse rpgHorse) {
-		Tier tier = getTier(rpgHorse.getTier());
+		Tier tier = getNextTier(rpgHorse);
 		if (tier != null) {
 
 			if (plugin.getEconomy() != null && tier.getCost() > 0)
 				plugin.getEconomy().withdrawPlayer(p, tier.getCost());
 
-			Inventory      inv         = p.getInventory();
+			Inventory inv = p.getInventory();
 			Set<ItemStack> itemsNeeded = tier.getItemsNeeded();
 
 			if (!getMissingItems(p, tier).isEmpty()) return false;
@@ -152,22 +167,14 @@ public class RPGHorseManager {
 			double success = this.getSuccessChance(rpgHorse);
 			if (success < 100 && (new Random()).nextDouble() * 100 >= success) return false;
 
-			double health        = rpgHorse.getMaxHealth() * tier.getHealthMultiplier();
-			double movementSpeed = rpgHorse.getMovementSpeed() * tier.getMovementSpeedMultiplier();
-			double jumpStrength  = rpgHorse.getJumpStrength() * tier.getJumpStrengthMultiplier();
-
-			rpgHorse.setMaxHealth(health);
-			rpgHorse.setMovementSpeed(movementSpeed);
-			rpgHorse.setJumpStrength(jumpStrength);
-			rpgHorse.setTier(tier.getTier() + 1);
+			tier.applyUpgrade(rpgHorse);
 
 			if (rpgHorse.getHorse() != null && rpgHorse.getHorse().isValid()) {
-				boolean wasMax    = rpgHorse.getHorse().getHealth() == rpgHorse.getHorse().getMaxHealth();
-				Entity  passenger = rpgHorse.getHorse().getPassenger();
+				Entity passenger = rpgHorse.getHorse().getPassenger();
 
 				if (rpgHorse.spawnEntity()) {
-					if (passenger != null) rpgHorse.getHorse().setPassenger(passenger);
-					if (wasMax) rpgHorse.getHorse().setHealth(rpgHorse.getMaxHealth());
+					if (passenger != null)
+						rpgHorse.getHorse().setPassenger(passenger);
 				}
 			}
 
@@ -179,13 +186,13 @@ public class RPGHorseManager {
 	}
 
 	public double getSuccessChance(RPGHorse rpgHorse) {
-		Tier tier = getTier(rpgHorse.getTier());
+		Tier tier = getNextTier(rpgHorse);
 		return tier == null ? -1 : tier.getSuccessChance();
 	}
 
 	public Map<ItemStack, Integer> getMissingItems(Player p, Tier tier) {
-		Inventory               inv           = p.getInventory();
-		Set<ItemStack>          itemsNeeded   = tier.getItemsNeeded();
+		Inventory inv = p.getInventory();
+		Set<ItemStack> itemsNeeded = tier.getItemsNeeded();
 		Map<ItemStack, Integer> amountMissing = new HashMap<>();
 
 		for (ItemStack itemNeeded : itemsNeeded) {
