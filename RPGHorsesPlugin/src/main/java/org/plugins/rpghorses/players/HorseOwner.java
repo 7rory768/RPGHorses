@@ -5,15 +5,17 @@ import lombok.Setter;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.OfflinePlayer;
-import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
+import org.bukkit.metadata.FixedMetadataValue;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.plugins.rpghorses.RPGHorsesMain;
 import org.plugins.rpghorses.guis.GUILocation;
 import org.plugins.rpghorses.guis.instances.*;
 import org.plugins.rpghorses.horses.RPGHorse;
 import org.plugins.rpghorses.managers.SQLManager;
+import org.plugins.rpghorses.utils.RPGMessagingUtil;
+import roryslibrary.util.MessagingUtil;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -27,7 +29,7 @@ public class HorseOwner {
 	private UUID uuid;
 	private List<RPGHorse> rpgHorses;
 	private RPGHorse currentHorse;
-	private boolean spawningHorse, mountingHorse, deMountingHorse, changingHorse, receivedDefaultHorse, autoMount = true;
+	private boolean spawningHorse, receivedDefaultHorse, autoMount = true;
 	private Location lastHorseLocation;
 	private StableGUI stableGUI;
 	private StableGUIPage stableGUIPage;
@@ -128,18 +130,7 @@ public class HorseOwner {
 				if (rpgHorse != null) {
 					LivingEntity horse = this.currentHorse.getHorse();
 					if (horse != null) {
-						if (RPGHorsesMain.getVersion().getWeight() < 11) {
-							if (horse.getPassenger() != null && horse.getPassenger().getUniqueId() == this.uuid) {
-								this.setChangingHorse(true);
-							}
-						} else {
-							for (Entity entity : horse.getPassengers()) {
-								if (entity.getUniqueId() == this.uuid) {
-									this.setChangingHorse(true);
-									break;
-								}
-							}
-						}
+						getPlayer().setMetadata("RPGHorses-Ignore-Next-Teleport", new FixedMetadataValue(RPGHorsesMain.getInstance(), true));
 					}
 				}
 
@@ -336,6 +327,62 @@ public class HorseOwner {
 			return horse.getPassenger().equals(p);
 		} else {
 			return horse.getPassengers().contains(p);
+		}
+	}
+
+	public void toggleRPGHorse(RPGHorse rpgHorse) {
+		toggleRPGHorse(rpgHorse, true);
+	}
+
+	public void toggleRPGHorse(RPGHorse rpgHorse, boolean updateGUI) {
+		RPGHorsesMain plugin = RPGHorsesMain.getInstance();
+		RPGMessagingUtil messagingUtil = plugin.getMessagingUtil();
+
+		Player p = getPlayer();
+		if (p == null) return;
+
+		if (getCurrentHorse() == rpgHorse) {
+			setCurrentHorse(null);
+			for (String cmd : plugin.getConfig().getStringList("command-options.on-despawn")) {
+				Bukkit.getServer().dispatchCommand(Bukkit.getConsoleSender(), MessagingUtil.format(cmd.replace("{PLAYER}", p.getName())));
+			}
+		} else if (rpgHorse.isDead()) {
+			messagingUtil.sendMessageAtPath(p, "messages.horse-is-dead", rpgHorse);
+		} else if (rpgHorse.isInMarket()) {
+			messagingUtil.sendMessageAtPath(p, "messages.horse-is-in-market", rpgHorse);
+		} else {
+			if (getCurrentHorse() != null) {
+				for (String cmd : plugin.getConfig().getStringList("command-options.on-despawn")) {
+					Bukkit.getServer().dispatchCommand(Bukkit.getConsoleSender(), MessagingUtil.format(cmd.replace("{PLAYER}", p.getName())));
+				}
+			}
+
+			RPGHorse currentHorse = getCurrentHorse();
+			LivingEntity horse = currentHorse != null ? currentHorse.getHorse() : null;
+			boolean isRidingHorse = isRidingHorse();
+
+			boolean onGround = p.isOnGround() || (isRidingHorse && horse.isOnGround());
+
+			if (!onGround) {
+				messagingUtil.sendMessageAtPath(p, "messages.not-on-ground");
+				return;
+			}
+
+			if (setCurrentHorse(rpgHorse)) {
+				for (String cmd : plugin.getConfig().getStringList("command-options.on-spawn")) {
+					Bukkit.getServer().dispatchCommand(Bukkit.getConsoleSender(), MessagingUtil.format(cmd.replace("{PLAYER}", p.getName())));
+				}
+			} else {
+				messagingUtil.sendMessageAtPath(p, "messages.cant-spawn-horse-here", rpgHorse);
+			}
+		}
+
+		if (updateGUI) {
+			if (getGUILocation() == GUILocation.HORSE_GUI) {
+				openHorseGUI(getHorseGUI());
+			} else if (getGUILocation() == GUILocation.STABLE_GUI) {
+				openStableGUIPage(getCurrentStableGUIPage());
+			}
 		}
 	}
 }

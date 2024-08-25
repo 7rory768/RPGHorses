@@ -25,7 +25,6 @@ public class PlayerQuitListener implements Listener {
 	public void onQuit(PlayerQuitEvent e) {
 		HorseOwner horseOwner = this.horseOwnerManager.getHorseOwner(e.getPlayer());
 		this.horseOwnerManager.flushHorseOwner(horseOwner);
-		this.xpManager.removeHorseOwner(horseOwner);
 	}
 	
 }

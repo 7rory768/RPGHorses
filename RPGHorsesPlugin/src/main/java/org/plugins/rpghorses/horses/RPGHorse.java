@@ -246,6 +246,7 @@ public class RPGHorse {
 
 			this.horse = (LivingEntity) horseLoc.getWorld().spawnEntity(horseLoc, horseInfo.getEntityType());
 			horse.setMetadata("RPGHorse-HorseOwner", new FixedMetadataValue(RPGHorsesMain.getInstance(), horseOwner.getUUID().toString()));
+			horseOwner.setLastHorseLocation(horse.getLocation());
 
 			if (RPGHorsesMain.getVersion().getWeight() < 11) {
 				Horse horse = (Horse) this.horse;
@@ -328,7 +329,6 @@ public class RPGHorse {
 					}
 
 					horseOwner.setLastHorseLocation(p.getLocation());
-					RPGHorsesMain.getInstance().getXpManager().addHorseOwner(horseOwner);
 				}, 1L);
 			}
 

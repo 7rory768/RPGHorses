@@ -1,5 +1,6 @@
 package org.plugins.rpghorses.managers;
 
+import lombok.Getter;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.World;
@@ -16,7 +17,9 @@ public class HorseDespawner {
 	private final HorseOwnerManager horseOwnerManager;
 	private final RPGHorseManager rpgHorseManager;
 
+	@Getter
 	private int idleTime = 5;
+	@Getter
 	private int despawnWhenOwnerPastDistance = -1;
 	private BukkitTask despawnTask;
 
@@ -81,6 +84,7 @@ public class HorseDespawner {
 
 					if (currentHorse.getHorse() == null || !currentHorse.getHorse().isValid()) {
 						horseOwner.setCurrentHorse(null);
+						plugin.getMessagingUtil().sendMessage(horseOwner.getPlayer(), plugin.getConfig().getString("messages.horse-sent-to-stable").replace("{PLAYER}", "CONSOLE"), currentHorse);
 						continue;
 					}
 

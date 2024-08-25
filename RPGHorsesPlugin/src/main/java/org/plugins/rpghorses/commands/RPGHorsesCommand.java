@@ -345,6 +345,35 @@ public class RPGHorsesCommand implements CommandExecutor {
 				this.messagingUtil.sendMessage(p, this.plugin.getConfig().getString("messages.particle-set").replace("{HORSE-NUMBER}", "" + horseOwner.getHorseNumber(rpgHorse)).replace("{PARTICLE}", particleArg.toUpperCase()), rpgHorse);
 				return true;
 			}
+
+			if (arg1.equalsIgnoreCase("togglehorse")) {
+				if (!sender.hasPermission("rpghorses.togglehorse")) {
+					this.messagingUtil.sendMessageAtPath(sender, "messages.no-permission");
+					return false;
+				}
+
+				if (!(sender instanceof Player)) {
+					this.messagingUtil.sendMessage(sender, "{PREFIX}This command can only be used in-game");
+					return false;
+				}
+				Player p = (Player) sender;
+
+				if (args.length < 2) {
+					this.messagingUtil.sendMessage(sender, "{PREFIX}Not enough arguments, try &6/" + label + " togglehorse <horse-number>");
+					return false;
+				}
+
+				String horseNumberArg = args[1];
+				if (!this.runHorseNumberCheck(sender, horseNumberArg, p)) {
+					return false;
+				}
+				int horseNumber = Integer.parseInt(horseNumberArg), index = horseNumber - 1;
+
+				HorseOwner horseOwner = this.horseOwnerManager.getHorseOwner(p);
+				RPGHorse rpgHorse = horseOwner.getRPGHorse(index);
+				horseOwner.toggleRPGHorse(rpgHorse);
+				return true;
+			}
 			
 			if (!sender.hasPermission("rpghorses.help")) {
 				this.messagingUtil.sendMessageAtPath(sender, "messages.no-permission");

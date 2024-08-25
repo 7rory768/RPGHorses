@@ -90,7 +90,7 @@ public class InventoryClickListener implements Listener {
 					RPGHorse rpgHorse = stableGUIPage.getRPGHorse(slot);
 					if (rpgHorse != null) {
 						if (e.isLeftClick()) {
-							clickRPGHorse(p, horseOwner, rpgHorse);
+							horseOwner.toggleRPGHorse(rpgHorse);
 						} else if (e.isRightClick()) {
 							horseOwner.openHorseGUI(horseGUIManager.getHorseGUI(rpgHorse));
 						}
@@ -223,7 +223,7 @@ public class InventoryClickListener implements Listener {
 					this.rpgHorseManager.addRemoveConfirmation(p, rpgHorse);
 					this.messagingUtil.sendMessage(p, this.plugin.getConfig().getString("messages.confirm-remove-horse").replace("{HORSE-NUMBER}", "" + horseNumber), rpgHorse);
 				} else if (slot == ItemUtil.getSlot(plugin.getConfig(), "horse-gui-options.horse-item")) {
-					clickRPGHorse(p, horseOwner, rpgHorse);
+					horseOwner.toggleRPGHorse(rpgHorse);
 				}
 			}
 		} else if (horseOwner.isInGUI(GUILocation.TRAILS_GUI)) {
@@ -406,50 +406,6 @@ public class InventoryClickListener implements Listener {
 
 		} else if (horseOwner.getCurrentHorse() != null && e.getView().getTitle().equals(horseOwner.getCurrentHorse().getHorse().getName()) && e.getView().getTopInventory() == e.getClickedInventory() && e.getSlot() == 0) {
 			e.setCancelled(true);
-		}
-	}
-
-	public void clickRPGHorse(Player p, HorseOwner horseOwner, RPGHorse rpgHorse) {
-		if (horseOwner.getCurrentHorse() == rpgHorse) {
-			horseOwner.setCurrentHorse(null);
-			for (String cmd : this.plugin.getConfig().getStringList("command-options.on-despawn")) {
-				Bukkit.getServer().dispatchCommand(Bukkit.getConsoleSender(), MessagingUtil.format(cmd.replace("{PLAYER}", p.getName())));
-			}
-		} else if (rpgHorse.isDead()) {
-			this.messagingUtil.sendMessageAtPath(p, "messages.horse-is-dead", rpgHorse);
-		} else if (rpgHorse.isInMarket()) {
-			this.messagingUtil.sendMessageAtPath(p, "messages.horse-is-in-market", rpgHorse);
-		} else {
-			if (horseOwner.getCurrentHorse() != null) {
-				for (String cmd : this.plugin.getConfig().getStringList("command-options.on-despawn")) {
-					Bukkit.getServer().dispatchCommand(Bukkit.getConsoleSender(), MessagingUtil.format(cmd.replace("{PLAYER}", p.getName())));
-				}
-			}
-
-			RPGHorse currentHorse = horseOwner.getCurrentHorse();
-			LivingEntity horse = currentHorse != null ? currentHorse.getHorse() : null;
-			boolean isRidingHorse = horseOwner.isRidingHorse();
-
-			boolean onGround = p.isOnGround() || (isRidingHorse && horse.isOnGround());
-
-			if (!onGround) {
-				messagingUtil.sendMessageAtPath(p, "messages.not-on-ground");
-				return;
-			}
-
-			if (horseOwner.setCurrentHorse(rpgHorse)) {
-				for (String cmd : this.plugin.getConfig().getStringList("command-options.on-spawn")) {
-					Bukkit.getServer().dispatchCommand(Bukkit.getConsoleSender(), MessagingUtil.format(cmd.replace("{PLAYER}", p.getName())));
-				}
-			} else {
-				messagingUtil.sendMessageAtPath(p, "messages.cant-spawn-horse-here", rpgHorse);
-			}
-		}
-
-		if (horseOwner.getGUILocation() == GUILocation.HORSE_GUI) {
-			horseOwner.openHorseGUI(horseOwner.getHorseGUI());
-		} else if (horseOwner.getGUILocation() == GUILocation.STABLE_GUI) {
-			horseOwner.openStableGUIPage(horseOwner.getCurrentStableGUIPage());
 		}
 	}
 

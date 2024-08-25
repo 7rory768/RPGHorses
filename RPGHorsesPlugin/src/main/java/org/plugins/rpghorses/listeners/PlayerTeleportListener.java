@@ -32,15 +32,20 @@ public class PlayerTeleportListener implements Listener {
 		HorseOwner horseOwner = this.horseOwnerManager.getHorseOwner(p);
 		if (horseOwner != null) {
 			RPGHorse currentHorse = horseOwner.getCurrentHorse();
+
+			if (p.hasMetadata("RPGHorses-Ignore-Next-Teleport")) {
+				return;
+			}
+
+			p.removeMetadata("RPGHorses-Ignore-Next-Teleport", this.plugin);
+
+			double maxDist = plugin.getHorseDespawner().getDespawnWhenOwnerPastDistance();
+			if (maxDist < 0) return;
 			
-			if (currentHorse != null && (!e.getFrom().getWorld().equals(e.getTo().getWorld()) || e.getTo().distance(e.getFrom()) > 10)) {
+			if (currentHorse != null && (!e.getFrom().getWorld().equals(e.getTo().getWorld()) || e.getTo().distance(e.getFrom()) > maxDist)) {
 				horseOwner.setCurrentHorse(null);
 				this.messagingUtil.sendMessage(p, this.plugin.getConfig().getString("messages.horse-sent-to-stable").replace("{PLAYER}", "CONSOLE"), currentHorse);
 			}
-			
-			horseOwner.setMountingHorse(false);
-			horseOwner.setDeMountingHorse(false);
-			horseOwner.setChangingHorse(false);
 		}
 	}
 	

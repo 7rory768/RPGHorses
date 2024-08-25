@@ -76,7 +76,7 @@ public class RPGHorseManager {
 
 		for (HorseOwner horseOwner : this.horseOwnerManager.getHorseOwners().values()) {
 			RPGHorse currentHorse = horseOwner.getCurrentHorse();
-			if (currentHorse != null && currentHorse.getHorse().getEntityId() == entity.getEntityId()) {
+			if (currentHorse != null && currentHorse.getHorse() != null && currentHorse.getHorse().getEntityId() == entity.getEntityId()) {
 				return currentHorse;
 			}
 		}
