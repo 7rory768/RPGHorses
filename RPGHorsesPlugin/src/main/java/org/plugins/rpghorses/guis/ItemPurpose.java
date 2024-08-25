@@ -6,6 +6,7 @@ public enum ItemPurpose {
 	RENAME(),
 	HORSE(),
 	UPGRADE(),
+	MAXED_LEVEL(),
 	TRAILS(),
 	TRAIL(),
 	CLEAR_TRAIL(),
