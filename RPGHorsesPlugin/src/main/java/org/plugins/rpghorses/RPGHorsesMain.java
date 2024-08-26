@@ -566,9 +566,9 @@ public class RPGHorsesMain extends JavaPlugin {
 		}
 
 		if (version < 4) {
-			config.set("messages.all-horses-removed", "{PREFIX}&7All of &6{PLAYER}''s {TOTAL-HORSES} &7horses removed successfully");
+			config.set("messages.all-horses-removed", "{PREFIX}&7All of &6{PLAYER}'s {TOTAL-HORSES} &7horses removed successfully");
 			config.set("messages.all-your-horses-were-removed", "{PREFIX}&7All your &6{TOTAL-HORSES} &7have been removed by {PLAYER}");
-			config.set("messages.no-horse-pvp", "{PREFIX}You can''t attack other player''s horses here");
+			config.set("messages.no-horse-pvp", "{PREFIX}You can't attack other player's horses here");
 
 			config.set("horse-gui-options.items.max-upgrade-item.enabled", true);
 			config.set("horse-gui-options.items.max-upgrade-item.PURPOSE", "MAXED_LEVEL");

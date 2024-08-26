@@ -405,7 +405,7 @@ public class RPGHorsesAdminCommand implements CommandExecutor {
 					this.messageQueuer.queueMessage(p, message);
 				}
 
-				this.messagingUtil.sendMessage(sender, this.plugin.getConfig().getString("messages.all-horses-removed").replace("{PLAYER}", sender.getName()).replace("{TOTAL-HORSES}", "" + totalHorses));
+				this.messagingUtil.sendMessage(sender, this.plugin.getConfig().getString("messages.all-horses-removed").replace("{PLAYER}", p.getName() == null ? playerArg : p.getName()).replace("{TOTAL-HORSES}", "" + totalHorses));
 
 				return true;
 			}

@@ -22,7 +22,6 @@ import roryslibrary.util.MessagingUtil;
 import roryslibrary.util.Version;
 
 import java.lang.reflect.Field;
-import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URL;
 import java.util.ArrayList;
@@ -243,6 +242,26 @@ public class ItemUtil extends roryslibrary.util.ItemUtil {
 		int xCord = section.getInt("x-cord", -1);
 		int yCord = section.getInt("y-cord", -1);
 		return xCord != -1 && yCord != -1 ? getSlot(xCord, yCord) : section.getInt("slot", 0);
+	}
+
+	public static boolean isSimilar(ItemStack o, ItemStack o1) {
+		if (o == null && o1 != null || o != null && o1 == null) {
+			return false;
+		}
+
+		if (o.getType() != o1.getType() || o.getDurability() != o1.getDurability()) {
+			return false;
+		}
+
+		ItemMeta oMeta = o.getItemMeta();
+		ItemMeta o1Meta = o1.getItemMeta();
+		if (oMeta == null || o1Meta == null) return false;
+
+		if (oMeta.hasDisplayName() != o1Meta.hasDisplayName() || oMeta.hasDisplayName() && !oMeta.getDisplayName().equals(o1Meta.getDisplayName()) || oMeta.hasLore() != o1Meta.hasLore() || oMeta.hasLore() && !oMeta.getLore().equals(o1Meta.getLore())) {
+			return false;
+		}
+
+		return true;
 	}
 
 	public static void addDurabilityGlow(ItemStack item) {

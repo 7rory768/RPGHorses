@@ -138,7 +138,7 @@ public class HorseGUIManager {
 	
 	public ItemPurpose getItemPurpose(int slot) {
 		for (GUIItem guiItem : guiItems) {
-			if (guiItem.isEnabled() && guiItem.getSlot() == slot && (guiItem.getItemPurpose() != ItemPurpose.NOTHING || guiItem.getItemPurpose() != ItemPurpose.FILL)) {
+			if (guiItem.isEnabled() && guiItem.getSlot() == slot && guiItem.getItemPurpose() != ItemPurpose.NOTHING && guiItem.getItemPurpose() != ItemPurpose.FILL && guiItem.getItemPurpose() != ItemPurpose.MAXED_LEVEL) {
 				return guiItem.getItemPurpose();
 			}
 		}

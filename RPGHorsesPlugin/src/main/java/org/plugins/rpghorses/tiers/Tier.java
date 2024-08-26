@@ -8,10 +8,11 @@ import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.plugins.rpghorses.horseinfo.AbstractHorseInfo;
+import org.plugins.rpghorses.horseinfo.LegacyHorseInfo;
 import org.plugins.rpghorses.horses.RPGHorse;
 import org.plugins.rpghorses.utils.ItemUtil;
+import org.plugins.rpghorses.version.Version;
 
-import java.math.BigDecimal;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -48,7 +49,7 @@ public class Tier {
 		}
 
 		config = config.getConfigurationSection("horse-info");
-		if (config != null) horseInfo = AbstractHorseInfo.loadFromConfig(config);
+		if (config != null) horseInfo = AbstractHorseInfo.loadFromConfig(config, false);
 		else horseInfo = null;
 	}
 
@@ -91,7 +92,25 @@ public class Tier {
 		rpgHorse.setJumpStrength(jumpStrength);
 
 		if (wasMaxHealth) rpgHorse.setHealth(health);
-		if (horseInfo != null) rpgHorse.setHorseInfo(horseInfo.populateNewRandomInfo());
+
+		if (horseInfo != null) {
+			AbstractHorseInfo currentInfo = rpgHorse.getHorseInfo();
+			AbstractHorseInfo newInfo = horseInfo.populateNewRandomInfo();
+
+			// Only change filled values
+			if (newInfo.getEntityType() != null) currentInfo.setEntityType(newInfo.getEntityType());
+			if (newInfo.getColor() != null) currentInfo.setColor(newInfo.getColor());
+			if (newInfo.getStyle() != null) currentInfo.setStyle(newInfo.getStyle());
+
+			if (Version.getVersion().getWeight() < 11) {
+				LegacyHorseInfo legacyHorseInfo = (LegacyHorseInfo) currentInfo;
+				LegacyHorseInfo newLegacyHorseInfo = (LegacyHorseInfo) newInfo;
+				if (newLegacyHorseInfo.getVariant() != null)
+					legacyHorseInfo.setVariant(newLegacyHorseInfo.getVariant());
+			}
+
+			rpgHorse.setHorseInfo(currentInfo);
+		}
 
 		rpgHorse.setTier(tier + 1);
 	}

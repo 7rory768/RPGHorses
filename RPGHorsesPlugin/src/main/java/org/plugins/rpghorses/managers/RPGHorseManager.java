@@ -25,6 +25,7 @@ import org.plugins.rpghorses.utils.RPGMessagingUtil;
 import roryslibrary.util.MessagingUtil;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 @Getter
 public class RPGHorseManager {
@@ -151,20 +152,18 @@ public class RPGHorseManager {
 				int amountNeeded = itemNeeded.getAmount();
 				for (int slot = 0; slot < inv.getSize(); slot++) {
 					ItemStack item = inv.getItem(slot);
-					if (ItemUtil.itemIsReal(item)) {
-						if (item.isSimilar(itemNeeded)) {
-							int amount = item.getAmount();
+					if (ItemUtil.itemIsReal(item) && ItemUtil.isSimilar(item, itemNeeded)) {
+						int amount = item.getAmount();
 
-							if (amount <= amountNeeded) {
-								inv.setItem(slot, null);
-							} else {
-								item.setAmount(item.getAmount() - amountNeeded);
-							}
-
-							amountNeeded -= amount;
-
-							if (amountNeeded <= 0) continue;
+						if (amount <= amountNeeded) {
+							inv.setItem(slot, null);
+						} else {
+							item.setAmount(item.getAmount() - amountNeeded);
 						}
+
+						amountNeeded -= amount;
+
+						if (amountNeeded <= 0) break;
 					}
 				}
 			}
@@ -202,14 +201,16 @@ public class RPGHorseManager {
 
 		for (ItemStack itemNeeded : itemsNeeded) {
 			int amount = 0, amountNeeded = itemNeeded.getAmount();
-			for (ItemStack item : inv.getContents()) {
-				if (ItemUtil.itemIsReal(item) && item.isSimilar(itemNeeded)) {
+			for (ItemStack item : inv) {
+				if (ItemUtil.itemIsReal(item) && ItemUtil.isSimilar(item, itemNeeded)) {
 					amount += item.getAmount();
 				}
 			}
 
 			if (amount < amountNeeded) amountMissing.put(itemNeeded, amountNeeded - amount);
 		}
+
+		Bukkit.broadcastMessage("missing items" + amountMissing.keySet().stream().map(k -> k.getType().name() + "x" + amountMissing.get(k)).collect(Collectors.joining(",")));
 
 		return amountMissing;
 	}

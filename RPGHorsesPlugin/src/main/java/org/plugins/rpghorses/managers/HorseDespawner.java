@@ -21,7 +21,7 @@ public class HorseDespawner {
 	@Getter
 	private int idleTime = 5;
 	@Getter
-	private int despawnWhenOwnerPastDistance = -1;
+	private int despawnWhenOwnerPastDistance = 10;
 	private BukkitTask despawnTask;
 
 	public HorseDespawner(RPGHorsesMain plugin, HorseOwnerManager horseOwnerManager, RPGHorseManager rpgHorseManager) {
@@ -39,7 +39,7 @@ public class HorseDespawner {
 
 	public void reload() {
 		this.idleTime = this.plugin.getConfig().getInt("horse-options.idle-time");
-		this.despawnWhenOwnerPastDistance = this.plugin.getConfig().getInt("horse-options.despawn-when-owner-past-distance");
+		this.despawnWhenOwnerPastDistance = this.plugin.getConfig().getInt("horse-options.despawn-when-owner-past-distance", 10);
 
 		this.startDespawnTask();
 	}
@@ -81,8 +81,7 @@ public class HorseDespawner {
 					if (currentHorse == null) return;
 
 					if (currentHorse.getHorse() == null || !currentHorse.getHorse().isValid()) {
-						horseOwner.setCurrentHorse(null);
-						plugin.getMessagingUtil().sendMessage(horseOwner.getPlayer(), plugin.getConfig().getString("messages.horse-sent-to-stable").replace("{PLAYER}", "CONSOLE"), currentHorse);
+						despawnInSync(horseOwner, currentHorse);
 						continue;
 					}
 

@@ -18,6 +18,7 @@ import org.plugins.rpghorses.players.HorseOwner;
 import roryslibrary.configs.PlayerConfigs;
 
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
@@ -117,14 +118,14 @@ public class HorseOwnerManager {
 						} catch (IllegalArgumentException e) {
 							Bukkit.getLogger().log(Level.SEVERE, "[RPGHorses] Failed to load " + uuid.toString() + "'s horse ( " + config.getString(path + "variant") + " is not a valid variant )");
 						}
-						horseInfo = new LegacyHorseInfo(style, color, variant);
+						horseInfo = new LegacyHorseInfo(style, color, variant, new HashSet<>());
 					} else {
 						try {
 							entityType = EntityType.valueOf(config.getString(path + "type", "HORSE"));
 						} catch (IllegalArgumentException e) {
 							Bukkit.getLogger().log(Level.SEVERE, "[RPGHorses] Failed to load " + uuid.toString() + "'s horse ( " + config.getString(path + "type") + " is not a valid entityType )");
 						}
-						horseInfo = new HorseInfo(entityType, style, color);
+						horseInfo = new HorseInfo(entityType, style, color, new HashSet<>());
 					}
 
 					if (RPGHorsesMain.getVersion().getWeight() < 9 && config.isSet(path + "particle")) {

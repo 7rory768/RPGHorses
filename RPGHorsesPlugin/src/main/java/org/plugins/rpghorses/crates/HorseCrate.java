@@ -40,9 +40,14 @@ public class HorseCrate {
 
 		upgradeTiers.clear();
 
-		for (String tierStr : config.getConfigurationSection("upgrade-tiers").getKeys(false)) {
-			Tier tier = new Tier(config.getConfigurationSection("upgrade-tiers." + tierStr), Integer.parseInt(tierStr));
-			upgradeTiers.add(tier);
+		ConfigurationSection upgradeTiersConfig = config.getConfigurationSection("upgrade-tiers");
+		if (upgradeTiersConfig != null) {
+			for (String tierStr : upgradeTiersConfig.getKeys(false)) {
+				if (!upgradeTiersConfig.isSet(tierStr)) continue;
+
+				Tier tier = new Tier(config.getConfigurationSection("upgrade-tiers." + tierStr), Integer.parseInt(tierStr));
+				upgradeTiers.add(tier);
+			}
 		}
 
 		config = config.getConfigurationSection("horse-info");
