@@ -210,8 +210,6 @@ public class RPGHorseManager {
 			if (amount < amountNeeded) amountMissing.put(itemNeeded, amountNeeded - amount);
 		}
 
-		Bukkit.broadcastMessage("missing items" + amountMissing.keySet().stream().map(k -> k.getType().name() + "x" + amountMissing.get(k)).collect(Collectors.joining(",")));
-
 		return amountMissing;
 	}
 
