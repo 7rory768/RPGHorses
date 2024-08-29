@@ -11,10 +11,6 @@ import org.plugins.rpghorses.players.HorseOwner;
 import org.plugins.rpghorses.tiers.Tier;
 import org.plugins.rpghorses.utils.RPGMessagingUtil;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-
 public class XPManager {
 
 	private final RPGHorsesMain plugin;
@@ -53,6 +49,12 @@ public class XPManager {
 					Player p = horseOwner.getPlayer();
 					Location newLoc = p.getLocation();
 					Location oldLoc = horseOwner.getLastHorseLocation();
+
+					if (oldLoc == null || !newLoc.getWorld().getUID().equals(oldLoc.getWorld().getUID())) {
+						horseOwner.setLastHorseLocation(newLoc);
+						continue;
+					}
+
 					newLoc.setY(oldLoc.getY());
 					rpgHorse.increaseXp(newLoc.distance(oldLoc));
 

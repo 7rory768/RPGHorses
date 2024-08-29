@@ -311,25 +311,14 @@ public class RPGHorse {
 				inventory.setItem(0, new ItemStack(Material.SADDLE));
 			}
 
+			horseOwner.setLastHorseLocation(p.getLocation());
+
 			if (horseOwner.autoMountOn()) {
 				if (RPGHorsesMain.getVersion().getWeight() < 11) {
 					horse.setPassenger(p);
 				} else {
 					horse.addPassenger(p);
 				}
-
-				// Wait to register in XPManager after HorseOwner#currentHorse is updated
-				Bukkit.getScheduler().runTaskLater(RPGHorsesMain.getInstance(), () -> {
-					if (horse == null) return;
-
-					if (RPGHorsesMain.getVersion().getWeight() < 11) {
-						if (horse.getPassenger() != p) return;
-					} else {
-						if (!horse.getPassengers().contains(p)) return;
-					}
-
-					horseOwner.setLastHorseLocation(p.getLocation());
-				}, 1L);
 			}
 
 			Bukkit.getPluginManager().callEvent(new RPGHorsePostSpawnEvent(p, this));
@@ -359,6 +348,8 @@ public class RPGHorse {
 		if (this.horse != null) {
 			RPGHorseDespawnEvent despawnEvent = new RPGHorseDespawnEvent(horseOwner.getPlayer(), horse);
 			Bukkit.getPluginManager().callEvent(despawnEvent);
+
+			horseOwner.setLastHorseLocation(null);
 
 			this.loadItems();
 			this.loadHealth();

@@ -14,6 +14,7 @@ import org.plugins.rpghorses.guis.GUILocation;
 import org.plugins.rpghorses.guis.instances.*;
 import org.plugins.rpghorses.horses.RPGHorse;
 import org.plugins.rpghorses.managers.SQLManager;
+import org.plugins.rpghorses.tiers.Tier;
 import org.plugins.rpghorses.utils.RPGMessagingUtil;
 import org.plugins.rpghorses.utils.WorldGuardUtil;
 import roryslibrary.util.MessagingUtil;
@@ -377,6 +378,12 @@ public class HorseOwner {
 				for (String cmd : plugin.getConfig().getStringList("command-options.on-spawn")) {
 					Bukkit.getServer().dispatchCommand(Bukkit.getConsoleSender(), MessagingUtil.format(cmd.replace("{PLAYER}", p.getName())));
 				}
+
+				Tier nextTier = plugin.getRpgHorseManager().getNextTier(rpgHorse);
+
+				if (nextTier != null && nextTier.getExpCost() <= rpgHorse.getXp())
+					messagingUtil.sendMessageAtPath(p, "messages.max-xp", rpgHorse);
+
 			} else {
 				messagingUtil.sendMessageAtPath(p, "messages.cant-spawn-horse-here", rpgHorse);
 			}

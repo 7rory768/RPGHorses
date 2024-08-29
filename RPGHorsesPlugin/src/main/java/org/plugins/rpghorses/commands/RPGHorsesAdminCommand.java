@@ -510,7 +510,7 @@ public class RPGHorsesAdminCommand implements CommandExecutor {
 				for (Player loopP : this.plugin.getServer().getOnlinePlayers()) {
 					HorseOwner horseOwner = this.horseOwnerManager.getHorseOwner(loopP);
 					RPGHorse rpgHorse = horseOwner.getCurrentHorse();
-					if (rpgHorse != null && rpgHorse.getHorse().getLocation().distance(loc) <= radius) {
+					if (rpgHorse != null && rpgHorse.getHorse().getWorld().getUID().equals(loc.getWorld().getUID()) && rpgHorse.getHorse().getLocation().distance(loc) <= radius) {
 						this.messagingUtil.sendMessage(sender, body.replace("{PLAYER}", loopP.getName()).replace("{HORSE-NUMBER}", "" + horseOwner.getHorseNumber(rpgHorse)).replace("{LOCATION}", LocationUtil.toBlockString(rpgHorse.getHorse().getLocation())), rpgHorse);
 					}
 				}
@@ -549,7 +549,7 @@ public class RPGHorsesAdminCommand implements CommandExecutor {
 				for (Player loopP : this.plugin.getServer().getOnlinePlayers()) {
 					HorseOwner horseOwner = this.horseOwnerManager.getHorseOwner(loopP);
 					RPGHorse rpgHorse = horseOwner.getCurrentHorse();
-					if (rpgHorse != null && rpgHorse.getHorse().getLocation().distance(loc) <= radius) {
+					if (rpgHorse != null && rpgHorse.getHorse().getWorld().getUID().equals(loc.getWorld().getUID()) && rpgHorse.getHorse().getLocation().distance(loc) <= radius) {
 						horseOwner.setCurrentHorse(null);
 						this.messagingUtil.sendMessage(loopP, this.plugin.getConfig().getString("messages.horse-sent-to-stable").replace("{PLAYER}", p.getName()), rpgHorse);
 						horseCount++;
