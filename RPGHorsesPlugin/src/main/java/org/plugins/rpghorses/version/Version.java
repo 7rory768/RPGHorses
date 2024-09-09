@@ -1,7 +1,9 @@
 package org.plugins.rpghorses.version;
 
+import lombok.Getter;
 import org.bukkit.Bukkit;
 
+@Getter
 public enum Version {
 	
 	v1_8("1.8", 8, ""),
@@ -22,37 +24,26 @@ public enum Version {
 	v1_18("1.18", 21, "v1_18"),
 	v1_18_1("1.18.1", 22, "v1_18"),
 	v1_18_2("1.18.2", 23, "v1_18_2"),
-	v1_19("1.19", 24, "v1_19"),
-	v1_20("1.20", 25, "v1_20"),
-	v1_20_1("1.20.1", 26, "v1_20"),
-	v1_20_2("1.20.2", 27, "v1_20_2"),
-	v1_20_3("1.20.3", 28, "v1_20_2"),
-	v1_20_4("1.20.4", 29, "v1_20_4"),
-	v1_21("1.21", 30, "v1_21"),
+	v1_19("1.19", 190, "v1_19"),
+	v1_19_4("1.19.4", 194, "v1_19_4"),
+	v1_20("1.20", 200, "v1_20"),
+	v1_20_1("1.20.1", 201, "v1_20"),
+	v1_20_2("1.20.2", 202, "v1_20_2"),
+	v1_20_3("1.20.3", 203, "v1_20_2"),
+	v1_20_4("1.20.4", 204, "v1_20_4"),
+	v1_21("1.21", 210, "v1_21"),
 	LATEST("", 100, "");
 	
-	private String name;
-	private int weight;
-	private String abstractName;
+	private final String name;
+	private final int weight;
+	private final String abstractName;
 	
 	Version(String name, int weight, String abstractName) {
 		this.name = name;
 		this.weight = weight;
 		this.abstractName = abstractName;
 	}
-	
-	public String getName() {
-		return name;
-	}
-	
-	public int getWeight() {
-		return weight;
-	}
-	
-	public String getAbstractName() {
-		return abstractName;
-	}
-	
+
 	public static Version getByName(String name) {
 		Version highestMatch = Version.LATEST;
 

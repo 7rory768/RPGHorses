@@ -16,9 +16,10 @@ public class NMSHandler extends NMS
 	@Override
 	public void removeBehaviour(LivingEntity entity)
 	{
-		EntityCreature creature = (EntityCreature) (((CraftEntity) entity).getHandle());
 		try
 		{
+			EntityCreature creature = (EntityCreature) (((CraftEntity) entity).getHandle());
+
 			Field selector;
 
 			try
@@ -29,18 +30,18 @@ public class NMSHandler extends NMS
 				selector = PathfinderGoalSelector.class.getDeclaredField("availableGoals");
 			}
 
-			Field b0F = EntityInsentient.class.getField("bS");
-			Field bPF = EntityInsentient.class.getField("bT");
+			Field bSf = EntityInsentient.class.getField("bS");
+			Field bTf = EntityInsentient.class.getField("bT");
 
-			b0F.setAccessible(true);
-			bPF.setAccessible(true);
+			bSf.setAccessible(true);
+			bTf.setAccessible(true);
 
-			Object b0 = b0F.get(creature);
-			Object bP = bPF.get(creature);
+			Object bS = bSf.get(creature);
+			Object bT = bTf.get(creature);
 
 			selector.setAccessible(true);
-			selector.set(b0, Sets.newLinkedHashSet());
-			selector.set(bP, Sets.newLinkedHashSet());
+			selector.set(bS, Sets.newLinkedHashSet());
+			selector.set(bT, Sets.newLinkedHashSet());
 		} catch (Exception | Error e)
 		{
 			logError(e);

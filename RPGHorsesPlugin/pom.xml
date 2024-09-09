@@ -360,6 +360,23 @@
         </dependency>
         <dependency>
             <groupId>org.plugins.rpghorses</groupId>
+            <artifactId>1_19_4</artifactId>
+            <version>1.0.0</version>
+            <scope>compile</scope>
+            <optional>true</optional>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.spigotmc</groupId>
+                    <artifactId>spigot-api</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>org.spigotmc</groupId>
+                    <artifactId>spigot</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+        <dependency>
+            <groupId>org.plugins.rpghorses</groupId>
             <artifactId>1_20</artifactId>
             <version>1.0.0</version>
             <scope>compile</scope>
