@@ -284,7 +284,7 @@ public class StableGUIManager {
 			
 			String cooldownTime = "";
 			if (rpgHorse.isDead()) {
-				cooldownTime = TimeUtil.formatTime(this.getDeathDifferent(rpgHorse) / 1000L);
+				cooldownTime = TimeUtil.formatTime((long) Math.ceil(this.getDeathDifferent(rpgHorse) / 1000D));
 			}
 			
 			NumberFormat formatter = new DecimalFormat("#0.###");
@@ -440,18 +440,13 @@ public class StableGUIManager {
 			@Override
 			public void run() {
 				for (HorseOwner horseOwner : horseOwnerManager.getHorseOwners().values()) {
-					if (horseOwner.isInGUI(GUILocation.STABLE_GUI)) {
-						StableGUIPage stableGUIPage = horseOwner.getCurrentStableGUIPage();
-						if (stableGUIPage != null) {
-							for (int slot : stableGUIPage.getHorseSlots().keySet()) {
-								RPGHorse rpgHorse = stableGUIPage.getRPGHorse(slot);
-								if (rpgHorse.isDead()) {
-									if (getDeathDifferent(rpgHorse) <= 0) {
-										rpgHorse.setDead(false);
-									}
-									updateRPGHorse(rpgHorse);
-								}
+
+					for (RPGHorse horse : horseOwner.getRPGHorses()) {
+						if (horse.isDead()) {
+							if (getDeathDifferent(horse) <= 0) {
+								horse.setDead(false);
 							}
+							updateRPGHorse(horse);
 						}
 					}
 				}

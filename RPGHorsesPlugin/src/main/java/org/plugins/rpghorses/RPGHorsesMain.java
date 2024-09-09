@@ -29,10 +29,7 @@ import roryslibrary.util.DebugUtil;
 import roryslibrary.util.TimeUtil;
 import roryslibrary.util.UpdateNotifier;
 
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.LinkedHashMap;
-import java.util.Map;
+import java.util.*;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -151,7 +148,7 @@ public class RPGHorsesMain extends JavaPlugin {
 		FileConfiguration config = getConfig();
 
 		int version = config.getInt("version", 1);
-		int latestVersion = 4;
+		int latestVersion = 5;
 
 		if (version < 2) {
 			config.set("stable-options.market-horse-item.skin-value", null);
@@ -578,7 +575,21 @@ public class RPGHorsesMain extends JavaPlugin {
 			config.set("horse-gui-options.items.max-upgrade-item.lore", Collections.singletonList("&7Your horse is already max level"));
 			config.set("horse-gui-options.items.max-upgrade-item.x-cord", 7);
 			config.set("horse-gui-options.items.max-upgrade-item.y-cord", 2);
-					
+		}
+
+		if (version < 5) {
+			config.set("messages.horse-is-dead", "{PREFIX}You horse is dead and won't respawn for another &6{TIME-LEFT}");
+
+			List<String> newUpgradeLore = new ArrayList<>();
+			newUpgradeLore.add("&7Click to upgrade your horse");
+			newUpgradeLore.add("");
+			newUpgradeLore.add("&7Health: &c{OLD-HEALTH} &7-> &c{NEW-HEALTH}");
+			newUpgradeLore.add("&7Speed: &b{OLD-SPEED} &7-> &b{NEW-SPEED}");
+			newUpgradeLore.add("&7Jump: &e{OLD-JUMP-STRENGTH} &7-> &e{NEW-JUMP-STRENGTH}");
+			newUpgradeLore.add("");
+			newUpgradeLore.add("&7Cost: &a${COST}");
+			newUpgradeLore.add("&7Horse XP Needed: &a{HORSE-EXP-NEEDED}");
+			config.set("horse-gui-options.items.upgrade-item.lore", newUpgradeLore);
 		}
 
 		config.set("version", latestVersion);

@@ -344,6 +344,10 @@ horse-gui-options:
       lore:
         - '&7Click to upgrade your horse'
         - ''
+        - '&7Health: &c{OLD-HEALTH} &7-> &c{NEW-HEALTH}'
+        - '&7Speed: &b{OLD-SPEED} &7-> &b{NEW-SPEED}'
+        - '&7Jump: &e{OLD-JUMP-STRENGTH} &7-> &e{NEW-JUMP-STRENGTH}'
+        - ''
         - '&7Cost: &a${COST}'
         - '&7Horse XP Needed: &a{HORSE-EXP-NEEDED}'
       x-cord: 7
@@ -761,7 +765,7 @@ messages:
   horse-already-in-market: '{PREFIX}&6{HORSE-NAME} &7is already listed in the market'
   horse-market-fail: '{PREFIX}Your &6{HORSE-NAME} &7must be alive and in your stable to be sold in the market'
   horse-is-in-market: '{PREFIX}You can''t call your horse while it''s in the market'
-  horse-is-dead: '{PREFIX}You can''t call your horse when it''s dead'
+  horse-is-dead: '{PREFIX}You horse is dead and won''t respawn for another &6{TIME-LEFT}'
   missing-items-upgrade: '{PREFIX}You are missing &6{ITEMS} &7needed to upgrade'
   cant-afford-upgrade: '{PREFIX}You can''t afford to upgrade &6{HORSE-NAME}'
   upgrade-horse-success: '{PREFIX}Upgraded &6{HORSE-NAME} &7to tier &6{TIER} &7successfully'

@@ -18,6 +18,7 @@ import org.plugins.rpghorses.tiers.Tier;
 import org.plugins.rpghorses.utils.RPGMessagingUtil;
 import org.plugins.rpghorses.utils.WorldGuardUtil;
 import roryslibrary.util.MessagingUtil;
+import roryslibrary.util.TimeUtil;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -353,7 +354,8 @@ public class HorseOwner {
 				Bukkit.getServer().dispatchCommand(Bukkit.getConsoleSender(), MessagingUtil.format(cmd.replace("{PLAYER}", p.getName())));
 			}
 		} else if (rpgHorse.isDead()) {
-			messagingUtil.sendMessageAtPath(p, "messages.horse-is-dead", rpgHorse);
+			String timeLeft = TimeUtil.formatTime((long) Math.ceil(plugin.getStableGuiManager().getDeathDifferent(rpgHorse) / 1000D));
+			messagingUtil.sendMessageAtPath(p, "messages.horse-is-dead", rpgHorse, "TIME-LEFT", timeLeft);
 		} else if (rpgHorse.isInMarket()) {
 			messagingUtil.sendMessageAtPath(p, "messages.horse-is-in-market", rpgHorse);
 		} else {

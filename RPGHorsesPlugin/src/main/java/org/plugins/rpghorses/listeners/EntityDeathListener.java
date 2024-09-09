@@ -47,7 +47,7 @@ public class EntityDeathListener implements Listener {
 				
 				this.stableGuiManager.updateRPGHorse(rpgHorse);
 				
-				messagingUtil.sendMessage(horseOwner.getPlayer(), plugin.getConfig().getString("messages.horse-died").replace("{TIME}", TimeUtil.formatTime(stableGuiManager.getDeathDifferent(rpgHorse) / 1000L)), rpgHorse);
+				messagingUtil.sendMessage(horseOwner.getPlayer(), plugin.getConfig().getString("messages.horse-died").replace("{TIME}", TimeUtil.formatTime((long) Math.ceil(stableGuiManager.getDeathDifferent(rpgHorse) / 1000D))), rpgHorse);
 			}
 		}
 	}
