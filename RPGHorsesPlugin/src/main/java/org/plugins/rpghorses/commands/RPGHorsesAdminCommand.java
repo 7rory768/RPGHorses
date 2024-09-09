@@ -655,11 +655,6 @@ public class RPGHorsesAdminCommand implements CommandExecutor {
 				String menu = args[3].toUpperCase();
 				if (!menu.endsWith("_GUI")) menu = menu + "_GUI";
 
-				HorseGUI horseGUI = horseOwner.getHorseGUI();
-				if (horseGUI == null || horseGUI.getRpgHorse() != rpgHorse){
-					horseOwner.setHorseGUI(horseGUI = horseGUIManager.getHorseGUI(rpgHorse));
-				}
-
 				if (menu.equals("RENAME_GUI")) {
 					rpgHorseManager.openRenameGUI(p.getPlayer(), horseOwner, rpgHorse, false);
 					return true;
@@ -667,6 +662,9 @@ public class RPGHorsesAdminCommand implements CommandExecutor {
 
 				try {
 					GUILocation guiLocation = GUILocation.valueOf(menu);
+
+					HorseGUI horseGUI;
+					horseOwner.setHorseGUI(horseGUI = horseGUIManager.getHorseGUI(rpgHorse));
 
 					if (guiLocation == GUILocation.STABLE_GUI) {
 						horseOwner.openStableGUIPage(1);

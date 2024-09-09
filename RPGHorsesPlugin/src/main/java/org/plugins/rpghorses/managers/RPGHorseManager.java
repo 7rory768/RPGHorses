@@ -184,6 +184,8 @@ public class RPGHorseManager {
 
 			tier.runCommands(p.getPlayer());
 
+			plugin.getStableGuiManager().updateRPGHorse(rpgHorse);
+
 			return true;
 		}
 		return false;
