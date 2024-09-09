@@ -31,7 +31,7 @@ public class HorseOwnerManager {
 	private final SQLManager sqlManager;
 	private final PlayerConfigs playerConfigs;
 
-	private ConcurrentHashMap<UUID, HorseOwner> horseOwners = new ConcurrentHashMap<>();
+	private final ConcurrentHashMap<UUID, HorseOwner> horseOwners = new ConcurrentHashMap<>();
 
 	public HorseOwnerManager(RPGHorsesMain plugin, HorseCrateManager horseCrateManager, PlayerConfigs playerConfigs) {
 		this.plugin = plugin;
@@ -168,7 +168,7 @@ public class HorseOwnerManager {
 
 	private HorseOwner removeHorseOwner(HorseOwner horseOwner) {
 		if (horseOwner != null) {
-			this.horseOwners.remove(horseOwner);
+			this.horseOwners.remove(horseOwner.getUUID());
 			horseOwner.setCurrentHorse(null);
 		}
 		return horseOwner;
