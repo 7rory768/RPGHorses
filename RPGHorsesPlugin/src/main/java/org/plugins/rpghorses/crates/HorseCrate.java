@@ -76,6 +76,9 @@ public class HorseCrate {
 			values[0] = min;
 			double max = Double.parseDouble(info.substring(index + 1).trim());
 			values[1] = max;
+		} else {
+			values[0] = Double.parseDouble(info.trim());
+			values[1] = values[0];
 		}
 		return values;
 	}
