@@ -13,6 +13,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.scheduler.BukkitRunnable;
+import org.bukkit.scheduler.BukkitTask;
 import org.plugins.rpghorses.RPGHorsesMain;
 import org.plugins.rpghorses.crates.HorseCrate;
 import org.plugins.rpghorses.horses.RPGHorse;
@@ -38,6 +39,11 @@ public class RPGHorseManager {
 	private final HashMap<UUID, HorseRenamer> horseRenamers = new HashMap<>();
 	private final List<Tier> tiers = new ArrayList<>();
 
+	private int healthRegenInterval;
+	private double healthRegenAmount;
+	private boolean onlyRegenActiveHorses;
+	private BukkitTask healthRegenTask;
+
 	public RPGHorseManager(RPGHorsesMain plugin, HorseOwnerManager horseOwnerManager) {
 		this.plugin = plugin;
 		this.horseOwnerManager = horseOwnerManager;
@@ -50,6 +56,13 @@ public class RPGHorseManager {
 		tiers.clear();
 
 		FileConfiguration config = plugin.getConfig();
+
+		this.healthRegenInterval = config.getInt("horse-options.health-regen-interval", 20);
+		this.healthRegenAmount = config.getDouble("horse-options.health-regen-amount", 1);
+		this.onlyRegenActiveHorses = config.getBoolean("horse-options.only-regen-active-horses", false);
+
+		this.startHealthRegenTask();
+
 		ConfigurationSection tiersConfig = config.getConfigurationSection("horse-tiers");
 
 		for (String tierNum : tiersConfig.getKeys(false)) {
@@ -71,6 +84,26 @@ public class RPGHorseManager {
 			this.validEntityTypes.add(EntityType.LLAMA);
 		}
 		this.validEntityTypes.add(EntityType.HORSE);
+	}
+
+	public void startHealthRegenTask() {
+		if (this.healthRegenTask != null)
+			this.healthRegenTask.cancel();
+
+		if (this.healthRegenAmount <= 0 || this.healthRegenInterval <= 0) return;
+
+		this.healthRegenTask = Bukkit.getScheduler().runTaskTimer(plugin, () -> {
+			for (Player player : Bukkit.getOnlinePlayers()) {
+				HorseOwner horseOwner = this.horseOwnerManager.getHorseOwner(player);
+				if (onlyRegenActiveHorses && horseOwner.getCurrentHorse() == null) continue;
+
+				for (RPGHorse rpgHorse : horseOwner.getRPGHorses()) {
+					if (rpgHorse.isDead() || (onlyRegenActiveHorses && horseOwner.getCurrentHorse() != rpgHorse)) continue;
+					rpgHorse.setHealth(Math.min(rpgHorse.getMaxHealth(), rpgHorse.getHealth() + this.healthRegenAmount));
+					plugin.getStableGuiManager().updateRPGHorse(rpgHorse);
+				}
+			}
+		}, 0, healthRegenInterval);
 	}
 
 	public boolean isRPGHorse(Entity entity) {

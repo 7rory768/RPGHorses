@@ -146,6 +146,9 @@ public class RPGHorse {
 		if (health > 0) {
 			this.health = health;
 
+			if (this.horse != null && this.horse.isValid())
+				this.horse.setHealth(health);
+
 			if (this.health > this.maxHealth) {
 				this.setMaxHealth(health);
 			}

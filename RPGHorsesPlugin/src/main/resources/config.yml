@@ -96,6 +96,12 @@ horse-options:
   allow-wandering: false
   # Should un-mounted horses de-spawn after their owner moves too far away? (-1 to disable)
   despawn-when-owner-past-distance: 10
+  # How often should rpg-horses regen health? (in ticks)
+  health-regen-interval: 20
+  # How much health should rpg-horses regen each interval?
+  health-regen-amount: 1.0
+  # Should rpg-horses regen health only when active?
+  only-regen-active-horses: false
   names:
     # Min name length (does not include color codes)
     min-length: 3

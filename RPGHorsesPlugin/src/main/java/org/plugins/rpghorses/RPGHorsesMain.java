@@ -590,6 +590,13 @@ public class RPGHorsesMain extends JavaPlugin {
 			newUpgradeLore.add("&7Cost: &a${COST}");
 			newUpgradeLore.add("&7Horse XP Needed: &a{HORSE-EXP-NEEDED}");
 			config.set("horse-gui-options.items.upgrade-item.lore", newUpgradeLore);
+
+			config.set("horse-options.health-regen-interval", 20);
+			config.setComments("horse-options.health-regen-interval", Collections.singletonList("How often should rpg-horses regen health? (in ticks)"));
+			config.set("horse-options.health-regen-amount", 1.0);
+			config.setComments("horse-options.health-regen-amount", Collections.singletonList("How much health should rpg-horses regen each interval?"));
+			config.set("horse-options.only-regen-active-horses", false);
+			config.setComments("horse-options.only-regen-active-horses", Collections.singletonList("Should rpg-horses regen health only when active?"));
 		}
 
 		config.set("version", latestVersion);
