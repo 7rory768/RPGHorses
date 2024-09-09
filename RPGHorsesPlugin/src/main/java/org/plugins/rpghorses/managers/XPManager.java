@@ -50,6 +50,11 @@ public class XPManager {
 					Location newLoc = p.getLocation();
 					Location oldLoc = horseOwner.getLastHorseLocation();
 
+					if (!horseOwner.isRidingHorse()) {
+						horseOwner.setLastHorseLocation(newLoc);
+						continue;
+					}
+
 					if (oldLoc == null || !newLoc.getWorld().getUID().equals(oldLoc.getWorld().getUID())) {
 						horseOwner.setLastHorseLocation(newLoc);
 						continue;

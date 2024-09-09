@@ -324,14 +324,15 @@ public class HorseOwner {
 
 	public boolean isRidingHorse() {
 		if (currentHorse == null) return false;
-		if (currentHorse.getHorse() == null) return false;
+
+		LivingEntity horse = currentHorse.getHorse();
+		if (horse == null || !horse.isValid() || horse.isDead()) return false;
 
 		Player p = getPlayer();
 		if (p == null) return false;
 
-		LivingEntity horse = currentHorse.getHorse();
 		if (RPGHorsesMain.getVersion().getWeight() < 11) {
-			return horse.getPassenger().equals(p);
+			return p.equals(horse.getPassenger());
 		} else {
 			return horse.getPassengers().contains(p);
 		}
