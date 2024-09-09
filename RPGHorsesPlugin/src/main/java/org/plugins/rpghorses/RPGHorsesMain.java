@@ -638,7 +638,7 @@ public class RPGHorsesMain extends JavaPlugin {
 	public void registerEvents() {
 		new ChunkUnloadListener(this);
 		new EntityDamageByEntityListener(this, this.rpgHorseManager, this.stableGuiManager);
-		new EntityDeathListener(this, this.rpgHorseManager, this.stableGuiManager, xpManager, messagingUtil);
+		new EntityDeathListener(this, this.rpgHorseManager, this.stableGuiManager, this.horseOwnerManager, xpManager, messagingUtil);
 		new EntitySpawnListener(this, this.rpgHorseManager, this.horseOwnerManager);
 		new InventoryClickListener(this, this.horseOwnerManager, this.rpgHorseManager, this.stableGuiManager, this.marketGUIManager, this.horseGUIManager, this.trailGUIManager, this.sellGUIManager, this.messageQueuer, this.messagingUtil);
 		new InventoryCloseListener(this, this.horseOwnerManager, this.stableGuiManager);
