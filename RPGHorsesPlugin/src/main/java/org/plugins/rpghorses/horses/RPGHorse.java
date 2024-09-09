@@ -20,6 +20,7 @@ import org.plugins.rpghorses.horseinfo.AbstractHorseInfo;
 import org.plugins.rpghorses.horseinfo.LegacyHorseInfo;
 import org.plugins.rpghorses.players.HorseOwner;
 import roryslibrary.util.MessagingUtil;
+import roryslibrary.util.Version;
 
 import java.util.HashMap;
 
@@ -311,6 +312,9 @@ public class RPGHorse {
 				inventory.setItem(0, new ItemStack(Material.SADDLE));
 			}
 
+			if (Version.isRunningMinimum(Version.v1_14))
+				horse.setPersistent(false);
+
 			horseOwner.setLastHorseLocation(p.getLocation());
 
 			if (horseOwner.autoMountOn()) {
@@ -345,6 +349,11 @@ public class RPGHorse {
 	}
 
 	public void despawnEntity() {
+		if (!Bukkit.isPrimaryThread()) {
+			Bukkit.getScheduler().runTask(RPGHorsesMain.getInstance(), this::despawnEntity);
+			return;
+		}
+
 		if (this.horse != null) {
 			RPGHorseDespawnEvent despawnEvent = new RPGHorseDespawnEvent(horseOwner.getPlayer(), horse);
 			Bukkit.getPluginManager().callEvent(despawnEvent);
