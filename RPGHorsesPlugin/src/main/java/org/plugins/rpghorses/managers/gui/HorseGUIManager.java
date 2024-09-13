@@ -98,12 +98,14 @@ public class HorseGUIManager {
 			String oldHealth = new BigDecimal(rpgHorse.getMaxHealth()).setScale(2, BigDecimal.ROUND_HALF_UP).toPlainString();;
 			String oldSpeed = new BigDecimal(rpgHorse.getMovementSpeed()).setScale(2, BigDecimal.ROUND_HALF_UP).toPlainString();
 			String oldJumpStrength = new BigDecimal(rpgHorse.getJumpStrength()).setScale(2, BigDecimal.ROUND_HALF_UP).toPlainString();
+			String oldTier = "" + tier.getTier();
 
 			String newHealth = tier == null ? "N/A" : new BigDecimal(tier.getNewHealth(rpgHorse.getMaxHealth())).setScale(2, BigDecimal.ROUND_HALF_UP).toPlainString();
 			String newSpeed = tier == null ? "N/A" : new BigDecimal(tier.getNewMovementSpeed(rpgHorse.getMovementSpeed())).setScale(2, BigDecimal.ROUND_HALF_UP).toPlainString();
 			String newJumpStrength = tier == null ? "N/A" : new BigDecimal(tier.getNewJumpStrength(rpgHorse.getJumpStrength())).setScale(2, BigDecimal.ROUND_HALF_UP).toPlainString();
+			String newTier = "" + (tier.getTier() + 1);
 
-			inventory.setItem(guiItem.getSlot(), ItemUtil.fillPlaceholders(guiItem.getItem(), "COST", NumberUtil.getCommaString(tier == null ? 0 : (int) tier.getCost()), "HORSE-EXP-NEEDED", NumberUtil.getCommaString(tier == null ? 0 : (int) tier.getExpCost()), "OLD-HEALTH", oldHealth, "OLD-SPEED", oldSpeed, "OLD-JUMP-STRENGTH", oldJumpStrength, "NEW-HEALTH", newHealth, "NEW-SPEED", newSpeed, "NEW-JUMP-STRENGTH", newJumpStrength));
+			inventory.setItem(guiItem.getSlot(), ItemUtil.fillPlaceholders(guiItem.getItem().clone(), "COST", NumberUtil.getCommaString(tier == null ? 0 : (int) tier.getCost()), "HORSE-EXP-NEEDED", NumberUtil.getCommaString(tier == null ? 0 : (int) tier.getExpCost()), "OLD-TIER", oldTier, "OLD-LEVEL", oldTier, "OLD-HEALTH", oldHealth, "OLD-SPEED", oldSpeed, "OLD-JUMP-STRENGTH", oldJumpStrength, "NEW-TIER", newTier, "NEW-LEVEL", newTier, "NEW-HEALTH", newHealth, "NEW-SPEED", newSpeed, "NEW-JUMP-STRENGTH", newJumpStrength));
 		}
 		
 		GUIItem autoMountItem = rpgHorse.getHorseOwner().autoMountOn() ? getGUIItem(ItemPurpose.TOGGLE_AUTOMOUNT_ON) : getGUIItem(ItemPurpose.TOGGLE_AUTOMOUNT_OFF);

@@ -350,6 +350,7 @@ horse-gui-options:
       lore:
         - '&7Click to upgrade your horse'
         - ''
+        - '&7Tier: &d{OLD-TIER} &7-> &d{NEW-TIER}'
         - '&7Health: &c{OLD-HEALTH} &7-> &c{NEW-HEALTH}'
         - '&7Speed: &b{OLD-SPEED} &7-> &b{NEW-SPEED}'
         - '&7Jump: &e{OLD-JUMP-STRENGTH} &7-> &e{NEW-JUMP-STRENGTH}'

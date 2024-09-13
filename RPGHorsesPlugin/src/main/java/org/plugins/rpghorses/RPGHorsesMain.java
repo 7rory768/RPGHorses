@@ -583,6 +583,7 @@ public class RPGHorsesMain extends JavaPlugin {
 			List<String> newUpgradeLore = new ArrayList<>();
 			newUpgradeLore.add("&7Click to upgrade your horse");
 			newUpgradeLore.add("");
+			newUpgradeLore.add("&7Tier: &d{OLD-TIER} &7-> &d{NEW-TIER}");
 			newUpgradeLore.add("&7Health: &c{OLD-HEALTH} &7-> &c{NEW-HEALTH}");
 			newUpgradeLore.add("&7Speed: &b{OLD-SPEED} &7-> &b{NEW-SPEED}");
 			newUpgradeLore.add("&7Jump: &e{OLD-JUMP-STRENGTH} &7-> &e{NEW-JUMP-STRENGTH}");
