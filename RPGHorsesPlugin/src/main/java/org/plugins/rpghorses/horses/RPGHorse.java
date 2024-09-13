@@ -166,6 +166,13 @@ public class RPGHorse {
 	public void setMaxHealth(double maxHealth) {
 		if (maxHealth > 0) {
 			this.maxHealth = maxHealth;
+			if (this.horse != null) {
+				if (RPGHorsesMain.getVersion().getWeight() >= 9) {
+					this.horse.getAttribute(Attribute.GENERIC_MAX_HEALTH).setBaseValue(this.maxHealth);
+				} else {
+					this.horse.setMaxHealth(this.maxHealth);
+				}
+			}
 		}
 	}
 
