@@ -72,15 +72,19 @@ public class HorseDespawner {
 	public void startDespawnTask() {
 		this.cancelDespawnTask();
 
-		final HorseDespawner horseDespawner = this;
 		this.despawnTask = new BukkitRunnable() {
 			@Override
 			public void run() {
 				for (HorseOwner horseOwner : horseOwnerManager.getHorseOwners().values()) {
 					RPGHorse currentHorse = horseOwner.getCurrentHorse();
-					if (currentHorse == null) return;
+					if (currentHorse == null) continue;
 
 					if (currentHorse.getHorse() == null || !currentHorse.getHorse().isValid()) {
+						despawnInSync(horseOwner, currentHorse);
+						continue;
+					}
+
+					if (horseOwner.getPlayer() == null) {
 						despawnInSync(horseOwner, currentHorse);
 						continue;
 					}
