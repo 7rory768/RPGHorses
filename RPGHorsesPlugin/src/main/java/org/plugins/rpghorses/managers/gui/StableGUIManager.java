@@ -324,9 +324,8 @@ public class StableGUIManager {
 		this.completedColor = this.plugin.getConfig().getString("progress-bar.completed-color");
 		this.missingColor = this.plugin.getConfig().getString("progress-bar.missing-color");
 		this.progressBarCount = this.plugin.getConfig().getInt("progress-bar.count");
-		
-		boolean reloadItems = false;
-		reloadItems = this.reloadStableFillItem() || reloadItems;
+
+		boolean reloadItems = this.reloadStableFillItem();
 		reloadItems = this.reloadAliveHorseItem() || reloadItems;
 		reloadItems = this.reloadDeadHorseItem() || reloadItems;
 		reloadItems = this.reloadMarketHorseItem() || reloadItems;
@@ -354,37 +353,37 @@ public class StableGUIManager {
 	private boolean reloadStableFillItem() {
 		ItemStack oldStableFillItem = this.stableFillItem;
 		this.stableFillItem = this.itemUtil.getItemStack("stable-options.fill-item");
-		return ItemUtil.isSimilar(oldStableFillItem, stableFillItem);
+		return !ItemUtil.isSimilar(oldStableFillItem, stableFillItem);
 	}
 	
 	private boolean reloadAliveHorseItem() {
 		ItemStack oldAliveHorseItem = this.aliveHorseItem;
 		this.aliveHorseItem = this.itemUtil.getItemStack("stable-options.alive-horse-item");
-		return ItemUtil.isSimilar(oldAliveHorseItem, aliveHorseItem);
+		return !ItemUtil.isSimilar(oldAliveHorseItem, aliveHorseItem);
 	}
 	
 	private boolean reloadDeadHorseItem() {
 		ItemStack oldDeadHorseItem = this.deadHorseItem;
 		this.deadHorseItem = this.itemUtil.getItemStack("stable-options.dead-horse-item");
-		return ItemUtil.isSimilar(oldDeadHorseItem, deadHorseItem);
+		return !ItemUtil.isSimilar(oldDeadHorseItem, deadHorseItem);
 	}
 	
 	private boolean reloadMarketHorseItem() {
 		ItemStack oldMarketHorseItem = this.marketHorseItem;
 		this.marketHorseItem = this.itemUtil.getItemStack("stable-options.market-horse-item");
-		return ItemUtil.isSimilar(oldMarketHorseItem, marketHorseItem);
+		return !ItemUtil.isSimilar(oldMarketHorseItem, marketHorseItem);
 	}
 	
 	private boolean reloadPreviousPageItem() {
 		ItemStack oldPreviousPageItem = this.previousPageItem;
 		this.previousPageItem = this.itemUtil.getItemStack("stable-options.previous-page-item");
-		return ItemUtil.isSimilar(oldPreviousPageItem, previousPageItem);
+		return !ItemUtil.isSimilar(oldPreviousPageItem, previousPageItem);
 	}
 	
 	private boolean reloadNextPageItem() {
 		ItemStack oldNextPageItem = this.nextPageItem;
 		this.nextPageItem = this.itemUtil.getItemStack("stable-options.next-page-item");
-		return ItemUtil.isSimilar(oldNextPageItem, nextPageItem);
+		return !ItemUtil.isSimilar(oldNextPageItem, nextPageItem);
 	}
 	
 	private boolean reloadStableNumbers() {

@@ -249,6 +249,10 @@ public class ItemUtil extends roryslibrary.util.ItemUtil {
 			return false;
 		}
 
+		if (o == null && o1 == null) {
+			return true;
+		}
+
 		if (o.getType() != o1.getType() || o.getDurability() != o1.getDurability()) {
 			return false;
 		}
