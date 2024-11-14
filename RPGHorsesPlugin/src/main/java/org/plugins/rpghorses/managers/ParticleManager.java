@@ -13,6 +13,7 @@ import org.plugins.rpghorses.horses.RPGHorse;
 import org.plugins.rpghorses.players.HorseOwner;
 
 import java.util.HashSet;
+import java.util.concurrent.ThreadLocalRandom;
 
 public class ParticleManager {
 
@@ -46,7 +47,13 @@ public class ParticleManager {
 							Particle particle = currentHorse.getParticle();
 							if (particle != null) {
 								Location loc = currentHorse.getHorse().getPassenger().getLocation();
-								loc.getWorld().spawnParticle(particle, loc, volume, 0.1, yOffset, 0.1);
+
+								if (particle.getDataType() == Color.class) {
+									Color color = Color.fromRGB(ThreadLocalRandom.current().nextInt(0, 256), ThreadLocalRandom.current().nextInt(0, 256), ThreadLocalRandom.current().nextInt(0, 256));
+									loc.getWorld().spawnParticle(particle, loc, volume, 0.1, yOffset, 0.1, color);
+								} else {
+									loc.getWorld().spawnParticle(particle, loc, volume, 0.1, yOffset, 0.1);
+								}
 							}
 						} else {
 							Effect effect = ((LegacyHorseInfo) currentHorse.getHorseInfo()).getEffect();

@@ -6,10 +6,11 @@ import org.bukkit.inventory.ItemStack;
 @Getter
 public class TrailGUIItem extends GUIItem {
 	
-	private String trailName;
+	private String trailName, trailPlaceholder;
 	
-	public TrailGUIItem(ItemStack item, ItemPurpose itemPurpose, boolean enabled, int slot, String trailName) {
+	public TrailGUIItem(ItemStack item, ItemPurpose itemPurpose, boolean enabled, int slot, String trailName, String trailPlaceholder) {
 		super(item, itemPurpose, enabled, slot);
 		this.trailName = trailName;
+		this.trailPlaceholder = trailPlaceholder;
 	}
 }

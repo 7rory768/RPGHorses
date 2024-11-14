@@ -68,7 +68,9 @@ public class TrailGUIManager {
 			ItemMeta itemMeta = trailItem.getItemMeta();
 			ItemMeta newMeta = itemMeta;
 
-			if (!config.getBoolean("trails." + trailName + ".enabled", true))
+			String trailPlaceholder = config.getString(path + "trails." + trailName + ".placeholder", trailName);
+
+			if (!config.getBoolean(path + "trails." + trailName + ".enabled", true))
 				continue;
 
 			if (Version.getVersion().getWeight() >= Version.v1_19.getWeight()) {
@@ -83,7 +85,7 @@ public class TrailGUIManager {
 				item.setItemMeta(newMeta);
 			}
 
-			validTrails.put(trailName, replacePlaceholders(new TrailGUIItem(item, ItemPurpose.TRAIL, true, -1, trailName)));
+			validTrails.put(trailName, replacePlaceholders(new TrailGUIItem(item, ItemPurpose.TRAIL, true, -1, trailName, trailPlaceholder)));
 		}
 
 		int totalTrails = validTrails.size(), slot = 10, trailsLeft = totalTrails, row = 1;
@@ -217,11 +219,7 @@ public class TrailGUIManager {
 	}
 
 	public TrailGUIItem replacePlaceholders(TrailGUIItem trailGUIItem) {
-		String name = "";
-		for (String word : trailGUIItem.getTrailName().toLowerCase().replace("_", " ").split("\\s")) {
-			name += word.substring(0, 1).toUpperCase() + word.substring(1) + " ";
-		}
-		name = name.trim();
+		String name = trailGUIItem.getTrailPlaceholder();
 
 		ItemMeta itemMeta = trailGUIItem.getItem().getItemMeta();
 

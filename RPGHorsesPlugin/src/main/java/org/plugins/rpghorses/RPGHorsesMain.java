@@ -7,7 +7,10 @@ import net.milkbowl.vault.permission.Permission;
 import org.bstats.bukkit.Metrics;
 import org.bstats.charts.SimplePie;
 import org.bukkit.Bukkit;
+import org.bukkit.Color;
+import org.bukkit.Particle;
 import org.bukkit.command.CommandSender;
+import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -148,7 +151,7 @@ public class RPGHorsesMain extends JavaPlugin {
 		FileConfiguration config = getConfig();
 
 		int version = config.getInt("version", 1);
-		int latestVersion = 5;
+		int latestVersion = 6;
 
 		if (version < 2) {
 			config.set("stable-options.market-horse-item.skin-value", null);
@@ -598,6 +601,420 @@ public class RPGHorsesMain extends JavaPlugin {
 			config.setComments("horse-options.health-regen-amount", Collections.singletonList("How much health should rpg-horses regen each interval?"));
 			config.set("horse-options.only-regen-active-horses", false);
 			config.setComments("horse-options.only-regen-active-horses", Collections.singletonList("Should rpg-horses regen health only when active?"));
+		}
+
+		if (version < 6) {
+			config.set("messages.horse-rename-title", "&6Type the new name");
+
+			for (Particle particle : Particle.values()) {
+				if (particle.getDataType() != Color.class && particle.getDataType() != Void.class)
+					continue;
+
+				String path = "trail-gui-options.trails." + particle.name();
+
+				if (config.contains(path, true) && !config.isConfigurationSection(path))
+					continue;
+
+				ConfigurationSection section = config.isConfigurationSection(path) ? config.getConfigurationSection(path) : config.createSection(path);
+
+				StringBuilder placeholder = new StringBuilder();
+				for (String word : particle.name().split("_"))
+					placeholder.append(word.substring(0, 1).toUpperCase()).append(word.substring(1).toLowerCase()).append(" ");
+
+				if (!section.contains("placeholder")) section.set("placeholder", placeholder.toString().trim());
+				if (!section.contains("enabled")) section.set("enabled", true);
+				if (!section.contains("textures-url")) {
+					if (particle.name().equals("SOUL_FIRE_FLAME")) {
+						section.set("textures-url", "https://textures.minecraft.net/texture/d20cb73f207b07d259ca1eef7cade302c7ea104b8a0c240b897a577971122e56");
+						if (!section.contains("skin-value"))
+							section.set("skin-value", "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvZDIwY2I3M2YyMDdiMDdkMjU5Y2ExZWVmN2NhZGUzMDJjN2VhMTA0YjhhMGMyNDBiODk3YTU3Nzk3MTEyMmU1NiJ9fX0=");
+					} else if (particle.name().equals("ITEM_SNOWBALL")) {
+						section.set("textures-url", "https://textures.minecraft.net/texture/e115c7968ec3771ee9ff6ae6bca2d5ba3962aa727a4fa8d37608e4c9bf1512bb");
+						if (!section.contains("skin-value"))
+							section.set("skin-value", "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvZTExNWM3OTY4ZWMzNzcxZWU5ZmY2YWU2YmNhMmQ1YmEzOTYyYWE3MjdhNGZhOGQzNzYwOGU0YzliZjE1MTJiYiJ9fX0=");
+					} else if (particle.name().equals("BUBBLE_COLUMN_UP")) {
+						section.set("textures-url", "https://textures.minecraft.net/texture/ae40fe6a9db22f2b12e605e492995bd46ac9367b26b8ab85e07266801becf71d");
+						if (!section.contains("skin-value"))
+							section.set("skin-value", "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvYjhmYjQwNGFmY2VhMTg3MTg3MmI4MWM3MTM5N2E1YzE2NTY0Mjg2MjYxZTI2NDdmZDY3NmZmYjk5MTc2MzJhZiJ9fX0=");
+					} else if (particle.name().equals("BUBBLE_POP")) {
+						section.set("textures-url", "https://textures.minecraft.net/texture/ae40fe6a9db22f2b12e605e492995bd46ac9367b26b8ab85e07266801becf71d");
+						if (!section.contains("skin-value"))
+							section.set("skin-value", "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvYjhmYjQwNGFmY2VhMTg3MTg3MmI4MWM3MTM5N2E1YzE2NTY0Mjg2MjYxZTI2NDdmZDY3NmZmYjk5MTc2MzJhZiJ9fX0=");
+					} else if (particle.name().equals("CAMPFIRE_COSY_SMOKE") || particle.name().equals("CAMPFIRE_SIGNAL_SMOKE")) {
+						section.set("textures-url", "https://textures.minecraft.net/texture/6d95965d79ddf613f594fd20d51e765c09a2a5ff8d0e09cff19a8ea4302358ad");
+						if (!section.contains("skin-value"))
+							section.set("skin-value", "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvNmQ5NTk2NWQ3OWRkZjYxM2Y1OTRmZDIwZDUxZTc2NWMwOWEyYTVmZjhkMGUwOWNmZjE5YThlYTQzMDIzNThhZCJ9fX0=");
+					} else if (particle.name().equals("CHERRY_LEAVES")) {
+						section.set("textures-url", "https://textures.minecraft.net/texture/9679861f7ecfe494103214d8a69b4cf51bd6a51c22662dc72345f23115c0a6ee");
+						if (!section.contains("skin-value"))
+							section.set("skin-value", "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvOTY3OTg2MWY3ZWNmZTQ5NDEwMzIxNGQ4YTY5YjRjZjUxYmQ2YTUxYzIyNjYyZGM3MjM0NWYyMzExNWMwYTZlZSJ9fX0=");
+					} else if (particle.name().equals("CLOUD")) {
+						section.set("textures-url", "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvMWE5NTcwNDE1Zjk0YjM5NGZmNTFhOTI1OWYxZmNmOWRiMzA2Njc3NDM4YmRjOGJhYzM1ZGNkNTkxYWEwMmVkZSJ9fX0=");
+						if (!section.contains("skin-value"))
+							section.set("skin-value", "https://textures.minecraft.net/texture/1a9570415f94b394ff51a9259f1fcf9db306677438bdc8bac35dcd591aa02ede");
+					} else if (particle.name().equals("COMPOSTER")) {
+						section.set("textures-url", "https://textures.minecraft.net/texture/53cb8f61e7f6bf957a2134e96faeb0fc924137d4bff88d9518b2bf662586c92e");
+						if (!section.contains("skin-value"))
+							section.set("skin-value", "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvNTNjYjhmNjFlN2Y2YmY5NTdhMjEzNGU5NmZhZWIwZmM5MjQxMzdkNGJmZjg4ZDk1MThiMmJmNjYyNTg2YzkyZSJ9fX0=");
+					} else if (particle.name().equals("CRIMSON_SPORE")) {
+						section.set("textures-url", "https://textures.minecraft.net/texture/944e504f311f0076384b3e09060fefefc44e0770523e684dd3df9402e06aa1b1");
+						if (!section.contains("skin-value"))
+							section.set("skin-value", "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvOTQ0ZTUwNGYzMTFmMDA3NjM4NGIzZTA5MDYwZmVmZWZjNDRlMDc3MDUyM2U2ODRkZDNkZjk0MDJlMDZhYTFiMSJ9fX0=");
+					} else if (particle.name().equals("CURRENT_DOWN")) {
+						section.set("textures-url", "https://textures.minecraft.net/texture/f0d1df8046f0b5d934c3e05798eacfeea6d7b595dbe26debf7db9acc8c4fa798");
+						if (!section.contains("skin-value"))
+							section.set("skin-value", "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvZjBkMWRmODA0NmYwYjVkOTM0YzNlMDU3OThlYWNmZWVhNmQ3YjU5NWRiZTI2ZGViZjdkYjlhY2M4YzRmYTc5OCJ9fX0=");
+					} else if (particle.name().equals("DAMAGE_INDICATOR")) {
+						section.set("textures-url", "https://textures.minecraft.net/texture/5cd20bd8c48ea2a27055eaf90b1a920f4eaf9a81ec8c3328a4c974c9e13ce3c2");
+						if (!section.contains("skin-value"))
+							section.set("skin-value", "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvNWNkMjBiZDhjNDhlYTJhMjcwNTVlYWY5MGIxYTkyMGY0ZWFmOWE4MWVjOGMzMzI4YTRjOTc0YzllMTNjZTNjMiJ9fX0=");
+					} else if (particle.name().equals("DOLPHIN")) {
+						section.set("textures-url", "https://textures.minecraft.net/texture/8e9688b950d880b55b7aa2cfcd76e5a0fa94aac6d16f78e833f7443ea29fed3");
+						if (!section.contains("skin-value"))
+							section.set("skin-value", "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvOGU5Njg4Yjk1MGQ4ODBiNTViN2FhMmNmY2Q3NmU1YTBmYTk0YWFjNmQxNmY3OGU4MzNmNzQ0M2VhMjlmZWQzIn19fQ==");
+					} else if (particle.name().equals("DRAGON_BREATH")) {
+						section.set("textures-url", "https://textures.minecraft.net/texture/8f81c9d42680ad7bc686a1281073fbbe2fd8161913e5a3bd99693d2c404d8828");
+						if (!section.contains("skin-value"))
+							section.set("skin-value", "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvOGY4MWM5ZDQyNjgwYWQ3YmM2ODZhMTI4MTA3M2ZiYmUyZmQ4MTYxOTEzZTVhM2JkOTk2OTNkMmM0MDRkODgyOCJ9fX0=");
+					} else if (particle.name().equals("DRIPPING_DRIPSTONE_LAVA") || particle.name().equals("DRIPPING_DRIPSTONE_WATER")) {
+						section.set("textures-url", "https://textures.minecraft.net/texture/450ad731ce6dc21eb5eef6948bd2180a7a32fa1fe3851e47e3c00c6e246249a2");
+						if (!section.contains("skin-value"))
+							section.set("skin-value", "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvNDUwYWQ3MzFjZTZkYzIxZWI1ZWVmNjk0OGJkMjE4MGE3YTMyZmExZmUzODUxZTQ3ZTNjMDBjNmUyNDYyNDlhMiJ9fX0=");
+					} else if (particle.name().equals("DRIPPING_HONEY")) {
+						section.set("textures-url", "https://textures.minecraft.net/texture/8aebd0df92ebf43a744e86663230cb08274faf303e6b3caef4e50d3838fbf14f");
+						if (!section.contains("skin-value"))
+							section.set("skin-value", "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvOGFlYmQwZGY5MmViZjQzYTc0NGU4NjY2MzIzMGNiMDgyNzRmYWYzMDNlNmIzY2FlZjRlNTBkMzgzOGZiZjE0ZiJ9fX0=");
+					} else if (particle.name().equals("DRIPPING_LAVA")) {
+						section.set("textures-url", "https://textures.minecraft.net/texture/b69a32cfff03155b9f8109858d8303b06fe70d0b535ba64b51d0302ff339e0cb");
+						if (!section.contains("skin-value"))
+							section.set("skin-value", "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvYjY5YTMyY2ZmZjAzMTU1YjlmODEwOTg1OGQ4MzAzYjA2ZmU3MGQwYjUzNWJhNjRiNTFkMDMwMmZmMzM5ZTBjYiJ9fX0=");
+					} else if (particle.name().equals("DRIPPING_OBSIDIAN_TEAR")) {
+						section.set("textures-url", "https://textures.minecraft.net/texture/6426ab888298adf1effd811c8074def09780e7d9d12ba4c77b73fda9982dd0fe");
+						if (!section.contains("skin-value"))
+							section.set("skin-value", "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvNjQyNmFiODg4Mjk4YWRmMWVmZmQ4MTFjODA3NGRlZjA5NzgwZTdkOWQxMmJhNGM3N2I3M2ZkYTk5ODJkZDBmZSJ9fX0=");
+					} else if (particle.name().equals("DRIPPING_WATER")) {
+						section.set("textures-url", "https://textures.minecraft.net/texture/49f1f07e2b1c32bb64a128e529f3af1e5286e518544edf8cbaa6c4065b476b");
+						if (!section.contains("skin-value"))
+							section.set("skin-value", "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvNDlmMWYwN2UyYjFjMzJiYjY0YTEyOGU1MjlmM2FmMWU1Mjg2ZTUxODU0NGVkZjhjYmFhNmM0MDY1YjQ3NmIifX19");
+					} else if (particle.name().equals("DUST_PLUME")) {
+						section.set("textures-url", "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvNDk5NDdkZTEyOTU4ZmU5NWU2YWExMTRmODRkNmYzOGRhMzAxOTJkZDZkNjllZDYzYzZmYjk3NjA4OTE0ZDM1MiJ9fX0=");
+						if (!section.contains("skin-value"))
+							section.set("skin-value", "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvNDk5NDdkZTEyOTU4ZmU5NWU2YWExMTRmODRkNmYzOGRhMzAxOTJkZDZkNjllZDYzYzZmYjk3NjA4OTE0ZDM1MiJ9fX0=");
+					} else if (particle.name().equals("EGG_CRACK")) {
+						section.set("textures-url", "https://textures.minecraft.net/texture/bee0d852d452d50827b745088d7e7a1829b0690cf242bded7eab3532ad89608");
+						if (!section.contains("skin-value"))
+							section.set("skin-value", "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvYmVlMGQ4NTJkNDUyZDUwODI3Yjc0NTA4OGQ3ZTdhMTgyOWIwNjkwY2YyNDJiZGVkN2VhYjM1MzJhZDg5NjA4In19fQ==");
+					} else if (particle.name().equals("ELDER_GUARDIAN")) {
+						section.set("textures-url", "https://textures.minecraft.net/texture/4340a268f25fd5cc276ca147a8446b2630a55867a2349f7ca107c26eb58991");
+						if (!section.contains("skin-value"))
+							section.set("skin-value", "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvNDM0MGEyNjhmMjVmZDVjYzI3NmNhMTQ3YTg0NDZiMjYzMGE1NTg2N2EyMzQ5ZjdjYTEwN2MyNmViNTg5OTEifX19");
+					} else if (particle.name().equals("ELECTRIC_SPARK")) {
+						section.set("textures-url", "https://textures.minecraft.net/texture/c465c121958c0522e3dccb3d14d68612d6317cd380b0e646b61b7420b904af02");
+						if (!section.contains("skin-value"))
+							section.set("skin-value", "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvYzQ2NWMxMjE5NThjMDUyMmUzZGNjYjNkMTRkNjg2MTJkNjMxN2NkMzgwYjBlNjQ2YjYxYjc0MjBiOTA0YWYwMiJ9fX0=");
+					} else if (particle.name().equals("ENCHANT")) {
+						section.set("textures-url", "https://textures.minecraft.net/texture/28951399d0ebd0dfe87e50f0d6dee25274d93f1fbb38505ec971b601d1c2cb9");
+						if (!section.contains("skin-value"))
+							section.set("skin-value", "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvMjg5NTEzOTlkMGViZDBkZmU4N2U1MGYwZDZkZWUyNTI3NGQ5M2YxZmJiMzg1MDVlYzk3MWI2MDFkMWMyY2I5In19fQ==");
+					} else if (particle.name().equals("ENCHANTED_HIT")) {
+						section.set("textures-url", "https://textures.minecraft.net/texture/348a7ea198ec4efd8b56bcda8aa4230039e04d1338ee98fa85897bd4f342d632");
+						if (!section.contains("skin-value"))
+							section.set("skin-value", "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvMzQ4YTdlYTE5OGVjNGVmZDhiNTZiY2RhOGFhNDIzMDAzOWUwNGQxMzM4ZWU5OGZhODU4OTdiZDRmMzQyZDYzMiJ9fX0=");
+					} else if (particle.name().equals("END_ROD")) {
+						section.set("textures-url", "https://textures.minecraft.net/texture/d80b3d019cca367ce3ca6f182fcf91ac9b8fb0be29afcedfe558ecee20b817de");
+						if (!section.contains("skin-value"))
+							section.set("skin-value", "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvZDgwYjNkMDE5Y2NhMzY3Y2UzY2E2ZjE4MmZjZjkxYWM5YjhmYjBiZTI5YWZjZWRmZTU1OGVjZWUyMGI4MTdkZSJ9fX0=");
+					} else if (particle.name().equals("EXPLOSION")) {
+						section.set("textures-url", "https://textures.minecraft.net/texture/602a1169309f05ef2f061b1fa0fe225f29d73a24f8f07ccc2a705deeaca069d1");
+						if (!section.contains("skin-value"))
+							section.set("skin-value", "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvNjAyYTExNjkzMDlmMDVlZjJmMDYxYjFmYTBmZTIyNWYyOWQ3M2EyNGY4ZjA3Y2NjMmE3MDVkZWVhY2EwNjlkMSJ9fX0=");
+					} else if (particle.name().equals("EXPLOSION_EMITTER")) {
+						section.set("textures-url", "https://textures.minecraft.net/texture/fc1087630208c9bc782c54722faeb99b8d5c9975a341c2f487b086824190b81b");
+						if (!section.contains("skin-value"))
+							section.set("skin-value", "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvZmMxMDg3NjMwMjA4YzliYzc4MmM1NDcyMmZhZWI5OWI4ZDVjOTk3NWEzNDFjMmY0ODdiMDg2ODI0MTkwYjgxYiJ9fX0=");
+					} else if (particle.name().equals("FALLING_DRIPSTONE_LAVA")) {
+						section.set("textures-url", "https://textures.minecraft.net/texture/1c9e6bfdcbe297b53ce1f127a2af3cb9539415c418138fd1bdda57242c69edd");
+						if (!section.contains("skin-value"))
+							section.set("skin-value", "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvMWM5ZTZiZmRjYmUyOTdiNTNjZTFmMTI3YTJhZjNjYjk1Mzk0MTVjNDE4MTM4ZmQxYmRkYTU3MjQyYzY5ZWRkIn19fQ==");
+					} else if (particle.name().equals("FALLING_DRIPSTONE_WATER")) {
+						section.set("textures-url", "https://textures.minecraft.net/texture/e6799bfaa3a2c63ad85dd378e66d57d9a97a3f86d0d9f683c498632f4f5c");
+						if (!section.contains("skin-value"))
+							section.set("skin-value", "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvZTY3OTliZmFhM2EyYzYzYWQ4NWRkMzc4ZTY2ZDU3ZDlhOTdhM2Y4NmQwZDlmNjgzYzQ5ODYzMmY0ZjVjIn19fQ==");
+					} else if (particle.name().equals("FALLING_DUST")) {
+						section.set("textures-url", "https://textures.minecraft.net/texture/93a1b830399ab432a5178fdaf3939b24bf25c724a66be947296c503352bc380d");
+						if (!section.contains("skin-value"))
+							section.set("skin-value", "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvOTNhMWI4MzAzOTlhYjQzMmE1MTc4ZmRhZjM5MzliMjRiZjI1YzcyNGE2NmJlOTQ3Mjk2YzUwMzM1MmJjMzgwZCJ9fX0=");
+					} else if (particle.name().equals("FALLING_HONEY")) {
+						section.set("textures-url", "https://textures.minecraft.net/texture/b906bfd817cc5818c7620e288f4e413014318c0bcbb5ecd6da8a5923d51c52f2");
+						if (!section.contains("skin-value"))
+							section.set("skin-value", "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvYjkwNmJmZDgxN2NjNTgxOGM3NjIwZTI4OGY0ZTQxMzAxNDMxOGMwYmNiYjVlY2Q2ZGE4YTU5MjNkNTFjNTJmMiJ9fX0=");
+					} else if (particle.name().equals("FALLING_LAVA")) {
+						section.set("textures-url", "https://textures.minecraft.net/texture/15c6a8036dfb9bd1e4aecb3ce3fbc340aec30b676c08dc9dd4280f508c4cedda");
+						if (!section.contains("skin-value"))
+							section.set("skin-value", "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvMTVjNmE4MDM2ZGZiOWJkMWU0YWVjYjNjZTNmYmMzNDBhZWMzMGI2NzZjMDhkYzlkZDQyODBmNTA4YzRjZWRkYSJ9fX0=");
+					} else if (particle.name().equals("FALLING_NECTAR")) {
+						section.set("textures-url", "https://textures.minecraft.net/texture/bb9960eade2dcb6e744c7d084def00599fe7327e3973cd2ca0af4a2a1e6eac08");
+						if (!section.contains("skin-value"))
+							section.set("skin-value", "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvYmI5OTYwZWFkZTJkY2I2ZTc0NGM3ZDA4NGRlZjAwNTk5ZmU3MzI3ZTM5NzNjZDJjYTBhZjRhMmExZTZlYWMwOCJ9fX0=");
+					} else if (particle.name().equals("FALLING_OBSIDIAN_TEAR")) {
+						section.set("textures-url", "https://textures.minecraft.net/texture/6426ab888298adf1effd811c8074def09780e7d9d12ba4c77b73fda9982dd0fe");
+						if (!section.contains("skin-value"))
+							section.set("skin-value", "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvNjQyNmFiODg4Mjk4YWRmMWVmZmQ4MTFjODA3NGRlZjA5NzgwZTdkOWQxMmJhNGM3N2I3M2ZkYTk5ODJkZDBmZSJ9fX0=");
+					} else if (particle.name().equals("FALLING_SPORE_BLOSSOM")) {
+						section.set("textures-url", "https://textures.minecraft.net/texture/195f349cc4c017d2ad2a5300da87a43f7960fdf16ef3e05ad44ac22063a0c270");
+						if (!section.contains("skin-value"))
+							section.set("skin-value", "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvMTk1ZjM0OWNjNGMwMTdkMmFkMmE1MzAwZGE4N2E0M2Y3OTYwZmRmMTZlZjNlMDVhZDQ0YWMyMjA2M2EwYzI3MCJ9fX0=");
+					} else if (particle.name().equals("FALLING_WATER")) {
+						section.set("textures-url", "https://textures.minecraft.net/texture/314d8b1a62815e62dfd547ad90a3f3574529b3e04f70f435a4e205f5683ad62f");
+						if (!section.contains("skin-value"))
+							section.set("skin-value", "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvMzE0ZDhiMWE2MjgxNWU2MmRmZDU0N2FkOTBhM2YzNTc0NTI5YjNlMDRmNzBmNDM1YTRlMjA1ZjU2ODNhZDYyZiJ9fX0=");
+					} else if (particle.name().equals("FIREWORK")) {
+						section.set("textures-url", "https://textures.minecraft.net/texture/a71baf92ffd639f71c79918f5979eef652c6371e6e1bb92ea5599990509ec2b7");
+						if (!section.contains("skin-value"))
+							section.set("skin-value", "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvYTcxYmFmOTJmZmQ2MzlmNzFjNzk5MThmNTk3OWVlZjY1MmM2MzcxZTZlMWJiOTJlYTU1OTk5OTA1MDllYzJiNyJ9fX0=");
+					} else if (particle.name().equals("FISHING")) {
+						section.set("textures-url", "https://textures.minecraft.net/texture/ff75871c90b94f4fbc167e351d36e8aeae1cc2fec03b16629007f74c989de648");
+						if (!section.contains("skin-value"))
+							section.set("skin-value", "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvZmY3NTg3MWM5MGI5NGY0ZmJjMTY3ZTM1MWQzNmU4YWVhZTFjYzJmZWMwM2IxNjYyOTAwN2Y3NGM5ODlkZTY0OCJ9fX0=");
+					} else if (particle.name().equals("FLAME")) {
+						section.set("textures-url", "https://textures.minecraft.net/texture/21708574e7e9a6a76c9aa8214797b1ac38950689ef9cdda18d50362398b6101d");
+						if (!section.contains("skin-value"))
+							section.set("skin-value", "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvMjE3MDg1NzRlN2U5YTZhNzZjOWFhODIxNDc5N2IxYWMzODk1MDY4OWVmOWNkZGExOGQ1MDM2MjM5OGI2MTAxZCJ9fX0=");
+					} else if (particle.name().equals("FLASH")) {
+						section.set("textures-url", "https://textures.minecraft.net/texture/5f3a8c1681dd2837e2b223310cc3cc6655eed4474bb6a63bf2df5b87429debe1");
+						if (!section.contains("skin-value"))
+							section.set("skin-value", "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvNWYzYThjMTY4MWRkMjgzN2UyYjIyMzMxMGNjM2NjNjY1NWVlZDQ0NzRiYjZhNjNiZjJkZjViODc0MjlkZWJlMSJ9fX0=");
+					} else if (particle.name().equals("GLOW")) {
+						section.set("textures-url", "https://textures.minecraft.net/texture/d1b11a60c643f1447fa45d22d38fd4da74617a45b4351e58472abacf0eb7cabb");
+						if (!section.contains("skin-value"))
+							section.set("skin-value", "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvZDFiMTFhNjBjNjQzZjE0NDdmYTQ1ZDIyZDM4ZmQ0ZGE3NDYxN2E0NWI0MzUxZTU4NDcyYWJhY2YwZWI3Y2FiYiJ9fX0=");
+					} else if (particle.name().equals("GLOW_SQUID_INK")) {
+						section.set("textures-url", "https://textures.minecraft.net/texture/7b424dd82d8249af6668447b920b6cbc94ae14ab9410dd9d0ae3f042f50e270d");
+						if (!section.contains("skin-value"))
+							section.set("skin-value", "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvN2I0MjRkZDgyZDgyNDlhZjY2Njg0NDdiOTIwYjZjYmM5NGFlMTRhYjk0MTBkZDlkMGFlM2YwNDJmNTBlMjcwZCJ9fX0=");
+					} else if (particle.name().equals("GUST") || particle.name().equals("GUST_EMITTER_LARGE") || particle.name().equals("GUST_EMITTER_SMALL")) {
+						section.set("textures-url", "https://textures.minecraft.net/texture/1b24d578daf1e8624b62cd647864522a26bfcdc02bac1102f9c1d9d82d7b25d2");
+						if (!section.contains("skin-value"))
+							section.set("skin-value", "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvMWIyNGQ1NzhkYWYxZTg2MjRiNjJjZDY0Nzg2NDUyMmEyNmJmY2RjMDJiYWMxMTAyZjljMWQ5ZDgyZDdiMjVkMiJ9fX0=");
+					} else if (particle.name().equals("INFESTED")) {
+						section.set("textures-url", "https://textures.minecraft.net/texture/ea953869a0c53e7c5c012115c2a4303ccbff9d2fb78bad4e28d066ed16d0f91");
+						if (!section.contains("skin-value"))
+							section.set("skin-value", "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvZWE5NTM4NjlhMGM1M2U3YzVjMDEyMTE1YzJhNDMwM2NjYmZmOWQyZmI3OGJhZDRlMjhkMDY2ZWQxNmQwZjkxIn19fQ==");
+					} else if (particle.name().equals("INSTANT_EFFECT")) {
+						section.set("textures-url", "https://textures.minecraft.net/texture/6fd77129617aa0a4f9f7b09e429847f477eb2b7696ac151f19bce48e1157fded");
+						if (!section.contains("skin-value"))
+							section.set("skin-value", "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvNmZkNzcxMjk2MTdhYTBhNGY5ZjdiMDllNDI5ODQ3ZjQ3N2ViMmI3Njk2YWMxNTFmMTliY2U0OGUxMTU3ZmRlZCJ9fX0=");
+					} else if (particle.name().equals("ITEM_COBWEB")) {
+						section.set("textures-url", "https://textures.minecraft.net/texture/7960da26126bc02ae882310105c765e10694792e67716dd50bafec190febecf3");
+						if (!section.contains("skin-value"))
+							section.set("skin-value", "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvNzk2MGRhMjYxMjZiYzAyYWU4ODIzMTAxMDVjNzY1ZTEwNjk0NzkyZTY3NzE2ZGQ1MGJhZmVjMTkwZmViZWNmMyJ9fX0=");
+					} else if (particle.name().equals("ITEM_SLIME")) {
+						section.set("textures-url", "https://textures.minecraft.net/texture/c98665bf1702c68db939f7bfe885021fb73a0817d91af43830293f7162a5f901");
+						if (!section.contains("skin-value"))
+							section.set("skin-value", "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvYzk4NjY1YmYxNzAyYzY4ZGI5MzlmN2JmZTg4NTAyMWZiNzNhMDgxN2Q5MWFmNDM4MzAyOTNmNzE2MmE1ZjkwMSJ9fX0=");
+					} else if (particle.name().equals("ITEM_SNOWBALL")) {
+						section.set("textures-url", "https://textures.minecraft.net/texture/1dfd7724c69a024dcfc60b16e00334ab5738f4a92bafb8fbc76cf15322ea0293");
+						if (!section.contains("skin-value"))
+							section.set("skin-value", "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvMWRmZDc3MjRjNjlhMDI0ZGNmYzYwYjE2ZTAwMzM0YWI1NzM4ZjRhOTJiYWZiOGZiYzc2Y2YxNTMyMmVhMDI5MyJ9fX0=");
+					} else if (particle.name().equals("LANDING_HONEY")) {
+						section.set("textures-url", "https://textures.minecraft.net/texture/4a7e0d55ea8051569955da138697174a0bd76190b2d58b997509737dce5fb61f");
+						if (!section.contains("skin-value"))
+							section.set("skin-value", "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvNGE3ZTBkNTVlYTgwNTE1Njk5NTVkYTEzODY5NzE3NGEwYmQ3NjE5MGIyZDU4Yjk5NzUwOTczN2RjZTVmYjYxZiJ9fX0=");
+					} else if (particle.name().equals("LANDING_LAVA")) {
+						section.set("textures-url", "https://textures.minecraft.net/texture/a4b93f41532fc27ef7df933c181ac3166d56037d5c5ff75d2e85afe37ca257d3");
+						if (!section.contains("skin-value"))
+							section.set("skin-value", "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvYTRiOTNmNDE1MzJmYzI3ZWY3ZGY5MzNjMTgxYWMzMTY2ZDU2MDM3ZDVjNWZmNzVkMmU4NWFmZTM3Y2EyNTdkMyJ9fX0=");
+					} else if (particle.name().equals("LANDING_OBSIDIAN_TEAR")) {
+						section.set("textures-url", "https://textures.minecraft.net/texture/6426ab888298adf1effd811c8074def09780e7d9d12ba4c77b73fda9982dd0fe");
+						if (!section.contains("skin-value"))
+							section.set("skin-value", "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvNjQyNmFiODg4Mjk4YWRmMWVmZmQ4MTFjODA3NGRlZjA5NzgwZTdkOWQxMmJhNGM3N2I3M2ZkYTk5ODJkZDBmZSJ9fX0=");
+					} else if (particle.name().equals("LARGE_SMOKE")) {
+						section.set("textures-url", "https://textures.minecraft.net/texture/1d057965c99a69039e4054d8d3db4b3d88504065ce4f7652def02603f2fb8e41");
+						if (!section.contains("skin-value"))
+							section.set("skin-value", "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvMWQwNTc5NjVjOTlhNjkwMzllNDA1NGQ4ZDNkYjRiM2Q4ODUwNDA2NWNlNGY3NjUyZGVmMDI2MDNmMmZiOGU0MSJ9fX0=");
+					} else if (particle.name().equals("LAVA")) {
+						section.set("textures-url", "https://textures.minecraft.net/texture/6ee23579dbceb451dbf37b86a626fe671cf595f3e1e5c78faa3e77cd11da270b");
+						if (!section.contains("skin-value"))
+							section.set("skin-value", "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvNmVlMjM1NzlkYmNlYjQ1MWRiZjM3Yjg2YTYyNmZlNjcxY2Y1OTVmM2UxZTVjNzhmYWEzZTc3Y2QxMWRhMjcwYiJ9fX0=");
+					} else if (particle.name().equals("MYCELIUM")) {
+						section.set("textures-url", "https://textures.minecraft.net/texture/7eb4c41f481e816cf4b507b0a17595f2ba1f24664dc432be347d4e7a4eb3");
+						if (!section.contains("skin-value"))
+							section.set("skin-value", "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvN2ViNGM0MWY0ODFlODE2Y2Y0YjUwN2IwYTE3NTk1ZjJiYTFmMjQ2NjRkYzQzMmJlMzQ3ZDRlN2E0ZWIzIn19fQ==");
+					} else if (particle.name().equals("NAUTILUS")) {
+						section.set("textures-url", "https://textures.minecraft.net/texture/32805e4a7982e706ebd2ea6c8209402cd7c1cf9cc08b7aace3a8af7718cca7dc");
+						if (!section.contains("skin-value"))
+							section.set("skin-value", "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvMzI4MDVlNGE3OTgyZTcwNmViZDJlYTZjODIwOTQwMmNkN2MxY2Y5Y2MwOGI3YWFjZTNhOGFmNzcxOGNjYTdkYyJ9fX0=");
+					} else if (particle.name().equals("NOTE")) {
+						section.set("textures-url", "https://textures.minecraft.net/texture/e82b0b7c68e88800030e674522aab40396fa543072b949c0600e66c2ed352ff0");
+						if (!section.contains("skin-value"))
+							section.set("skin-value", "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvZTgyYjBiN2M2OGU4ODgwMDAzMGU2NzQ1MjJhYWI0MDM5NmZhNTQzMDcyYjk0OWMwNjAwZTY2YzJlZDM1MmZmMCJ9fX0=");
+					} else if (particle.name().equals("OMINOUS_SPAWNING")) {
+						section.set("textures-url", "https://textures.minecraft.net/texture/70baa9218f78b78d73ebf87217c042bf43d34dba3d4c4ccf1d33f612456115f0");
+						if (!section.contains("skin-value"))
+							section.set("skin-value", "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvNzBiYWE5MjE4Zjc4Yjc4ZDczZWJmODcyMTdjMDQyYmY0M2QzNGRiYTNkNGM0Y2NmMWQzM2Y2MTI0NTYxMTVmMCJ9fX0=");
+					} else if (particle.name().equals("POOF")) {
+						section.set("textures-url", "https://textures.minecraft.net/texture/1b24d578daf1e8624b62cd647864522a26bfcdc02bac1102f9c1d9d82d7b25d2");
+						if (!section.contains("skin-value"))
+							section.set("skin-value", "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvMWIyNGQ1NzhkYWYxZTg2MjRiNjJjZDY0Nzg2NDUyMmEyNmJmY2RjMDJiYWMxMTAyZjljMWQ5ZDgyZDdiMjVkMiJ9fX0=");
+					} else if (particle.name().equals("PORTAL")) {
+						section.set("textures-url", "https://textures.minecraft.net/texture/2c915db3fc40a79b63c2c453f0c490981e5227c5027501283272138533dea519");
+						if (!section.contains("skin-value"))
+							section.set("skin-value", "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvMmM5MTVkYjNmYzQwYTc5YjYzYzJjNDUzZjBjNDkwOTgxZTUyMjdjNTAyNzUwMTI4MzI3MjEzODUzM2RlYTUxOSJ9fX0=");
+					} else if (particle.name().equals("RAID_OMEN")) {
+						section.set("textures-url", "https://textures.minecraft.net/texture/34543e3dfb5048b43ca3c3abcf0df4b3fcfb17a99854d76cfaa67a661f564fd9");
+						if (!section.contains("skin-value"))
+							section.set("skin-value", "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvMzQ1NDNlM2RmYjUwNDhiNDNjYTNjM2FiY2YwZGY0YjNmY2ZiMTdhOTk4NTRkNzZjZmFhNjdhNjYxZjU2NGZkOSJ9fX0=");
+					} else if (particle.name().equals("RAIN")) {
+						section.set("textures-url", "https://textures.minecraft.net/texture/df0d96336ffcc7f12a8a8f5e3bd258ec2d8037ba24a435917c3d531b216de6d7");
+						if (!section.contains("skin-value"))
+							section.set("skin-value", "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvZGYwZDk2MzM2ZmZjYzdmMTJhOGE4ZjVlM2JkMjU4ZWMyZDgwMzdiYTI0YTQzNTkxN2MzZDUzMWIyMTZkZTZkNyJ9fX0=");
+					} else if (particle.name().equals("REVERSE_PORTAL")) {
+						section.set("textures-url", "https://textures.minecraft.net/texture/2f920986c572389a23c8ac0471b88df44a4776803be6444f5ff0b9d1552c274e");
+						if (!section.contains("skin-value"))
+							section.set("skin-value", "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvMmY5MjA5ODZjNTcyMzg5YTIzYzhhYzA0NzFiODhkZjQ0YTQ3NzY4MDNiZTY0NDRmNWZmMGI5ZDE1NTJjMjc0ZSJ9fX0=");
+					} else if (particle.name().equals("SCULK_CHARGE_POP")) {
+						section.set("textures-url", "https://textures.minecraft.net/texture/57bc418359ddf397d3bc291e51bdd231e1624b88c542ad132f0aebd2bf4a6e54");
+						if (!section.contains("skin-value"))
+							section.set("skin-value", "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvNTdiYzQxODM1OWRkZjM5N2QzYmMyOTFlNTFiZGQyMzFlMTYyNGI4OGM1NDJhZDEzMmYwYWViZDJiZjRhNmU1NCJ9fX0=");
+					} else if (particle.name().equals("SCULK_SOUL")) {
+						section.set("textures-url", "https://textures.minecraft.net/texture/3eea90cbcc2a2021892a56fa9aa5f797e6e43d98c406f8d6b52c69ba3f463be0");
+						if (!section.contains("skin-value"))
+							section.set("skin-value", "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvM2VlYTkwY2JjYzJhMjAyMTg5MmE1NmZhOWFhNWY3OTdlNmU0M2Q5OGM0MDZmOGQ2YjUyYzY5YmEzZjQ2M2JlMCJ9fX0=");
+					} else if (particle.name().equals("SMALL_FLAME")) {
+						section.set("textures-url", "https://textures.minecraft.net/texture/bb58b83f07618ea79a1a1202b5a77b14df1c8e35b6e1deb8a26d8976f85360c3");
+						if (!section.contains("skin-value"))
+							section.set("skin-value", "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvYmI1OGI4M2YwNzYxOGVhNzlhMWExMjAyYjVhNzdiMTRkZjFjOGUzNWI2ZTFkZWI4YTI2ZDg5NzZmODUzNjBjMyJ9fX0=");
+					} else if (particle.name().equals("SMALL_GUST")) {
+						section.set("textures-url", "https://textures.minecraft.net/texture/1b24d578daf1e8624b62cd647864522a26bfcdc02bac1102f9c1d9d82d7b25d2");
+						if (!section.contains("skin-value"))
+							section.set("skin-value", "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvMWIyNGQ1NzhkYWYxZTg2MjRiNjJjZDY0Nzg2NDUyMmEyNmJmY2RjMDJiYWMxMTAyZjljMWQ5ZDgyZDdiMjVkMiJ9fX0=");
+					} else if (particle.name().equals("SMOKE")) {
+						section.set("textures-url", "https://textures.minecraft.net/texture/1d057965c99a69039e4054d8d3db4b3d88504065ce4f7652def02603f2fb8e41");
+						if (!section.contains("skin-value"))
+							section.set("skin-value", "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvMWQwNTc5NjVjOTlhNjkwMzllNDA1NGQ4ZDNkYjRiM2Q4ODUwNDA2NWNlNGY3NjUyZGVmMDI2MDNmMmZiOGU0MSJ9fX0=");
+					} else if (particle.name().equals("SNOWFLAKE")) {
+						section.set("textures-url", "https://textures.minecraft.net/texture/e115c7968ec3771ee9ff6ae6bca2d5ba3962aa727a4fa8d37608e4c9bf1512bb");
+						if (!section.contains("skin-value"))
+							section.set("skin-value", "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvZTExNWM3OTY4ZWMzNzcxZWU5ZmY2YWU2YmNhMmQ1YmEzOTYyYWE3MjdhNGZhOGQzNzYwOGU0YzliZjE1MTJiYiJ9fX0=");
+					} else if (particle.name().equals("SONIC_BOOM")) {
+						section.set("textures-url", "https://textures.minecraft.net/texture/9f02dc2fa1a220321376b5d5384f4adb392b1f7b610b638eab5c41611a744b71");
+						if (!section.contains("skin-value"))
+							section.set("skin-value", "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvOWYwMmRjMmZhMWEyMjAzMjEzNzZiNWQ1Mzg0ZjRhZGIzOTJiMWY3YjYxMGI2MzhlYWI1YzQxNjExYTc0NGI3MSJ9fX0=");
+					} else if (particle.name().equals("SOUL")) {
+						section.set("textures-url", "https://textures.minecraft.net/texture/54b8f3dbea08b3640555729c32d7461aa49ee229b9d6bb9ba3c907fdc45fa952");
+						if (!section.contains("skin-value"))
+							section.set("skin-value", "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvNTRiOGYzZGJlYTA4YjM2NDA1NTU3MjljMzJkNzQ2MWFhNDllZTIyOWI5ZDZiYjliYTNjOTA3ZmRjNDVmYTk1MiJ9fX0=");
+					} else if (particle.name().equals("SOUL_FIRE_FLAME")) {
+						section.set("textures-url", "https://textures.minecraft.net/texture/d20cb73f207b07d259ca1eef7cade302c7ea104b8a0c240b897a577971122e56");
+						if (!section.contains("skin-value"))
+							section.set("skin-value", "https://textures.minecraft.net/texture/d20cb73f207b07d259ca1eef7cade302c7ea104b8a0c240b897a577971122e56");
+					} else if (particle.name().equals("SPIT")) {
+						section.set("textures-url", "https://textures.minecraft.net/texture/92b31239520511ca7b6712ef0ecfb55b6c56b9347240f4cbf9925ce0bf0fa445");
+						if (!section.contains("skin-value"))
+							section.set("skin-value", "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvOTJiMzEyMzk1MjA1MTFjYTdiNjcxMmVmMGVjZmI1NWI2YzU2YjkzNDcyNDBmNGNiZjk5MjVjZTBiZjBmYTQ0NSJ9fX0=");
+					} else if (particle.name().equals("SPLASH")) {
+						section.set("textures-url", "https://textures.minecraft.net/texture/6f5cb401239a3410632c1bf040c9b6b2492d2819b88a3632f1de3e0ceec08812");
+						if (!section.contains("skin-value"))
+							section.set("skin-value", "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvNmY1Y2I0MDEyMzlhMzQxMDYzMmMxYmYwNDBjOWI2YjI0OTJkMjgxOWI4OGEzNjMyZjFkZTNlMGNlZWMwODgxMiJ9fX0=");
+					} else if (particle.name().equals("SPORE_BLOSSOM_AIR")) {
+						section.set("textures-url", "https://textures.minecraft.net/texture/195f349cc4c017d2ad2a5300da87a43f7960fdf16ef3e05ad44ac22063a0c270");
+						if (!section.contains("skin-value"))
+							section.set("skin-value", "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvMTk1ZjM0OWNjNGMwMTdkMmFkMmE1MzAwZGE4N2E0M2Y3OTYwZmRmMTZlZjNlMDVhZDQ0YWMyMjA2M2EwYzI3MCJ9fX0=");
+					} else if (particle.name().equals("SQUID_INK")) {
+						section.set("textures-url", "https://textures.minecraft.net/texture/938a42a80c70b243643ee5015e9d5149af54ade83ff55c2179f8a8b3b10805f6");
+						if (!section.contains("skin-value"))
+							section.set("skin-value", "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvOTM4YTQyYTgwYzcwYjI0MzY0M2VlNTAxNWU5ZDUxNDlhZjU0YWRlODNmZjU1YzIxNzlmOGE4YjNiMTA4MDVmNiJ9fX0=");
+					} else if (particle.name().equals("SWEEP_ATTACK")) {
+						section.set("textures-url", "https://textures.minecraft.net/texture/7e40ddae351c6674b88d6c6c978d188e4bbe5694b25c12985f4d0976f0690e5e");
+						if (!section.contains("skin-value"))
+							section.set("skin-value", "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvN2U0MGRkYWUzNTFjNjY3NGI4OGQ2YzZjOTc4ZDE4OGU0YmJlNTY5NGIyNWMxMjk4NWY0ZDA5NzZmMDY5MGU1ZSJ9fX0=");
+					} else if (particle.name().equals("TOTEM_OF_UNDYING")) {
+						section.set("textures-url", "https://textures.minecraft.net/texture/2bea24d751d25ecf29eed1159bc4f91903ab0eeab4da0675e1a986501f9159b9");
+						if (!section.contains("skin-value"))
+							section.set("skin-value", "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvMmJlYTI0ZDc1MWQyNWVjZjI5ZWVkMTE1OWJjNGY5MTkwM2FiMGVlYWI0ZGEwNjc1ZTFhOTg2NTAxZjkxNTliOSJ9fX0=");
+					} else if (particle.name().equals("TRIAL_OMEN")) {
+						section.set("textures-url", "https://textures.minecraft.net/texture/cfe2f511677d39c43ea376512b69212e45e810dc9cf966dbcc8980d9e0167674");
+						if (!section.contains("skin-value"))
+							section.set("skin-value", "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvY2ZlMmY1MTE2NzdkMzljNDNlYTM3NjUxMmI2OTIxMmU0NWU4MTBkYzljZjk2NmRiY2M4OTgwZDllMDE2NzY3NCJ9fX0=");
+					} else if (particle.name().equals("TRIAL_SPAWNER_DETECTION")) {
+						section.set("textures-url", "https://textures.minecraft.net/texture/c327758fb3852b874e12a31d90b6ccaf77c7de8215ab843703c76682544b607");
+						if (!section.contains("skin-value"))
+							section.set("skin-value", "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvYzMyNzc1OGZiMzg1MmI4NzRlMTJhMzFkOTBiNmNjYWY3N2M3ZGU4MjE1YWI4NDM3MDNjNzY2ODI1NDRiNjA3In19fQ==");
+					} else if (particle.name().equals("TRIAL_SPAWNER_DETECTION_OMINOUS")) {
+						section.set("textures-url", "https://textures.minecraft.net/texture/76d126affd03def502bfaa91a34e7c1562421490002a85c2b5815bdd4248e12");
+						if (!section.contains("skin-value"))
+							section.set("skin-value", "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvNzZkMTI2YWZmZDAzZGVmNTAyYmZhYTkxYTM0ZTdjMTU2MjQyMTQ5MDAwMmE4NWMyYjU4MTViZGQ0MjQ4ZTEyIn19fQ==");
+					} else if (particle.name().equals("UNDERWATER")) {
+						section.set("textures-url", "https://textures.minecraft.net/texture/3725c8adb9fe6b34b48740a130cec44b2825fe32dad198570050ee4b4edadf33");
+						if (!section.contains("skin-value"))
+							section.set("skin-value", "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvMzcyNWM4YWRiOWZlNmIzNGI0ODc0MGExMzBjZWM0NGIyODI1ZmUzMmRhZDE5ODU3MDA1MGVlNGI0ZWRhZGYzMyJ9fX0=");
+					} else if (particle.name().equals("VAULT_CONNECTION")) {
+						section.set("textures-url", "https://textures.minecraft.net/texture/334375719d19ef4ca29fd0b2baaadb9ad4c8de18e8791fc2413b2b9f4b54f5e0");
+						if (!section.contains("skin-value"))
+							section.set("skin-value", "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvMzM0Mzc1NzE5ZDE5ZWY0Y2EyOWZkMGIyYmFhYWRiOWFkNGM4ZGUxOGU4NzkxZmMyNDEzYjJiOWY0YjU0ZjVlMCJ9fX0=");
+					} else if (particle.name().equals("VIBRATION")) {
+						section.set("textures-url", "https://textures.minecraft.net/texture/f8c211d66c803aac15ab86f79c7edfd6c3b2034d23355a92f6bd42e835260be0");
+						if (!section.contains("skin-value"))
+							section.set("skin-value", "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvZjhjMjExZDY2YzgwM2FhYzE1YWI4NmY3OWM3ZWRmZDZjM2IyMDM0ZDIzMzU1YTkyZjZiZDQyZTgzNTI2MGJlMCJ9fX0=");
+					} else if (particle.name().equals("WARPED_SPORE")) {
+						section.set("textures-url", "https://textures.minecraft.net/texture/e257972cde33e8eba83efa5e84095d7650a45c0a08a851a557c82819018a560a");
+						if (!section.contains("skin-value"))
+							section.set("skin-value", "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvZTI1Nzk3MmNkZTMzZThlYmE4M2VmYTVlODQwOTVkNzY1MGE0NWMwYTA4YTg1MWE1NTdjODI4MTkwMThhNTYwYSJ9fX0=");
+					} else if (particle.name().equals("WAX_OFF")) {
+						section.set("textures-url", "https://textures.minecraft.net/texture/69fbe9bf6618cab10cfc5e1f4952da88c752607d823212fd36b9f0366a4c");
+						if (!section.contains("skin-value"))
+							section.set("skin-value", "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvNjlmYmU5YmY2NjE4Y2FiMTBjZmM1ZTFmNDk1MmRhODhjNzUyNjA3ZDgyMzIxMmZkMzZiOWYwMzY2YTRjIn19fQ==");
+					} else if (particle.name().equals("WAX_ON")) {
+						section.set("textures-url", "https://textures.minecraft.net/texture/db2ea2742c31ef7ff5e5e83cafa9c72c5d172e88d7c8d0dc1eac2eea5c1cc");
+						if (!section.contains("skin-value"))
+							section.set("skin-value", "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvZGIyZWEyNzQyYzMxZWY3ZmY1ZTVlODNjYWZhOWM3MmM1ZDE3MmU4OGQ3YzhkMGRjMWVhYzJlZWE1YzFjYyJ9fX0=");
+					} else if (particle.name().equals("WHITE_ASH")) {
+						section.set("textures-url", "https://textures.minecraft.net/texture/e900b1c6f390e6cc11ae17355de8056f1b8770c5ec8be43615a5175f1bfa91c9");
+						if (!section.contains("skin-value"))
+							section.set("skin-value", "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvZTkwMGIxYzZmMzkwZTZjYzExYWUxNzM1NWRlODA1NmYxYjg3NzBjNWVjOGJlNDM2MTVhNTE3NWYxYmZhOTFjOSJ9fX0=");
+					} else if (particle.name().equals("WHITE_SMOKE")) {
+						section.set("textures-url", "https://textures.minecraft.net/texture/ce3acc78b624c070849184e0a266d9e99aa671fb3e38d66c2c3c5191194793");
+						if (!section.contains("skin-value"))
+							section.set("skin-value", "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvY2UzYWNjNzhiNjI0YzA3MDg0OTE4NGUwYTI2NmQ5ZTk5YWE2NzFmYjNlMzhkNjZjMmMzYzUxOTExOTQ3OTMifX19");
+					} else if (particle.name().equals("WITCH")) {
+						section.set("textures-url", "https://textures.minecraft.net/texture/8aa986a6e1c2d88ff198ab2c3259e8d2674cb83a6d206f883bad2c8ada819");
+						if (!section.contains("skin-value"))
+							section.set("skin-value", "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvOGFhOTg2YTZlMWMyZDg4ZmYxOThhYjJjMzI1OWU4ZDI2NzRjYjgzYTZkMjA2Zjg4M2JhZDJjOGFkYTgxOSJ9fX0=");
+					} else if (particle.name().equals("EFFECT")) {
+						section.set("textures-url", "https://textures.minecraft.net/texture/3ef2432ef305361384d4318df5bda5bd1ac2d9bea06d1f5cfead6dd87e37ddf5");
+						if (!section.contains("skin-value"))
+							section.set("skin-value", "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvM2VmMjQzMmVmMzA1MzYxMzg0ZDQzMThkZjViZGE1YmQxYWMyZDliZWEwNmQxZjVjZmVhZDZkZDg3ZTM3ZGRmNSJ9fX0=");
+					} else if (particle.name().equals("HAPPY_VILLAGER")) {
+						section.set("textures-url", "https://textures.minecraft.net/texture/5e5dbc49e8188da1b936072d45bc7c13b42a0a4c0624b21058aa3f5283955b8e");
+						if (!section.contains("skin-value"))
+							section.set("skin-value", "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvNWU1ZGJjNDllODE4OGRhMWI5MzYwNzJkNDViYzdjMTNiNDJhMGE0YzA2MjRiMjEwNThhYTNmNTI4Mzk1NWI4ZSJ9fX0=");
+					} else if (particle.name().equals("ENTITY_EFFECT")) {
+						section.set("textures-url", "https://textures.minecraft.net/texture/67844a5b74f341039560f280db1fcdf836e3b6a48dc2a09351937626977e1c2");
+						if (!section.contains("skin-value"))
+							section.set("skin-value", "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvNjc4NDRhNWI3NGYzNDEwMzk1NjBmMjgwZGIxZmNkZjgzNmUzYjZhNDhkYzJhMDkzNTE5Mzc2MjY5NzdlMWMyIn19fQ==");
+					} else if (particle.name().equals("SNEEZE")) {
+						section.set("textures-url", "https://textures.minecraft.net/texture/6a463d2460b0f50a5ca8e6db53738ea25dd216706069e296cf64cd3371cf9a31");
+						if (!section.contains("skin-value"))
+							section.set("skin-value", "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvNmE0NjNkMjQ2MGIwZjUwYTVjYThlNmRiNTM3MzhlYTI1ZGQyMTY3MDYwNjllMjk2Y2Y2NGNkMzM3MWNmOWEzMSJ9fX0=");
+					} else if (particle.name().equals("SCRAPE")) {
+						section.set("textures-url", "https://textures.minecraft.net/texture/3299ec4d18a080034328b667efb95d7093d19b5be1ac91b7000df0f15eddf80a");
+						if (!section.contains("skin-value"))
+							section.set("skin-value", "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvMzI5OWVjNGQxOGEwODAwMzQzMjhiNjY3ZWZiOTVkNzA5M2QxOWI1YmUxYWM5MWI3MDAwZGYwZjE1ZWRkZjgwYSJ9fX0=");
+					}
+						/*else if (particle.name().equals("")) {
+							section.set("textures-url", "");
+							if (!section.contains("skin-value"))
+								section.set("skin-value", "");
+						} */
+					else {
+						section.set("textures-url", "https://textures.minecraft.net/texture/fc271052719ef64079ee8c1498951238a74dac4c27b95640db6fbddc2d6b5b6e");
+					}
+
+					if (!section.contains("skin-value")) {
+						section.set("skin-value", "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvZmMyNzEwNTI3MTllZjY0MDc5ZWU4YzE0OTg5NTEyMzhhNzRkYWM0YzI3Yjk1NjQwZGI2ZmJkZGMyZDZiNWI2ZSJ9fX0=");
+					}
+				}
+			}
 		}
 
 		config.set("version", latestVersion);
