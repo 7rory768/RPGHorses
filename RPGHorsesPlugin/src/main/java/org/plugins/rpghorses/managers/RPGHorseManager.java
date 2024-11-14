@@ -26,7 +26,6 @@ import org.plugins.rpghorses.utils.RPGMessagingUtil;
 import roryslibrary.util.MessagingUtil;
 
 import java.util.*;
-import java.util.stream.Collectors;
 
 @Getter
 public class RPGHorseManager {
@@ -98,7 +97,8 @@ public class RPGHorseManager {
 				if (onlyRegenActiveHorses && horseOwner.getCurrentHorse() == null) continue;
 
 				for (RPGHorse rpgHorse : horseOwner.getRPGHorses()) {
-					if (rpgHorse.isDead() || (onlyRegenActiveHorses && horseOwner.getCurrentHorse() != rpgHorse)) continue;
+					if (rpgHorse.isDead() || (onlyRegenActiveHorses && horseOwner.getCurrentHorse() != rpgHorse))
+						continue;
 					rpgHorse.setHealth(Math.min(rpgHorse.getMaxHealth(), rpgHorse.getHealth() + this.healthRegenAmount));
 					plugin.getStableGuiManager().updateRPGHorse(rpgHorse);
 				}
@@ -210,8 +210,10 @@ public class RPGHorseManager {
 				Entity passenger = rpgHorse.getHorse().getPassenger();
 
 				if (rpgHorse.spawnEntity()) {
-					if (passenger != null)
+					if (passenger != null && rpgHorse.getHorseOwner().autoMountOn())
 						rpgHorse.getHorse().setPassenger(passenger);
+				} else if (rpgHorse.getHorseOwner().getCurrentHorse() == rpgHorse) {
+					rpgHorse.getHorseOwner().setCurrentHorse(null);
 				}
 			}
 
@@ -323,7 +325,9 @@ public class RPGHorseManager {
 	public void updateHorse(RPGHorse rpgHorse) {
 		HorseOwner horseOwner = rpgHorse.getHorseOwner();
 		if (horseOwner.getCurrentHorse() == rpgHorse) {
-			rpgHorse.spawnEntity();
+			if (!rpgHorse.spawnEntity()) {
+				horseOwner.setCurrentHorse(null);
+			}
 		}
 
 	}
@@ -377,15 +381,15 @@ public class RPGHorseManager {
 
 		AnvilGUI.Builder builder = new AnvilGUI.Builder().plugin(plugin);
 		builder.onClose(player -> {
-			if (returnToHorseGUI) {
-				new BukkitRunnable() {
-					@Override
-					public void run() {
-						horseOwner.openHorseGUI(horseOwner.getHorseGUI());
+					if (returnToHorseGUI) {
+						new BukkitRunnable() {
+							@Override
+							public void run() {
+								horseOwner.openHorseGUI(horseOwner.getHorseGUI());
+							}
+						}.runTaskLater(plugin, 1L);
 					}
-				}.runTaskLater(plugin, 1L);
-			}
-		}
+				}
 		).onClick((clickSlot, state) -> {
 			String oldName = rpgHorse.getName(), name = state.getText();
 			if (!plugin.getConfig().getBoolean("horse-options.names.allow-spaces")) {

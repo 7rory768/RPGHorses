@@ -605,6 +605,14 @@ public class RPGHorsesMain extends JavaPlugin {
 
 		if (version < 6) {
 			config.set("messages.horse-rename-title", "&6Type the new name");
+			config.set("messages.automount-toggled", "{PREFIX}Your auto-mounting was turned &6{VALUE} &7by &6{SENDER}");
+			config.set("messages.automount-toggled-sender", "{PREFIX}You turned &6{PLAYER}''s &7auto-mounting &6{VALUE}");
+
+			config.set("horse-options.auto-mount-default", true);
+			config.setComments("horse-options.auto-mount-default", Collections.singletonList("What should auto-mount default to for new players"));
+
+			config.set("horse-options.require-clear-space", true);
+			config.setComments("horse-options.require-clear-space", Collections.singletonList("Require clear area for horse to spawn to prevent players clipping through blocks"));
 
 			for (Particle particle : Particle.values()) {
 				if (particle.getDataType() != Color.class && particle.getDataType() != Void.class)

@@ -257,6 +257,40 @@ public class RPGHorse {
 
 			this.horse = (LivingEntity) horseLoc.getWorld().spawnEntity(horseLoc, horseInfo.getEntityType());
 			horse.setMetadata("RPGHorse-HorseOwner", new FixedMetadataValue(RPGHorsesMain.getInstance(), horseOwner.getUUID().toString()));
+
+			if (Version.isRunningMinimum(Version.v1_21) && RPGHorsesMain.getInstance().getConfig().getBoolean("horse-options.require-clear-space", false)) {
+				// Check if hitbox is hitting anything solid
+				boolean clearSpace = true;
+
+				org.bukkit.util.BoundingBox box = horse.getBoundingBox();
+				for (double x = box.getMinX(); x <= box.getMaxX(); x += 0.5) {
+					for (double y = box.getMinY(); y <= box.getMaxY(); y += 0.5) {
+						for (double z = box.getMinZ(); z <= box.getMaxZ(); z += 0.5) {
+							Location loc = new Location(horse.getWorld(), x, box.getMinY(), z);
+							if (loc.getBlock().getType().isSolid()) {
+								clearSpace = false;
+								break;
+							}
+						}
+						if (!clearSpace) break;
+					}
+					if (!clearSpace) break;
+				}
+
+				if (clearSpace) {
+					Location loc = box.getMax().toLocation(horse.getWorld());
+					if (loc.getBlock().getType().isSolid()) {
+						clearSpace = false;
+					}
+				}
+
+				if (!clearSpace) {
+					this.horse.remove();
+					this.horse = null;
+					return false;
+				}
+			}
+
 			horseOwner.setLastHorseLocation(horse.getLocation());
 
 			if (RPGHorsesMain.getVersion().getWeight() < 11) {
