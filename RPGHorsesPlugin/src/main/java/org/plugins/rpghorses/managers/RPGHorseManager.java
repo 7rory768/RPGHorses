@@ -410,7 +410,7 @@ public class RPGHorseManager {
 			return Collections.singletonList(AnvilGUI.ResponseAction.close());
 		});
 
-		builder.title(RPGMessagingUtil.format("&6Type the new name")).itemOutput(horseOwner.getHorseGUI().getInventory().getItem(ItemUtil.getSlot(plugin.getConfig(), "horse-gui-options.horse-item")).clone()).text(rpgHorse.getName()).open(p);
+		builder.title(plugin.getMessagingUtil().getMessage("messages.horse-rename-title")).itemOutput(horseOwner.getHorseGUI().getInventory().getItem(ItemUtil.getSlot(plugin.getConfig(), "horse-gui-options.horse-item")).clone()).text(rpgHorse.getName()).open(p);
 	}
 
 }

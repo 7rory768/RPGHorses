@@ -798,5 +798,6 @@ messages:
   horse-limit: '{PREFIX}&6{PLAYER} &7tried to give you a RPGHorse but you''ve reached your limit!'
   no-horses: '{PREFIX}You don''t have any horses in your stable'
   no-horse-pvp: '{PREFIX}You can''t attack other player''s horses here'
+  horse-rename-title: '&6Type the new name'
   config-reloaded: '{PREFIX}Configuration file reloaded'
   no-permission: '&cYou don''t have permission for that'
