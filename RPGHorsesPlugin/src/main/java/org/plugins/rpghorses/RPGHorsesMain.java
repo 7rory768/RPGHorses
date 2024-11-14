@@ -1101,6 +1101,7 @@ public class RPGHorsesMain extends JavaPlugin {
 		helpMessages.put("&6/rpghorsesadmin togglehorse <horse-number> <player> &8- &7Toggles a players horse on/off", "rpghorses.togglehorse");
 		helpMessages.put("&6/rpghorsesadmin removeall <player> &8- &7Removes all of players horses", "rpghorses.removeall");
 		helpMessages.put("&6/rpghorsesadmin forcemenu <horse-number> <player> <menu> &8- &7Forces the player to open a specific menu", "rpghorses.forcemenu");
+		helpMessages.put("&6/rpghorsesadmin toggleautomount <player> [value] &8- &7Toggles a players automount on/off", "rpghorses.toggleautomount");
 		helpMessages.put("&6/rpghorsesadmin reload &8- &7Reloads the configuration file", "rpghorses.reload");
 	}
 

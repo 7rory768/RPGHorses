@@ -66,7 +66,7 @@ public class HorseOwnerManager {
 			horseOwner = new HorseOwner(uuid);
 
 			horseOwner.setReceivedDefaultHorse(config.getBoolean("received-default-horse", false));
-			horseOwner.setAutoMount(config.getBoolean("auto-mount", true));
+			horseOwner.setAutoMount(config.getBoolean("auto-mount", plugin.getConfig().getBoolean("horse-options.auto-mount-default", true)));
 
 			if (config.getConfigurationSection("rpghorses") != null) {
 				for (String horseIndex : config.getConfigurationSection("rpghorses").getKeys(false)) {

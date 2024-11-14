@@ -498,7 +498,7 @@ public class SQLManager extends roryslibrary.managers.SQLManager implements Plug
 
 			ResultSet set = preparedStatement.executeQuery();
 
-			boolean defaultHorse = false, autoMount = true;
+			boolean defaultHorse = false, autoMount = plugin.getConfig().getBoolean("horse-options.auto-mount-default", true);
 
 			if (set.next()) {
 				defaultHorse = set.getBoolean("default_horse");

@@ -32,7 +32,7 @@ public class HorseOwner {
 	private UUID uuid;
 	private List<RPGHorse> rpgHorses;
 	private RPGHorse currentHorse;
-	private boolean spawningHorse, receivedDefaultHorse, autoMount = true;
+	private boolean spawningHorse, receivedDefaultHorse, autoMount;
 	private Location lastHorseLocation;
 	private StableGUI stableGUI;
 	private StableGUIPage stableGUIPage;

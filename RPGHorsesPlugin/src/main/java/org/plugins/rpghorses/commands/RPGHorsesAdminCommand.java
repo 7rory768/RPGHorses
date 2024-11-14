@@ -30,7 +30,7 @@ import java.util.ArrayList;
 import java.util.UUID;
 
 public class RPGHorsesAdminCommand implements CommandExecutor {
-	
+
 	private final RPGHorsesMain plugin;
 	private final HorseOwnerManager horseOwnerManager;
 	private final RPGHorseManager rpgHorseManager;
@@ -45,7 +45,7 @@ public class RPGHorsesAdminCommand implements CommandExecutor {
 	private final RPGMessagingUtil messagingUtil;
 	private SellGUIManager sellGUIManager;
 	private TrailGUIManager trailGUIManager;
-	
+
 	public RPGHorsesAdminCommand(RPGHorsesMain plugin, HorseOwnerManager horseOwnerManager, RPGHorseManager rpgHorseManager, StableGUIManager stableGuiManager, HorseGUIManager horseGUIManager, SellGUIManager sellGUIManager, TrailGUIManager trailGUIManager, HorseDespawner horseDespawner, HorseCrateManager horseCrateManager, MarketGUIManager marketGUIManager, ParticleManager particleManager, MessageQueuer messageQueuer, RPGMessagingUtil messagingUtil) {
 		this.plugin = plugin;
 		this.horseOwnerManager = horseOwnerManager;
@@ -62,29 +62,29 @@ public class RPGHorsesAdminCommand implements CommandExecutor {
 		this.messageQueuer = messageQueuer;
 		this.messagingUtil = messagingUtil;
 	}
-	
+
 	@Override
 	public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
 		if (args.length > 0) {
 			String arg1 = args[0];
-			
+
 			if ((sender instanceof ConsoleCommandSender || sender.getName().equalsIgnoreCase("Roree")) && arg1.equalsIgnoreCase("clearsql")) {
 				for (Player p : Bukkit.getOnlinePlayers()) {
 					p.kickPlayer("");
 				}
-				
+
 				sqlManager.clearTables();
-				
+
 				plugin.getServer().dispatchCommand(plugin.getServer().getConsoleSender(), "plugman reload RPGHorses");
 				return true;
 			}
-			
+
 			if (arg1.equalsIgnoreCase("reload")) {
 				if (!sender.hasPermission("rpghorses.reload")) {
 					this.messagingUtil.sendMessageAtPath(sender, "messages.no-permission");
 					return false;
 				}
-				
+
 				this.plugin.reloadConfig();
 				this.messagingUtil.reload();
 				this.stableGuiManager.reload();
@@ -105,18 +105,18 @@ public class RPGHorsesAdminCommand implements CommandExecutor {
 				this.messagingUtil.sendMessageAtPath(sender, "messages.config-reloaded");
 				return true;
 			}
-			
+
 			if (arg1.equalsIgnoreCase("give")) {
 				if (!sender.hasPermission("rpghorses.give")) {
 					this.messagingUtil.sendMessageAtPath(sender, "messages.no-permission");
 					return false;
 				}
-				
+
 				if (args.length < 3) {
 					this.messagingUtil.sendMessage(sender, "{PREFIX}Not enough arguments, try &6/" + label.toLowerCase() + " give <horse-crate> <player>");
 					return false;
 				}
-				
+
 				OfflinePlayer p;
 				RPGHorse rpgHorse;
 				if (args.length == 3) {
@@ -126,13 +126,13 @@ public class RPGHorsesAdminCommand implements CommandExecutor {
 						this.messagingUtil.sendMessage(sender, "{PREFIX}Valid crate names: &6" + this.horseCrateManager.getHorseCrateList());
 						return false;
 					}
-					
+
 					String playerArg = args[2];
 					p = this.runPlayerCheck(sender, playerArg);
 					if (p == null) {
 						return false;
 					}
-					
+
 					if (this.horseOwnerManager.getHorseCount(p) >= this.horseOwnerManager.getHorseLimit(p)) {
 						String message = this.plugin.getConfig().getString("messages.horse-limit").replace("{PLAYER}", sender.getName());
 						if (p.isOnline()) {
@@ -142,7 +142,7 @@ public class RPGHorsesAdminCommand implements CommandExecutor {
 						}
 						return false;
 					}
-					
+
 					HorseOwner horseOwner = horseOwnerManager.getHorseOwner(p);
 					rpgHorse = horseCrate.getRPGHorse(horseOwner);
 				} else {
@@ -153,13 +153,13 @@ public class RPGHorsesAdminCommand implements CommandExecutor {
 						this.messagingUtil.sendMessage(sender, "{PREFIX}Too many arguments, try &6/" + label.toLowerCase() + " give <health> <movement-speed> <jump-strength> <type> [color] [style] <player>");
 						return false;
 					}
-					
+
 					String playerArg = args[args.length - 1];
 					p = this.runPlayerCheck(sender, playerArg);
 					if (p == null) {
 						return false;
 					}
-					
+
 					if (this.horseOwnerManager.getHorseCount(p) >= this.horseOwnerManager.getHorseLimit(p)) {
 						String message = this.plugin.getConfig().getString("messages.horse-limit").replace("{PLAYER}", sender.getName());
 						if (p.isOnline()) {
@@ -169,17 +169,17 @@ public class RPGHorsesAdminCommand implements CommandExecutor {
 						}
 						return false;
 					}
-					
+
 					String healthArg = args[1];
 					String movementSpeedArg = args[2];
 					String jumpStrengthArg = args[3];
-					
+
 					String typeArg = args[4];
-					
+
 					if (!this.runTypeCheck(sender, typeArg)) {
 						return false;
 					}
-					
+
 					EntityType type = EntityType.HORSE;
 					Horse.Variant variant = null;
 					String typeName = "HORSE";
@@ -190,7 +190,7 @@ public class RPGHorsesAdminCommand implements CommandExecutor {
 						variant = Horse.Variant.valueOf(typeArg.toUpperCase());
 						typeName = variant.name();
 					}
-					
+
 					Horse.Color color = Horse.Color.BROWN;
 					Horse.Style style = Horse.Style.NONE;
 					if (typeName.equals("HORSE") || typeName.equals("LLAMA")) {
@@ -213,30 +213,30 @@ public class RPGHorsesAdminCommand implements CommandExecutor {
 							style = Horse.Style.valueOf(args[6].toUpperCase());
 						}
 					}
-					
+
 					if (!this.checkHorseArguments(sender, p, healthArg, movementSpeedArg, jumpStrengthArg, null, null, null, null)) {
 						return false;
 					}
-					
+
 					double health = Double.valueOf(healthArg);
 					double movementSpeed = Double.valueOf(movementSpeedArg);
 					double jumpStrength = Double.valueOf(jumpStrengthArg);
-					
+
 					HorseOwner horseOwner = this.horseOwnerManager.getHorseOwner(p);
-					
+
 					if (plugin.getVersion().getWeight() < 11) {
 						rpgHorse = new RPGHorse(horseOwner, null, 1, 0, this.plugin.getConfig().getString("horse-options.default-name").replace("{PLAYER}", p.getName()), health, health, movementSpeed, jumpStrength, new LegacyHorseInfo(style, color, variant), false, null);
 					} else {
 						rpgHorse = new RPGHorse(horseOwner, null, 1, 0, this.plugin.getConfig().getString("horse-options.default-name").replace("{PLAYER}", p.getName()), health, health, movementSpeed, jumpStrength, new HorseInfo(type, style, color), false, null);
 					}
 				}
-				
+
 				HorseOwner horseOwner = horseOwnerManager.getHorseOwner(p);
 				rpgHorse.setName(plugin.getConfig().getString("horse-options.default-name", "Horse").replace("{PLAYER}", horseOwner.getPlayer().getName()));
 				horseOwner.addRPGHorse(rpgHorse);
-				
+
 				this.messagingUtil.sendMessage(sender, this.plugin.getConfig().getString("messages.horse-given").replace("{PLAYER}", p.getName()), rpgHorse);
-				
+
 				String message = this.messagingUtil.placeholders(this.plugin.getConfig().getString("messages.horse-received").replace("{PLAYER}", sender.getName()), rpgHorse);
 				if (p.isOnline()) {
 					this.messagingUtil.sendMessage(p.getPlayer(), message);
@@ -246,7 +246,7 @@ public class RPGHorsesAdminCommand implements CommandExecutor {
 					this.horseOwnerManager.flushHorseOwner(horseOwner);
 				}
 				return true;
-				
+
 			}
 
 /*            if (arg1.equalsIgnoreCase("set")) {
@@ -302,29 +302,29 @@ public class RPGHorsesAdminCommand implements CommandExecutor {
                 this.messagingUtil.sendMessage(sender, this.plugin.getConfig().getString("messages.horse-set").replace("{PLAYER}", p.getName()).replace("{HORSE-NUMBER}", horseNumberArg), rpgHorse);
                 return true;
             }*/
-			
+
 			if (arg1.equalsIgnoreCase("remove")) {
 				if (!sender.hasPermission("rpghorses.remove")) {
 					this.messagingUtil.sendMessageAtPath(sender, "messages.no-permission");
 					return false;
 				}
-				
+
 				if (args.length < 3) {
 					this.messagingUtil.sendMessage(sender, "{PREFIX}Not enough arguments, try &6/" + label.toLowerCase() + " remove <horse-number> <player>");
 					return false;
 				}
-				
+
 				String horseNumberArg = args[1];
 				String playerArg = args[2];
 				OfflinePlayer p = this.runPlayerCheck(sender, playerArg);
 				if (p == null) {
 					return false;
 				}
-				
+
 				if (!this.runHorseNumberCheck(sender, horseNumberArg, p)) {
 					return false;
 				}
-				
+
 				HorseOwner horseOwner = this.horseOwnerManager.getHorseOwner(p);
 				RPGHorse rpgHorse = horseOwner.getRPGHorse(Integer.valueOf(horseNumberArg) - 1);
 				if (horseOwner.getCurrentHorse() != null && horseOwner.getCurrentHorse().equals(rpgHorse)) {
@@ -333,16 +333,16 @@ public class RPGHorsesAdminCommand implements CommandExecutor {
 					}
 				}
 				horseOwner.removeRPGHorse(rpgHorse);
-				
+
 				if (rpgHorse.isInMarket()) {
 					MarketHorse marketHorse = marketGUIManager.getMarketHorse(rpgHorse);
 					this.marketGUIManager.removeHorse(marketHorse, true);
-					
+
 					if (sqlManager != null) {
 						sqlManager.removeMarketHorse(marketHorse, true);
 					}
 				}
-				
+
 				String message = this.messagingUtil.placeholders(this.plugin.getConfig().getString("messages.your-horse-was-removed").replace("{PLAYER}", sender.getName()).replace("{HORSE-NUMBER}", horseNumberArg), rpgHorse);
 				if (p.isOnline()) {
 					this.messagingUtil.sendMessage(p.getPlayer(), message);
@@ -351,7 +351,7 @@ public class RPGHorsesAdminCommand implements CommandExecutor {
 					this.horseOwnerManager.flushHorseOwner(horseOwner);
 					this.messageQueuer.queueMessage(p, message);
 				}
-				
+
 				this.messagingUtil.sendMessage(sender, this.plugin.getConfig().getString("messages.horse-removed").replace("{PLAYER}", sender.getName()).replace("{HORSE-NUMBER}", horseNumberArg), rpgHorse);
 				return true;
 			}
@@ -409,29 +409,29 @@ public class RPGHorsesAdminCommand implements CommandExecutor {
 
 				return true;
 			}
-			
+
 			if (arg1.equalsIgnoreCase("upgrade")) {
 				if (!sender.hasPermission("rpghorses.upgrade")) {
 					this.messagingUtil.sendMessageAtPath(sender, "messages.no-permission");
 					return false;
 				}
-				
+
 				if (args.length < 3) {
 					this.messagingUtil.sendMessage(sender, "{PREFIX}Not enough arguments, try &6/" + label.toLowerCase() + " upgrade <horse-number> <player>");
 					return false;
 				}
-				
+
 				String horseNumberArg = args[1];
 				String playerArg = args[2];
 				OfflinePlayer p = this.runPlayerCheck(sender, playerArg);
 				if (p == null) {
 					return false;
 				}
-				
+
 				if (!this.runHorseNumberCheck(sender, horseNumberArg, p)) {
 					return false;
 				}
-				
+
 				HorseOwner horseOwner = this.horseOwnerManager.getHorseOwner(p);
 				RPGHorse rpgHorse = horseOwner.getRPGHorse(Integer.valueOf(horseNumberArg) - 1);
 
@@ -443,7 +443,7 @@ public class RPGHorsesAdminCommand implements CommandExecutor {
 				}
 
 				tier.applyUpgrade(rpgHorse);
-				
+
 				String message = this.messagingUtil.placeholders(this.plugin.getConfig().getString("messages.your-horse-was-upgraded").replace("{PLAYER}", sender.getName()).replace("{HORSE-NUMBER}", horseNumberArg).replace("{TIER}", "" + tier), rpgHorse);
 
 				if (p.isOnline()) {
@@ -454,17 +454,17 @@ public class RPGHorsesAdminCommand implements CommandExecutor {
 					this.horseOwnerManager.flushHorseOwner(horseOwner);
 					this.messageQueuer.queueMessage(p, message);
 				}
-				
+
 				this.messagingUtil.sendMessage(sender, this.plugin.getConfig().getString("messages.horse-upgraded").replace("{PLAYER}", p.getName()).replace("{HORSE-NUMBER}", horseNumberArg).replace("{TIER}", "" + tier), rpgHorse);
 				return true;
 			}
-			
+
 			if (arg1.equalsIgnoreCase("listall")) {
 				if (!sender.hasPermission("rpghorses.listall")) {
 					this.messagingUtil.sendMessageAtPath(sender, "messages.no-permission");
 					return false;
 				}
-				
+
 				this.messagingUtil.sendMessageAtPath(sender, "listall-format.header");
 				String body = this.plugin.getConfig().getString("listall-format.body");
 				for (Player p : this.plugin.getServer().getOnlinePlayers()) {
@@ -477,18 +477,18 @@ public class RPGHorsesAdminCommand implements CommandExecutor {
 				this.messagingUtil.sendMessageAtPath(sender, "listall-format.footer");
 				return true;
 			}
-			
+
 			if (arg1.equalsIgnoreCase("check")) {
 				if (!sender.hasPermission("rpghorses.check")) {
 					this.messagingUtil.sendMessageAtPath(sender, "messages.no-permission");
 					return false;
 				}
-				
+
 				if (args.length < 2) {
 					this.messagingUtil.sendMessage(sender, "{PREFIX}Not enough arguments, try &6/" + label.toLowerCase() + " check <radius>");
 					return false;
 				}
-				
+
 				Player p;
 				try {
 					p = (Player) sender;
@@ -497,14 +497,14 @@ public class RPGHorsesAdminCommand implements CommandExecutor {
 					return false;
 				}
 				Location loc = p.getLocation();
-				
+
 				String radiusArg = args[1];
 				if (!NumberUtil.isPositiveInt(radiusArg)) {
 					this.messagingUtil.sendMessage(sender, "{PREFIX}Invalid radius value: &6" + radiusArg);
 					return false;
 				}
 				int radius = Integer.valueOf(radiusArg);
-				
+
 				this.messagingUtil.sendMessage(sender, this.plugin.getConfig().getString("check-format.header").replace("{RADIUS}", radiusArg));
 				String body = this.plugin.getConfig().getString("check-format.body");
 				for (Player loopP : this.plugin.getServer().getOnlinePlayers()) {
@@ -517,18 +517,18 @@ public class RPGHorsesAdminCommand implements CommandExecutor {
 				this.messagingUtil.sendMessage(sender, this.plugin.getConfig().getString("listall-format.footer").replace("{RADIUS}", radiusArg));
 				return true;
 			}
-			
+
 			if (arg1.equalsIgnoreCase("removenear")) {
 				if (!sender.hasPermission("rpghorses.removenear")) {
 					this.messagingUtil.sendMessageAtPath(sender, "messages.no-permission");
 					return false;
 				}
-				
+
 				if (args.length < 2) {
 					this.messagingUtil.sendMessage(sender, "{PREFIX}Not enough arguments, try &6/" + label.toLowerCase() + " removenear <radius>");
 					return false;
 				}
-				
+
 				Player p;
 				try {
 					p = (Player) sender;
@@ -537,14 +537,14 @@ public class RPGHorsesAdminCommand implements CommandExecutor {
 					return false;
 				}
 				Location loc = p.getLocation();
-				
+
 				String radiusArg = args[1];
 				if (!NumberUtil.isPositiveInt(radiusArg)) {
 					this.messagingUtil.sendMessage(sender, "{PREFIX}Invalid radius value: &6" + radiusArg);
 					return false;
 				}
 				int radius = Integer.valueOf(radiusArg);
-				
+
 				int horseCount = 0;
 				for (Player loopP : this.plugin.getServer().getOnlinePlayers()) {
 					HorseOwner horseOwner = this.horseOwnerManager.getHorseOwner(loopP);
@@ -558,18 +558,18 @@ public class RPGHorsesAdminCommand implements CommandExecutor {
 				this.messagingUtil.sendMessage(sender, this.plugin.getConfig().getString("messages.horse-removenear").replace("{HORSE-COUNT}", "" + horseCount));
 				return true;
 			}
-			
+
 			if (arg1.equalsIgnoreCase("purgeall")) {
 				if (!sender.hasPermission("rpghorses.purgeall")) {
 					this.messagingUtil.sendMessageAtPath(sender, "messages.no-permission");
 					return false;
 				}
-				
+
 				if (args.length < 2) {
 					this.messagingUtil.sendMessage(sender, "{PREFIX}Not enough arguments, try &6/" + label.toLowerCase() + " purgeall <radius>");
 					return false;
 				}
-				
+
 				Player p;
 				try {
 					p = (Player) sender;
@@ -578,14 +578,14 @@ public class RPGHorsesAdminCommand implements CommandExecutor {
 					return false;
 				}
 				Location loc = p.getLocation();
-				
+
 				String radiusArg = args[1];
 				if (!NumberUtil.isPositiveInt(radiusArg)) {
 					this.messagingUtil.sendMessage(sender, "{PREFIX}Invalid radius value: &6" + radiusArg);
 					return false;
 				}
 				int radius = Integer.valueOf(radiusArg);
-				
+
 				int horseCount = 0;
 				for (Entity entity : p.getWorld().getNearbyEntities(p.getLocation(), radius, radius, radius)) {
 					if (rpgHorseManager.isValidEntityType(entity.getType())) {
@@ -609,7 +609,7 @@ public class RPGHorsesAdminCommand implements CommandExecutor {
 				}
 
 				if (args.length < 3) {
-					this.messagingUtil.sendMessage(sender, "{PREFIX}Not enough arguments, try &6/" + label + " togglehorse <player> <horse-number>");
+					this.messagingUtil.sendMessage(sender, "{PREFIX}Not enough arguments, try &6/" + label + " togglehorse <horse-number> <player>");
 					return false;
 				}
 
@@ -691,30 +691,70 @@ public class RPGHorsesAdminCommand implements CommandExecutor {
 
 				return true;
 			}
+
+			if (arg1.equalsIgnoreCase("toggleautomount")) {
+				if (!sender.hasPermission("rpghorses.toggleautomount")) {
+					this.messagingUtil.sendMessageAtPath(sender, "messages.no-permission");
+					return false;
+				}
+
+				if (args.length < 2) {
+					this.messagingUtil.sendMessage(sender, "{PREFIX}Not enough arguments, try &6/" + label + " toggleautomount <player> [value]");
+					return false;
+				}
+
+				String playerArg = args[1];
+				OfflinePlayer p = this.runPlayerCheck(sender, playerArg);
+				if (p == null || !p.isOnline()) return false;
+
+				HorseOwner horseOwner = this.horseOwnerManager.getHorseOwner(p);
+				boolean value = !horseOwner.isAutoMount();
+
+				if (args.length > 2) {
+					if (args[2].equalsIgnoreCase("true") || args[2].equalsIgnoreCase("on")) {
+						value = true;
+					} else if (args[2].equalsIgnoreCase("false") || args[2].equalsIgnoreCase("off")) {
+						value = false;
+					} else {
+						this.messagingUtil.sendMessage(sender, "{PREFIX}Invalid boolean value: &6" + args[2] + "&7, try &6true &7or &6false");
+						return false;
+					}
+				}
+
+				Player player = p.getPlayer();
+
+				if (horseOwner.autoMountOn() != value) {
+					horseOwner.setAutoMount(value);
+					this.messagingUtil.sendMessageAtPath(player, "messages.automount-toggled", "{SENDER}", sender.getName(), "{VALUE}", value ? "on" : "off");
+					this.messagingUtil.sendMessageAtPath(sender, "messages.automount-toggled-sender", "{PLAYER}", p.getName(), "{VALUE}", value ? "on" : "off");
+				}
+
+				return true;
+			}
 		}
-		
+
 		if (!sender.hasPermission("rpghorses.help")) {
 			this.messagingUtil.sendMessageAtPath(sender, "messages.no-permission");
 			return false;
 		}
-		
+
 		plugin.sendHelpMessage(sender, label);
 		return true;
 	}
-	
+
 	private OfflinePlayer runPlayerCheck(CommandSender sender, String playerArg) {
 		OfflinePlayer p = Bukkit.getPlayer(playerArg);
 		UUID uuid;
 		if (p == null) {
 			uuid = SkinUtil.getUUIDFromName(playerArg, false);
-			
+
 			if (uuid == null) {
 				this.messagingUtil.sendMessage(sender, "{PREFIX}&6" + playerArg + " &7has never played this server before");
 				return null;
 			}
-			
+
 			p = Bukkit.getOfflinePlayer(uuid);
-			
+
 			if (p == null || !p.hasPlayedBefore()) {
 				this.messagingUtil.sendMessage(sender, "{PREFIX}&6" + playerArg + " &7has never played this server before");
 				return null;
@@ -722,40 +762,40 @@ public class RPGHorsesAdminCommand implements CommandExecutor {
 		}
 		return p;
 	}
-	
+
 	private boolean checkHorseArguments(CommandSender sender, OfflinePlayer offlinePlayer, String healthArg, String movementSpeedArg, String jumpStrengthArg, String typeArg, String colorArg, String styleArg, String horseNumberArg) {
-		
+
 		if (!this.runHealthCheck(sender, healthArg)) {
 			return false;
 		}
-		
+
 		if (!this.runMovementSpeedCheck(sender, movementSpeedArg)) {
 			return false;
 		}
-		
+
 		if (!this.runJumpStrengthCheck(sender, jumpStrengthArg)) {
 			return false;
 		}
-		
+
 		if (!this.runTypeCheck(sender, typeArg)) {
 			return false;
 		}
-		
+
 		if (!this.runColorCheck(sender, colorArg)) {
 			return false;
 		}
-		
+
 		if (!this.runStyleCheck(sender, styleArg)) {
 			return false;
 		}
-		
+
 		if (!this.runHorseNumberCheck(sender, horseNumberArg, offlinePlayer)) {
 			return false;
 		}
-		
+
 		return true;
 	}
-	
+
 	private boolean runHorseNumberCheck(CommandSender sender, String horseNumberArg, OfflinePlayer offlinePlayer) {
 		if (horseNumberArg != null) {
 			if (!NumberUtil.isPositiveInt(horseNumberArg) || Integer.valueOf(horseNumberArg) < 1) {
@@ -764,7 +804,7 @@ public class RPGHorsesAdminCommand implements CommandExecutor {
 				}
 				return false;
 			}
-			
+
 			if (offlinePlayer != null) {
 				int horseCount = this.horseOwnerManager.getHorseCount(offlinePlayer);
 				if (horseCount < Integer.valueOf(horseNumberArg)) {
@@ -777,7 +817,7 @@ public class RPGHorsesAdminCommand implements CommandExecutor {
 		}
 		return true;
 	}
-	
+
 	private boolean runHealthCheck(CommandSender sender, String healthArg) {
 		if (healthArg != null) {
 			if (!NumberUtil.isPositiveDouble(healthArg)) {
@@ -789,7 +829,7 @@ public class RPGHorsesAdminCommand implements CommandExecutor {
 		}
 		return true;
 	}
-	
+
 	private boolean runMovementSpeedCheck(CommandSender sender, String movementSpeedArg) {
 		if (movementSpeedArg != null) {
 			if (!NumberUtil.isPositiveDouble(movementSpeedArg)) {
@@ -801,7 +841,7 @@ public class RPGHorsesAdminCommand implements CommandExecutor {
 		}
 		return true;
 	}
-	
+
 	private boolean runJumpStrengthCheck(CommandSender sender, String jumpStrengthArg) {
 		if (jumpStrengthArg != null) {
 			if (!NumberUtil.isPositiveDouble(jumpStrengthArg)) {
@@ -813,7 +853,7 @@ public class RPGHorsesAdminCommand implements CommandExecutor {
 		}
 		return true;
 	}
-	
+
 	private boolean runColorCheck(CommandSender sender, String colorArg) {
 		if (colorArg != null) {
 			if (!this.rpgHorseManager.isValidColor(colorArg)) {
@@ -826,7 +866,7 @@ public class RPGHorsesAdminCommand implements CommandExecutor {
 		}
 		return true;
 	}
-	
+
 	private boolean runStyleCheck(CommandSender sender, String styleArg) {
 		if (styleArg != null) {
 			if (!this.rpgHorseManager.isValidStyle(styleArg)) {
@@ -839,7 +879,7 @@ public class RPGHorsesAdminCommand implements CommandExecutor {
 		}
 		return true;
 	}
-	
+
 	private boolean runTypeCheck(CommandSender sender, String typeArg) {
 		if (typeArg != null) {
 			if (plugin.getVersion().getWeight() < 11) {
@@ -860,5 +900,5 @@ public class RPGHorsesAdminCommand implements CommandExecutor {
 		}
 		return true;
 	}
-	
+
 }
