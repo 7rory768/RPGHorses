@@ -151,7 +151,7 @@ public class RPGHorsesMain extends JavaPlugin {
 		FileConfiguration config = getConfig();
 
 		int version = config.getInt("version", 1);
-		int latestVersion = 6;
+		int latestVersion = 7;
 
 		if (version < 2) {
 			config.set("stable-options.market-horse-item.skin-value", null);
@@ -1023,6 +1023,12 @@ public class RPGHorsesMain extends JavaPlugin {
 					}
 				}
 			}
+		}
+
+		if (version < 7) {
+
+			config.set("horse-options.disable-horse-storage", false);
+			config.setComments("horse-options.disable-horse-storage", Collections.singletonList("Disables ability for player to store or take items out of their Donkey's chest"));
 		}
 
 		config.set("version", latestVersion);

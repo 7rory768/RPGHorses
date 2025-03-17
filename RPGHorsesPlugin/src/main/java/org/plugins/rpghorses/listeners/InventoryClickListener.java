@@ -1,6 +1,5 @@
 package org.plugins.rpghorses.listeners;
 
-import net.wesjd.anvilgui.AnvilGUI;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.OfflinePlayer;
@@ -8,10 +7,11 @@ import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
+import org.bukkit.event.inventory.InventoryAction;
 import org.bukkit.event.inventory.InventoryClickEvent;
+import org.bukkit.event.inventory.InventoryDragEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.scheduler.BukkitRunnable;
 import org.plugins.rpghorses.RPGHorsesMain;
 import org.plugins.rpghorses.guis.*;
 import org.plugins.rpghorses.guis.instances.*;
@@ -29,22 +29,21 @@ import org.plugins.rpghorses.utils.RPGMessagingUtil;
 import roryslibrary.util.MessagingUtil;
 import roryslibrary.util.SoundUtil;
 
-import java.util.Collections;
 import java.util.Map;
 
 public class InventoryClickListener implements Listener {
 
-	private final RPGHorsesMain     plugin;
+	private final RPGHorsesMain plugin;
 	private final HorseOwnerManager horseOwnerManager;
-	private final RPGHorseManager   rpgHorseManager;
-	private final StableGUIManager  stableGUIManager;
-	private final MarketGUIManager  marketGUIManager;
-	private final HorseGUIManager   horseGUIManager;
-	private final TrailGUIManager   trailGUIManager;
-	private final SellGUIManager    sellGUIManager;
-	private final SQLManager        sqlManager;
-	private final MessageQueuer     messageQueuer;
-	private final RPGMessagingUtil  messagingUtil;
+	private final RPGHorseManager rpgHorseManager;
+	private final StableGUIManager stableGUIManager;
+	private final MarketGUIManager marketGUIManager;
+	private final HorseGUIManager horseGUIManager;
+	private final TrailGUIManager trailGUIManager;
+	private final SellGUIManager sellGUIManager;
+	private final SQLManager sqlManager;
+	private final MessageQueuer messageQueuer;
+	private final RPGMessagingUtil messagingUtil;
 
 	public InventoryClickListener(RPGHorsesMain plugin, HorseOwnerManager horseOwnerManager, RPGHorseManager rpgHorseManager, StableGUIManager stableGUIManager, MarketGUIManager marketGUIManager, HorseGUIManager horseGUIManager, TrailGUIManager trailGUIManager, SellGUIManager sellGUIManager, MessageQueuer messageQueuer, RPGMessagingUtil messagingUtil) {
 		this.plugin = plugin;
@@ -64,9 +63,9 @@ public class InventoryClickListener implements Listener {
 
 	@EventHandler
 	public void onClick(InventoryClickEvent e) {
-		Player     p          = (Player) e.getWhoClicked();
+		Player p = (Player) e.getWhoClicked();
 		HorseOwner horseOwner = this.horseOwnerManager.getHorseOwner(p);
-		int        slot       = e.getSlot();
+		int slot = e.getSlot();
 
 		if (horseOwner.getGUILocation() != GUILocation.NONE) {
 			e.setCancelled(true);
@@ -99,9 +98,9 @@ public class InventoryClickListener implements Listener {
 			}
 		} else if (horseOwner.isInGUI(GUILocation.HORSE_GUI)) {
 			if (e.getClickedInventory() == p.getOpenInventory().getTopInventory()) {
-				HorseGUI    horseGUI    = horseOwner.getHorseGUI();
-				RPGHorse    rpgHorse    = horseGUI.getRpgHorse();
-				int         horseNumber = horseOwner.getHorseNumber(rpgHorse);
+				HorseGUI horseGUI = horseOwner.getHorseGUI();
+				RPGHorse rpgHorse = horseGUI.getRpgHorse();
+				int horseNumber = horseOwner.getHorseNumber(rpgHorse);
 				ItemPurpose itemPurpose = horseGUIManager.getItemPurpose(slot);
 				if (itemPurpose == ItemPurpose.BACK) {
 					horseOwner.openStableGUIPage(horseOwner.getCurrentStableGUIPage());
@@ -133,8 +132,8 @@ public class InventoryClickListener implements Listener {
 							} else {
 								SoundUtil.playSound(p, plugin.getConfig(), "upgrade-options.failure-sound");
 
-								String items        = "";
-								int    totalMissing = itemsMissing.size(), count = 0;
+								String items = "";
+								int totalMissing = itemsMissing.size(), count = 0;
 								for (ItemStack item : itemsMissing.keySet()) {
 									int amount = itemsMissing.get(item);
 
@@ -218,12 +217,10 @@ public class InventoryClickListener implements Listener {
 					horseOwner.openTrailsGUIPage(trailsGUI.getPage(page.getPageNum() + 1));
 				} else if (itemPurpose == ItemPurpose.BACK) {
 					horseOwner.openHorseGUI(horseOwner.getHorseGUI());
-				} else if (itemPurpose == ItemPurpose.CLEAR_TRAIL)
-				{
+				} else if (itemPurpose == ItemPurpose.CLEAR_TRAIL) {
 					TrailGUIItem currentTrail = page.getCurrentTrail();
 
-					if (trailsGUI.removeTrail())
-					{
+					if (trailsGUI.removeTrail()) {
 						horseOwner.openHorseGUI(horseOwner.getHorseGUI());
 
 						RPGHorse rpgHorse = trailsGUI.getRpgHorse();
@@ -249,8 +246,8 @@ public class InventoryClickListener implements Listener {
 							return;
 						}
 
-						RPGHorse rpgHorse    = sellGUI.getRpgHorse();
-						int      horseNumber = rpgHorse.getHorseOwner().getHorseNumber(rpgHorse);
+						RPGHorse rpgHorse = sellGUI.getRpgHorse();
+						int horseNumber = rpgHorse.getHorseOwner().getHorseNumber(rpgHorse);
 
 						rpgHorse.setInMarket(true);
 						MarketHorse marketHorse = this.marketGUIManager.addHorse(rpgHorse, price, horseNumber - 1);
@@ -358,7 +355,7 @@ public class InventoryClickListener implements Listener {
 				}
 
 				YourHorsesGUIPage yourHorsesGUIPage = horseOwner.getCurrentYourHorsesGUIPage();
-				MarketHorse       marketHorse       = yourHorsesGUIPage.getMarketHorse(slot);
+				MarketHorse marketHorse = yourHorsesGUIPage.getMarketHorse(slot);
 				if (marketHorse != null) {
 					RPGHorse rpgHorse = marketHorse.getRPGHorse();
 					this.marketGUIManager.removeHorse(marketHorse, false);
@@ -378,7 +375,30 @@ public class InventoryClickListener implements Listener {
 				}
 			}
 
-		} else if (horseOwner.getCurrentHorse() != null && e.getView().getTitle().equals(horseOwner.getCurrentHorse().getHorse().getName()) && e.getView().getTopInventory() == e.getClickedInventory() && e.getSlot() == 0) {
+			// If the player is in the horse inventory
+		} else if (e.getView().getTopInventory() != null
+				&& e.getView().getTopInventory().getHolder() instanceof LivingEntity
+				&& rpgHorseManager.isRPGHorse((LivingEntity) e.getView().getTopInventory().getHolder())) {
+
+			boolean disableHorseStorage = plugin.getConfig().getBoolean("horse-options.disable-horse-storage", false);
+
+			if (e.getClickedInventory() != null && e.getClickedInventory().equals(p.getOpenInventory().getTopInventory())) {
+				if (e.getSlot() == 0 || disableHorseStorage) {
+					e.setCancelled(true);
+				}
+			} else if (disableHorseStorage && (e.isShiftClick() || e.getAction().name().equals("COLLECT_TO_CURSOR") || e.getAction().name().equals("SWAP_WITH_CURSOR"))) {
+				e.setCancelled(true);
+			}
+		}
+	}
+
+	@EventHandler
+	public void onDrag(InventoryDragEvent e) {
+		Inventory inv = e.getInventory();
+
+		if (inv.getHolder() instanceof LivingEntity
+				&& rpgHorseManager.isRPGHorse((LivingEntity) inv.getHolder())
+				&& plugin.getConfig().getBoolean("horse-options.disable-horse-storage", false)) {
 			e.setCancelled(true);
 		}
 	}
