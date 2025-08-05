@@ -319,23 +319,23 @@ public class InventoryClickListener implements Listener {
 									}
 
 									String oldPlayerName = "null";
-									if (rpgHorse.getHorseOwner().getPlayer() != null) {
-										HorseOwner oldHorseOwner = rpgHorse.getHorseOwner();
-										oldHorseOwner.removeRPGHorse(rpgHorse);
-										Player oldOwner = Bukkit.getPlayer(oldHorseOwner.getUUID());
-										if (oldOwner != null) {
-											oldPlayerName = oldOwner.getName();
-											this.stableGUIManager.setupStableGUI(oldHorseOwner);
-											this.messagingUtil.sendMessage(oldOwner, this.plugin.getConfig().getString("messages.market-horse-sold").replace("{PRICE}", "" + price).replace("{PLAYER}", p.getName()), rpgHorse);
-										} else {
-											OfflinePlayer offlinePlayer = Bukkit.getOfflinePlayer(oldHorseOwner.getUUID());
-											if (offlinePlayer.hasPlayedBefore()) {
-												oldPlayerName = offlinePlayer.getName();
-												this.messageQueuer.queueMessage(offlinePlayer, this.messagingUtil.placeholders(this.plugin.getConfig().getString("messages.market-horse-sold").replace("{PRICE}", "" + price).replace("{PLAYER}", p.getName()), rpgHorse));
-												this.horseOwnerManager.flushHorseOwner(oldHorseOwner);
-											}
+									HorseOwner oldHorseOwner = rpgHorse.getHorseOwner();
+									oldHorseOwner.removeRPGHorse(rpgHorse);
+									Player oldOwner = Bukkit.getPlayer(oldHorseOwner.getUUID());
+									if (oldOwner != null) {
+										oldPlayerName = oldOwner.getName();
+										this.stableGUIManager.setupStableGUI(oldHorseOwner);
+										this.messagingUtil.sendMessage(oldOwner, this.plugin.getConfig().getString("messages.market-horse-sold").replace("{PRICE}", "" + price).replace("{PLAYER}", p.getName()), rpgHorse);
+									} else {
+										this.horseOwnerManager.flushHorseOwner(oldHorseOwner);
+
+										OfflinePlayer offlinePlayer = Bukkit.getOfflinePlayer(oldHorseOwner.getUUID());
+										if (offlinePlayer.hasPlayedBefore()) {
+											oldPlayerName = offlinePlayer.getName();
+											this.messageQueuer.queueMessage(offlinePlayer, this.messagingUtil.placeholders(this.plugin.getConfig().getString("messages.market-horse-sold").replace("{PRICE}", "" + price).replace("{PLAYER}", p.getName()), rpgHorse));
 										}
 									}
+
 									horseOwner.addRPGHorse(rpgHorse);
 									this.stableGUIManager.setupStableGUI(horseOwner);
 									this.messagingUtil.sendMessage(p, this.plugin.getConfig().getString("messages.market-horse-bought").replace("{PRICE}", "" + price).replace("{PLAYER}", oldPlayerName), rpgHorse);
