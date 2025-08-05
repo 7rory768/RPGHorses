@@ -52,7 +52,7 @@ public class NMSHandler extends NMS {
 				goalIterator.remove();
 			}
 		} catch (Exception e) {
-			e.printStackTrace();
+			logError(e);
 		}
 	}
 
