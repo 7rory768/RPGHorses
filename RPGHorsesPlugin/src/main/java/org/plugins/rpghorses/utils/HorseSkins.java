@@ -44,6 +44,10 @@ public enum HorseSkins {
 
 	GRAY_LLAMA("https://textures.minecraft.net/texture/cf24e56fd9ffd7133da6d1f3e2f455952b1da462686f753c597ee82299a", "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvY2YyNGU1NmZkOWZmZDcxMzNkYTZkMWYzZTJmNDU1OTUyYjFkYTQ2MjY4NmY3NTNjNTk3ZWU4MjI5OWEifX19"), // https://minecraft-heads.com/custom-heads/animals/3930-llama-light-gray
 
+	RAVAGER("https://textures.minecraft.net/texture/5c73e16fa2926899cf18434360e2144f84ef1eb981f996148912148dd87e0b2a", "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvNWM3M2UxNmZhMjkyNjg5OWNmMTg0MzQzNjBlMjE0NGY4NGVmMWViOTgxZjk5NjE0ODkxMjE0OGRkODdlMGIyYSJ9fX0="), // https://minecraft-heads.com/custom-heads/head/56800-ravager
+
+	CAMEL("https://textures.minecraft.net/texture/7eb6ad908b8d5155bc4d249271ef6084d455dd0e70a4002eb148f9e20b9deb2c", "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvN2ViNmFkOTA4YjhkNTE1NWJjNGQyNDkyNzFlZjYwODRkNDU1ZGQwZTcwYTQwMDJlYjE0OGY5ZTIwYjlkZWIyYyJ9fX0="), // https://minecraft-heads.com/custom-heads/head/102135-camel
+
 	HORSE_EGG("https://textures.minecraft.net/texture/5c6d5abbf68ccb2386bf16af25ac38d8b77bb0e043152461bd97f3f630dbb8bc", "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvNWM2ZDVhYmJmNjhjY2IyMzg2YmYxNmFmMjVhYzM4ZDhiNzdiYjBlMDQzMTUyNDYxYmQ5N2YzZjYzMGRiYjhiYyJ9fX0="), // https://minecraft-heads.com/custom-heads/decoration/936-spawn-egg-horse
 
 	DONKEY_EGG("https://textures.minecraft.net/texture/db522f6d77c0696c9d1f2ad49bfa3cb8205a5e623af1c420bd740dc471914e97", "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvZGI1MjJmNmQ3N2MwNjk2YzlkMWYyYWQ0OWJmYTNjYjgyMDVhNWU2MjNhZjFjNDIwYmQ3NDBkYzQ3MTkxNGU5NyJ9fX0="), // https://minecraft-heads.com/custom-heads/decoration/23905-spawn-egg-donkey
@@ -56,7 +60,11 @@ public enum HorseSkins {
 
 	SKELETON_HORSE_EGG("https://textures.minecraft.net/texture/9dc084b7874268973006c897a03d8906cc9b3df8c39bce93d87ec0df507bbe0d", "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvOWRjMDg0Yjc4NzQyNjg5NzMwMDZjODk3YTAzZDg5MDZjYzliM2RmOGMzOWJjZTkzZDg3ZWMwZGY1MDdiYmUwZCJ9fX0="), // https://minecraft-heads.com/custom-heads/decoration/24268-spawn-egg-skeleton-horse
 
-	LLAMA_EGG("https://textures.minecraft.net/texture/5cbc6bd92728d79cfa6d8f23cbae9d912f495920b9e95ef691a1967fef8a4453", "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvNWNiYzZiZDkyNzI4ZDc5Y2ZhNmQ4ZjIzY2JhZTlkOTEyZjQ5NTkyMGI5ZTk1ZWY2OTFhMTk2N2ZlZjhhNDQ1MyJ9fX0="); // https://minecraft-heads.com/custom-heads/decoration/23709-spawn-egg-llama
+	LLAMA_EGG("https://textures.minecraft.net/texture/5cbc6bd92728d79cfa6d8f23cbae9d912f495920b9e95ef691a1967fef8a4453", "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvNWNiYzZiZDkyNzI4ZDc5Y2ZhNmQ4ZjIzY2JhZTlkOTEyZjQ5NTkyMGI5ZTk1ZWY2OTFhMTk2N2ZlZjhhNDQ1MyJ9fX0="), // https://minecraft-heads.com/custom-heads/decoration/23709-spawn-egg-llama
+
+	RAVAGER_EGG("https://textures.minecraft.net/texture/79b625b80cfb0baf04eebbd2cb1ff9f1010b02f4df21b3baf86eb812ab7eba8b", "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvNzliNjI1YjgwY2ZiMGJhZjA0ZWViYmQyY2IxZmY5ZjEwMTBiMDJmNGRmMjFiM2JhZjg2ZWI4MTJhYjdlYmE4YiJ9fX0=") , // https://minecraft-heads.com/custom-heads/head/23854-spawn-egg-ravager
+
+	CAMEL_EGG("https://textures.minecraft.net/texture/11e9bf25f3458da2e5dddac0a6ae81ed256c5510b507094781b9c4682cbf5d0d", "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvMTFlOWJmMjVmMzQ1OGRhMmU1ZGRkYWMwYTZhZTgxZWQyNTZjNTUxMGI1MDcwOTQ3ODFiOWM0NjgyY2JmNWQwZCJ9fX0="); // https://minecraft-heads.com/custom-heads/head/84108-spawn-egg-camel
 
 	private final String texturesURL, legacySkinValue;
 

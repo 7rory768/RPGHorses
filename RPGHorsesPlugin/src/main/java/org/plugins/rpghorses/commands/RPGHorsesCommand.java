@@ -84,11 +84,13 @@ public class RPGHorsesCommand implements CommandExecutor {
 					return false;
 				}
 
-				ItemStack saddleItem = ((InventoryHolder) entity).getInventory().getItem(0);
+				if (entity instanceof InventoryHolder) {
+					ItemStack saddleItem = ((InventoryHolder) entity).getInventory().getItem(0);
 
-				if (plugin.getConfig().getBoolean("horse-options.no-claiming-without-saddle", false) && (saddleItem == null || saddleItem.getType() != Material.SADDLE)) {
-					messagingUtil.sendMessageAtPath(sender, "messages.claim-saddle-fail");
-					return false;
+					if (plugin.getConfig().getBoolean("horse-options.no-claiming-without-saddle", false) && (saddleItem == null || saddleItem.getType() != Material.SADDLE)) {
+						messagingUtil.sendMessageAtPath(sender, "messages.claim-saddle-fail");
+						return false;
+					}
 				}
 				
 				HorseOwner horseOwner = horseOwnerManager.getHorseOwner(p);

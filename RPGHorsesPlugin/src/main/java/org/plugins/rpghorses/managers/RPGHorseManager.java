@@ -23,6 +23,7 @@ import org.plugins.rpghorses.players.RemoveHorseConfirmation;
 import org.plugins.rpghorses.tiers.Tier;
 import org.plugins.rpghorses.utils.ItemUtil;
 import org.plugins.rpghorses.utils.RPGMessagingUtil;
+import org.plugins.rpghorses.version.Version;
 import roryslibrary.util.MessagingUtil;
 
 import java.util.*;
@@ -75,13 +76,22 @@ public class RPGHorseManager {
 	}
 
 	public void setupValidEntityTypes() {
-		if (plugin.getVersion().getWeight() >= 11) {
+		if (Version.isRunningMinimum(Version.v1_11)) {
 			this.validEntityTypes.add(EntityType.DONKEY);
 			this.validEntityTypes.add(EntityType.MULE);
 			this.validEntityTypes.add(EntityType.SKELETON_HORSE);
 			this.validEntityTypes.add(EntityType.ZOMBIE_HORSE);
 			this.validEntityTypes.add(EntityType.LLAMA);
+
+			/* TODO: Requires custom control of the entity
+			if (Version.isRunningMinimum(Version.v1_14))
+				this.validEntityTypes.add(EntityType.RAVAGER);
+			*/
+
+			if (Version.isRunningMinimum(Version.v1_20))
+				this.validEntityTypes.add(EntityType.CAMEL);
 		}
+
 		this.validEntityTypes.add(EntityType.HORSE);
 	}
 

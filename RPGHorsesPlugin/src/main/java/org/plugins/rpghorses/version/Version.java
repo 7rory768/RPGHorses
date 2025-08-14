@@ -5,7 +5,7 @@ import org.bukkit.Bukkit;
 
 @Getter
 public enum Version {
-	
+
 	v1_8("1.8", 8, ""),
 	v1_9("1.9", 9, ""),
 	v1_10("1.10", 10, ""),
@@ -35,11 +35,11 @@ public enum Version {
 	v1_21_4("1.21.4", 214, "v1_21_4"),
 	v1_21_5("1.21.5", 215, "v1_21_5"),
 	LATEST("", 10000, "");
-	
+
 	private final String name;
 	private final int weight;
 	private final String abstractName;
-	
+
 	Version(String name, int weight, String abstractName) {
 		this.name = name;
 		this.weight = weight;
@@ -52,13 +52,16 @@ public enum Version {
 		for (Version version : values())
 			if (version != Version.LATEST && name.startsWith(version.name))
 				highestMatch = version;
-		
+
 		return highestMatch;
 	}
-	
+
 	public static Version getVersion() {
 		return Version.getByName(Bukkit.getBukkitVersion().split("-")[0]);
 	}
-	
+
+	public static boolean isRunningMinimum(Version version) {
+		return getVersion().weight >= version.weight;
+	}
 }
 

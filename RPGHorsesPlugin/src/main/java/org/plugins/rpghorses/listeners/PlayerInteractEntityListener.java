@@ -33,6 +33,8 @@ public class PlayerInteractEntityListener implements Listener {
 				if (!rpgHorse.getHorseOwner().getUUID().equals(p.getUniqueId())) {
 					e.setCancelled(true);
 					this.messagingUtil.sendMessageAtPath(p, "messages.not-your-horse", rpgHorse);
+				} else if (rpgHorse.getEntityType().name().equals("RAVAGER")) {
+					entity.addPassenger(p);
 				}
 			}
 		}

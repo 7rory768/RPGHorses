@@ -81,28 +81,33 @@ public class RPGHorse {
 		}
 		this.setName(name);
 		this.setTier(1);
-		if (RPGHorsesMain.getVersion().getWeight() >= 11) {
+
+		if (RPGHorsesMain.getVersion().getWeight() >= 11 && this.horse instanceof AbstractHorse) {
 			this.setJumpStrength(((AbstractHorse) this.horse).getJumpStrength());
-		} else {
+		} else if (this.horse instanceof Horse) {
 			this.setJumpStrength(((Horse) this.horse).getJumpStrength());
 		}
+
 		this.setHealth(entity.getHealth());
 		this.setInMarket(false);
 		this.setParticle(null);
-		Inventory inventory = ((InventoryHolder) this.horse).getInventory();
 
-		ItemStack saddleSlotItem = inventory.getItem(0);
-		if (saddleSlotItem == null) {
-			inventory.setItem(0, new ItemStack(Material.SADDLE));
-		} else if (saddleSlotItem.getType() != Material.SADDLE) {
-			horse.getWorld().dropItemNaturally(horse.getLocation(), saddleSlotItem);
-			inventory.setItem(0, new ItemStack(Material.SADDLE));
-		}
+		if (this.horse instanceof InventoryHolder) {
+			Inventory inventory = ((InventoryHolder) this.horse).getInventory();
 
-		for (int slot = 0; slot < inventory.getSize(); slot++) {
-			ItemStack item = inventory.getItem(slot);
-			if (item != null) {
-				items.put(slot, item);
+			ItemStack saddleSlotItem = inventory.getItem(0);
+			if (saddleSlotItem == null) {
+				inventory.setItem(0, new ItemStack(Material.SADDLE));
+			} else if (saddleSlotItem.getType() != Material.SADDLE) {
+				horse.getWorld().dropItemNaturally(horse.getLocation(), saddleSlotItem);
+				inventory.setItem(0, new ItemStack(Material.SADDLE));
+			}
+
+			for (int slot = 0; slot < inventory.getSize(); slot++) {
+				ItemStack item = inventory.getItem(slot);
+				if (item != null) {
+					items.put(slot, item);
+				}
 			}
 		}
 	}
@@ -191,9 +196,9 @@ public class RPGHorse {
 		if (jumpStrength > 0) {
 			this.jumpStrength = jumpStrength;
 			if (this.horse != null) {
-				if (RPGHorsesMain.getVersion().getWeight() >= 11) {
+				if (RPGHorsesMain.getVersion().getWeight() >= 11 && horse instanceof AbstractHorse) {
 					((AbstractHorse) this.horse).setJumpStrength(jumpStrength);
-				} else {
+				} else if (horse instanceof Horse) {
 					((Horse) this.horse).setJumpStrength(jumpStrength);
 				}
 			}
@@ -210,7 +215,7 @@ public class RPGHorse {
 
 	public void setItems(HashMap<Integer, ItemStack> items) {
 		this.items = items;
-		if (this.horse != null) {
+		if (this.horse != null && horse instanceof InventoryHolder) {
 			Inventory inventory = ((InventoryHolder) this.horse).getInventory();
 			for (Integer slot : items.keySet()) {
 				inventory.setItem(slot, items.get(slot));
@@ -293,21 +298,30 @@ public class RPGHorse {
 
 			horseOwner.setLastHorseLocation(horse.getLocation());
 
-			if (RPGHorsesMain.getVersion().getWeight() < 11) {
-				Horse horse = (Horse) this.horse;
-				horse.setMaxHealth(maxHealth);
-				horse.setAdult();
-				horse.setAgeLock(true);
-				horse.setOwner(p);
-			} else {
+			if (this.horse instanceof AbstractHorse) {
 				AbstractHorse abstractHorse = (AbstractHorse) horse;
 				abstractHorse.setJumpStrength(this.jumpStrength);
-				abstractHorse.setAdult();
-				abstractHorse.setAgeLock(true);
-				abstractHorse.setOwner(p);
 			}
 
-			if (RPGHorsesMain.getVersion().getWeight() >= 9) {
+			if (this.horse instanceof Ageable) {
+				Ageable ageable = (Ageable) this.horse;
+				ageable.setAdult();
+				if (Version.isRunningMinimum(Version.v1_16) && this.horse instanceof Breedable) {
+					Breedable breedable = (Breedable) this.horse;
+					breedable.setAgeLock(true);
+				} else {
+					ageable.setAgeLock(true);
+				}
+			}
+
+			if (this.horse instanceof Tameable) {
+				Tameable tameable = (Tameable) this.horse;
+				tameable.setOwner(p);
+			}
+
+			if (RPGHorsesMain.getVersion().getWeight() < 11) {
+				this.horse.setMaxHealth(maxHealth);
+			} else {
 				this.horse.getAttribute(Attribute.GENERIC_MAX_HEALTH).setBaseValue(this.maxHealth);
 				this.horse.getAttribute(Attribute.GENERIC_MOVEMENT_SPEED).setBaseValue(this.movementSpeed);
 			}
@@ -332,10 +346,10 @@ public class RPGHorse {
 				if (RPGHorsesMain.getVersion().getWeight() < 11) {
 					horse.setVariant(((LegacyHorseInfo) horseInfo).getVariant());
 				}
-			} else if (this.horseInfo.getEntityType() == EntityType.DONKEY) {
+			} else if (this.horseInfo.getEntityType().name().equals("DONKEY")) {
 				ChestedHorse chestedHorse = (ChestedHorse) this.horse;
 				chestedHorse.setCarryingChest(true);
-			} else if (this.getEntityType() == EntityType.LLAMA) {
+			} else if (this.getEntityType().name().equals("LLAMA")) {
 				Llama llama = (Llama) horse;
 				Llama.Color color = Llama.Color.WHITE;
 				try {
@@ -343,17 +357,22 @@ public class RPGHorse {
 				} catch (IllegalArgumentException e) {
 				}
 				llama.setColor(color);
+			} else if (this.getEntityType().name().equals("RAVAGER")) {
+				Ravager ravager = (Ravager) horse;
+				ravager.setCanJoinRaid(false);
 			}
 
 			setItems(items);
 
-			Inventory inventory = ((InventoryHolder) horse).getInventory();
-			ItemStack saddleSlotItem = inventory.getItem(0);
-			if (saddleSlotItem == null) {
-				inventory.setItem(0, new ItemStack(Material.SADDLE));
-			} else if (saddleSlotItem.getType() != Material.SADDLE) {
-				horse.getWorld().dropItemNaturally(horse.getLocation(), saddleSlotItem);
-				inventory.setItem(0, new ItemStack(Material.SADDLE));
+			if (horse instanceof InventoryHolder) {
+				Inventory inventory = ((InventoryHolder) horse).getInventory();
+				ItemStack saddleSlotItem = inventory.getItem(0);
+				if (saddleSlotItem == null) {
+					inventory.setItem(0, new ItemStack(Material.SADDLE));
+				} else if (saddleSlotItem.getType() != Material.SADDLE) {
+					horse.getWorld().dropItemNaturally(horse.getLocation(), saddleSlotItem);
+					inventory.setItem(0, new ItemStack(Material.SADDLE));
+				}
 			}
 
 			if (Version.isRunningMinimum(Version.v1_14))
@@ -412,7 +431,7 @@ public class RPGHorse {
 	}
 
 	public void loadItems() {
-		if (this.horse != null) {
+		if (this.horse != null && this.horse instanceof InventoryHolder) {
 			this.items.clear();
 			Inventory inventory = ((InventoryHolder) this.horse).getInventory();
 			for (int slot = 0; slot < inventory.getSize(); slot++) {
