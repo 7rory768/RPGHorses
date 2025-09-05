@@ -22,7 +22,9 @@ import org.plugins.rpghorses.players.HorseOwner;
 import roryslibrary.util.MessagingUtil;
 import roryslibrary.util.Version;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 @Getter
 @Setter
@@ -217,9 +219,19 @@ public class RPGHorse {
 		this.items = items;
 		if (this.horse != null && horse instanceof InventoryHolder) {
 			Inventory inventory = ((InventoryHolder) this.horse).getInventory();
+
+			List<Integer> toRemove = new ArrayList<>();
+
 			for (Integer slot : items.keySet()) {
-				inventory.setItem(slot, items.get(slot));
+				if (slot >= 0 && slot < inventory.getSize()) {
+					inventory.setItem(slot, items.get(slot));
+				} else {
+					toRemove.add(slot);
+					horse.getWorld().dropItemNaturally(horse.getLocation(), items.get(slot));
+				}
 			}
+
+			toRemove.forEach(items::remove);
 		}
 	}
 
