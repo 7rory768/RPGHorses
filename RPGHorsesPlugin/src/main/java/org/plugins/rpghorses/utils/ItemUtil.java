@@ -203,7 +203,9 @@ public class ItemUtil extends roryslibrary.util.ItemUtil {
 		}
 
 		SkullMeta skullMeta = (SkullMeta) itemMeta;
-		if (Version.isRunningMinimum(Version.v1_19) && isURL && texturesURL.contains("textures.minecraft.net")) {
+		if (Version.isRunningMinimum(Version.v1_19)) {
+			if (!isURL || !texturesURL.contains("textures.minecraft.net")) return skullMeta;
+
 			PlayerProfile playerProfile = Bukkit.createPlayerProfile(UUID.randomUUID());
 			playerProfile.getTextures().setSkin(url);
 			skullMeta.setOwnerProfile(playerProfile);

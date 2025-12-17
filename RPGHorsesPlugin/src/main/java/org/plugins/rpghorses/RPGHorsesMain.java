@@ -151,7 +151,7 @@ public class RPGHorsesMain extends JavaPlugin {
 		FileConfiguration config = getConfig();
 
 		int version = config.getInt("version", 1);
-		int latestVersion = 7;
+		int latestVersion = 8;
 
 		if (version < 2) {
 			config.set("stable-options.market-horse-item.skin-value", null);
@@ -657,9 +657,9 @@ public class RPGHorsesMain extends JavaPlugin {
 						if (!section.contains("skin-value"))
 							section.set("skin-value", "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvOTY3OTg2MWY3ZWNmZTQ5NDEwMzIxNGQ4YTY5YjRjZjUxYmQ2YTUxYzIyNjYyZGM3MjM0NWYyMzExNWMwYTZlZSJ9fX0=");
 					} else if (particle.name().equals("CLOUD")) {
-						section.set("textures-url", "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvMWE5NTcwNDE1Zjk0YjM5NGZmNTFhOTI1OWYxZmNmOWRiMzA2Njc3NDM4YmRjOGJhYzM1ZGNkNTkxYWEwMmVkZSJ9fX0=");
+						section.set("textures-url", "https://textures.minecraft.net/texture/1a9570415f94b394ff51a9259f1fcf9db306677438bdc8bac35dcd591aa02ede");
 						if (!section.contains("skin-value"))
-							section.set("skin-value", "https://textures.minecraft.net/texture/1a9570415f94b394ff51a9259f1fcf9db306677438bdc8bac35dcd591aa02ede");
+							section.set("skin-value", "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvMWE5NTcwNDE1Zjk0YjM5NGZmNTFhOTI1OWYxZmNmOWRiMzA2Njc3NDM4YmRjOGJhYzM1ZGNkNTkxYWEwMmVkZSJ9fX0=");
 					} else if (particle.name().equals("COMPOSTER")) {
 						section.set("textures-url", "https://textures.minecraft.net/texture/53cb8f61e7f6bf957a2134e96faeb0fc924137d4bff88d9518b2bf662586c92e");
 						if (!section.contains("skin-value"))
@@ -705,7 +705,7 @@ public class RPGHorsesMain extends JavaPlugin {
 						if (!section.contains("skin-value"))
 							section.set("skin-value", "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvNDlmMWYwN2UyYjFjMzJiYjY0YTEyOGU1MjlmM2FmMWU1Mjg2ZTUxODU0NGVkZjhjYmFhNmM0MDY1YjQ3NmIifX19");
 					} else if (particle.name().equals("DUST_PLUME")) {
-						section.set("textures-url", "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvNDk5NDdkZTEyOTU4ZmU5NWU2YWExMTRmODRkNmYzOGRhMzAxOTJkZDZkNjllZDYzYzZmYjk3NjA4OTE0ZDM1MiJ9fX0=");
+						section.set("textures-url", "https://textures.minecraft.net/texture/9cdd6af29956edf1a40dba008f5d34102f6a4190262a8c63c9b54edbf43ff67e");
 						if (!section.contains("skin-value"))
 							section.set("skin-value", "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvNDk5NDdkZTEyOTU4ZmU5NWU2YWExMTRmODRkNmYzOGRhMzAxOTJkZDZkNjllZDYzYzZmYjk3NjA4OTE0ZDM1MiJ9fX0=");
 					} else if (particle.name().equals("EGG_CRACK")) {
@@ -1029,6 +1029,18 @@ public class RPGHorsesMain extends JavaPlugin {
 
 			config.set("horse-options.disable-horse-storage", false);
 			config.setComments("horse-options.disable-horse-storage", Collections.singletonList("Disables ability for player to store or take items out of their Donkey's chest"));
+		}
+
+		if (version < 8) {
+			if (config.contains("trail-gui-options.trails.DUST_PLUME")) {
+				config.set("trail-gui-options.trails.DUST_PLUME.textures-url", "https://textures.minecraft.net/texture/9cdd6af29956edf1a40dba008f5d34102f6a4190262a8c63c9b54edbf43ff67e");
+				config.set("trail-gui-options.trails.DUST_PLUME.skin-value", "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvNDk5NDdkZTEyOTU4ZmU5NWU2YWExMTRmODRkNmYzOGRhMzAxOTJkZDZkNjllZDYzYzZmYjk3NjA4OTE0ZDM1MiJ9fX0=");
+			}
+
+			if (config.contains("trail-gui-options.trails.CLOUD")) {
+				config.set("trail-gui-options.trails.CLOUD.textures-url", "https://textures.minecraft.net/texture/1a9570415f94b394ff51a9259f1fcf9db306677438bdc8bac35dcd591aa02ede");
+				config.set("trail-gui-options.trails.CLOUD.skin-value", "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvMWE5NTcwNDE1Zjk0YjM5NGZmNTFhOTI1OWYxZmNmOWRiMzA2Njc3NDM4YmRjOGJhYzM1ZGNkNTkxYWEwMmVkZSJ9fX0=");
+			}
 		}
 
 		config.set("version", latestVersion);

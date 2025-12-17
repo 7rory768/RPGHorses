@@ -8,6 +8,7 @@ import org.bukkit.Material;
 import org.bukkit.Particle;
 import org.bukkit.attribute.Attribute;
 import org.bukkit.entity.*;
+import org.bukkit.inventory.AbstractHorseInventory;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.inventory.ItemStack;
@@ -378,11 +379,20 @@ public class RPGHorse {
 
 			if (horse instanceof InventoryHolder) {
 				Inventory inventory = ((InventoryHolder) horse).getInventory();
-				ItemStack saddleSlotItem = inventory.getItem(0);
-				if (saddleSlotItem == null) {
-					inventory.setItem(0, new ItemStack(Material.SADDLE));
-				} else if (saddleSlotItem.getType() != Material.SADDLE) {
-					horse.getWorld().dropItemNaturally(horse.getLocation(), saddleSlotItem);
+
+				if (Version.isRunningMinimum(Version.v1_13) && inventory instanceof AbstractHorseInventory) {
+					AbstractHorseInventory horseInventory = (AbstractHorseInventory) inventory;
+
+					ItemStack saddleSlotItem = horseInventory.getSaddle();
+					if (saddleSlotItem != null && saddleSlotItem.getType() != Material.SADDLE)
+						horse.getWorld().dropItemNaturally(horse.getLocation(), saddleSlotItem);
+
+					horseInventory.setSaddle(new ItemStack(Material.SADDLE));
+				} else {
+					ItemStack saddleSlotItem = inventory.getItem(0);
+					if (saddleSlotItem != null && saddleSlotItem.getType() != Material.SADDLE)
+						horse.getWorld().dropItemNaturally(horse.getLocation(), saddleSlotItem);
+
 					inventory.setItem(0, new ItemStack(Material.SADDLE));
 				}
 			}
