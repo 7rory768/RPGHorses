@@ -24,7 +24,7 @@ public class WorldGuardUtil {
 			} catch (ClassNotFoundException ignored) {
 				try {
 					worldGuard = new WorldGuardv6Support();
-				} catch (Exception ignored1) {
+				} catch (Throwable ignored1) {
 				}
 			}
 		}
@@ -41,7 +41,11 @@ public class WorldGuardUtil {
 	}
 
 	public static boolean isEnabled() {
-		return getWorldGuard() != null;
+		try {
+			return getWorldGuard() != null;
+		} catch (Exception ignored) {
+			return false;
+		}
 	}
 
 	public static List<String> getRegions(Location l) {
