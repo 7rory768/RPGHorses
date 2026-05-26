@@ -30,6 +30,7 @@
         <module>1_21_5</module>
         <module>1_21_10</module>
         <module>1_21_11</module>
+        <module>26_1_2</module>
         <module>RPGHorsesPlugin</module>
         <module>WorldGuard-v6</module>
         <module>WorldGuard-v7</module>
@@ -51,10 +52,17 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
-                <version>3.13.0</version>
+                <version>3.14.1</version>
                 <configuration>
                     <source>${java.version}</source>
                     <target>${java.version}</target>
+                    <annotationProcessorPaths>
+                        <path>
+                            <groupId>org.projectlombok</groupId>
+                            <artifactId>lombok</artifactId>
+                            <version>1.18.44</version>
+                        </path>
+                    </annotationProcessorPaths>
                 </configuration>
             </plugin>
         </plugins>
