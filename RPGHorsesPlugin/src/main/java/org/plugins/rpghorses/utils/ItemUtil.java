@@ -271,10 +271,12 @@ public class ItemUtil extends roryslibrary.util.ItemUtil {
 	}
 
 	public static void addDurabilityGlow(ItemStack item) {
+		if (RPGHorsesMain.getNMS() == null) return;
 		RPGHorsesMain.getNMS().addGlow(item);
 	}
 
 	public static void removeDurabilityGlow(ItemStack item) {
+		if (RPGHorsesMain.getNMS() == null) return;
 		RPGHorsesMain.getNMS().removeGlow(item);
 	}
 
