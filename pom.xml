@@ -33,6 +33,7 @@
         <module>RPGHorsesPlugin</module>
         <module>WorldGuard-v6</module>
         <module>WorldGuard-v7</module>
+        <module>26_1_2</module>
     </modules>
     <packaging>pom</packaging>
 

@@ -70,7 +70,7 @@
         <dependency>
             <groupId>net.wesjd</groupId>
             <artifactId>anvilgui</artifactId>
-            <version>1.10.11-SNAPSHOT</version>
+            <version>1.10.13-SNAPSHOT</version>
             <scope>compile</scope>
             <exclusions>
                 <exclusion>
@@ -497,6 +497,23 @@
         <dependency>
             <groupId>org.plugins.rpghorses</groupId>
             <artifactId>1_21_11</artifactId>
+            <version>1.0.0</version>
+            <scope>compile</scope>
+            <optional>true</optional>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.spigotmc</groupId>
+                    <artifactId>spigot-api</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>org.spigotmc</groupId>
+                    <artifactId>spigot</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+        <dependency>
+            <groupId>org.plugins.rpghorses</groupId>
+            <artifactId>26_1_2</artifactId>
             <version>1.0.0</version>
             <scope>compile</scope>
             <optional>true</optional>
